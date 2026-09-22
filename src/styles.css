@@ -1,0 +1,211 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * BeacHub — Design System "Areia & Grafite"
+ * Areia quente, grafite de linha de quadra, laranja de marcação.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-sand: var(--sand);
+  --color-sand-deep: var(--sand-deep);
+  --color-graphite: var(--graphite);
+  --color-graphite-soft: var(--graphite-soft);
+  --color-line: var(--line);
+  --color-teal: var(--teal);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.375rem;
+
+  /* BeacHub — navy #0D1B2A · teal #0E7C86 · laranja #F26C28 · areia #E7C89B · off-white #F5F2EC · cinza #6B6F72 */
+  --sand: #f5f2ec;
+  --sand-deep: #e7c89b;
+  --graphite: #0d1b2a;
+  --graphite-soft: #1b3147;
+  --teal: #0e7c86;
+  --line: #f26c28;
+
+  --background: #f5f2ec;
+  --foreground: #0d1b2a;
+  --card: #fffdf9;
+  --card-foreground: #0d1b2a;
+  --popover: #fffdf9;
+  --popover-foreground: #0d1b2a;
+  --primary: #0d1b2a;
+  --primary-foreground: #f5f2ec;
+  --secondary: #ece7dd;
+  --secondary-foreground: #0d1b2a;
+  --muted: #ece7dd;
+  --muted-foreground: #6b6f72;
+  --accent: #f26c28;
+  --accent-foreground: #fffdf9;
+  --destructive: oklch(0.55 0.212 27);
+  --destructive-foreground: #fffdf9;
+  --success: #0e7c86;
+  --warning: #e0a33c;
+  --info: #0e7c86;
+  --border: #ded7ca;
+  --input: #ded7ca;
+  --ring: #f26c28;
+
+  --chart-1: #f26c28;
+  --chart-2: #0e7c86;
+  --chart-3: #e7c89b;
+  --chart-4: #0d1b2a;
+  --chart-5: #6b6f72;
+
+  --sidebar: #0d1b2a;
+  --sidebar-foreground: #e8edf2;
+  --sidebar-primary: #f26c28;
+  --sidebar-primary-foreground: #fffdf9;
+  --sidebar-accent: #1b3147;
+  --sidebar-accent-foreground: #f5f2ec;
+  --sidebar-border: #22405c;
+  --sidebar-ring: #f26c28;
+}
+
+.dark {
+  --background: #0b1622;
+  --foreground: #eef2f6;
+  --card: #12212f;
+  --card-foreground: #eef2f6;
+  --popover: #12212f;
+  --popover-foreground: #eef2f6;
+  --primary: #eef2f6;
+  --primary-foreground: #0d1b2a;
+  --secondary: #1b3147;
+  --secondary-foreground: #eef2f6;
+  --muted: #1b3147;
+  --muted-foreground: #9aa4ad;
+  --accent: #f26c28;
+  --accent-foreground: #0d1b2a;
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --sand: #1b3147;
+  --sand-deep: #22405c;
+}
+
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Etiqueta tipo súmula / placar */
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+/* Numeral de placar tabular */
+@utility score-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* Textura sutil de areia */
+@utility sand-grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        color-mix(in oklab, var(--graphite) 5%, transparent) 0.5px,
+        transparent 0.6px
+      ),
+      radial-gradient(
+        circle at 70% 60%,
+        color-mix(in oklab, var(--graphite) 4%, transparent) 0.5px,
+        transparent 0.6px
+      );
+    background-size: 7px 7px, 11px 11px;
+  }
+}
+
+/* Faixa de linha de quadra */
+@utility court-line {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in oklab, var(--line) 100%, transparent) 0 2px,
+    transparent 2px 9px
+  );
+}
