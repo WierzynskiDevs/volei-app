@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -6,8 +7,8 @@ import { cn } from "@/lib/utils";
 import { AppShell, PageHeader } from "@/components/site/shell";
 import { Stat } from "@/components/site/cards";
 import { CourtRow, EstimateNote, LiveMatchCard, UpcomingMatchCard } from "@/components/site/live";
-import { OpsKanban } from "@/components/site/ops";
-import { events } from "@/lib/mock-data";
+import { OpsKanban } from "@/components/site/ops-live";
+import { organizerEventBySlugQuery, organizerEventsQuery } from "@/lib/api/events";
 import {
   courtStatuses,
   liveMatches,
@@ -111,8 +112,24 @@ function EventControlPage() {
   const courts = useMemo(() => courtStatuses(), []);
   const maxDelay = Math.max(0, ...courts.map((c) => c.delay));
   const remaining = scheduleMatches.filter((m) => m.status !== "FINISHED").length;
-  const [slug, setSlug] = useState(events[0]?.slug ?? "copa-areia-curitiba");
-  const activeEvent = events.find((e) => e.slug === slug) ?? events[0];
+
+  /*
+   * Seletor de evento religado à API real (era `events` mock antes): sem
+   * isto, o slug escolhido nunca bateria com um evento de verdade e o
+   * Kanban (já ligado à API) nunca encontraria partida nenhuma. As outras
+   * abas desta tela (Sets/Quadras/Próximos jogos/Resultados/Correções)
+   * continuam em `schedule-data.ts` — mock declarado, fora do escopo desta
+   * fatia (docs/DIVERGENCES.md).
+   */
+  const organizerEvents = useQuery(organizerEventsQuery());
+  const eventList = organizerEvents.data?.items ?? [];
+  const [slug, setSlug] = useState<string | null>(null);
+  const activeSlug = slug ?? eventList[0]?.slug ?? null;
+  const eventConfig = useQuery({
+    ...organizerEventBySlugQuery(activeSlug ?? ""),
+    enabled: activeSlug !== null,
+  });
+  const activeEvent = eventList.find((e) => e.slug === activeSlug) ?? eventList[0];
 
   return (
     <AppShell>
@@ -126,7 +143,7 @@ function EventControlPage() {
           action={
             <Link
               to="/eventos/$slug"
-              params={{ slug }}
+              params={{ slug: activeSlug ?? "" }}
               className="inline-flex h-11 items-center border border-graphite px-5 font-display text-xs font-bold uppercase tracking-widest"
             >
               Página do evento
@@ -137,11 +154,12 @@ function EventControlPage() {
         <div className="mt-6 border border-border bg-card p-4">
           <span className="eyebrow">Evento em operação</span>
           <select
-            value={slug}
+            value={activeSlug ?? ""}
             onChange={(e) => setSlug(e.target.value)}
             className="mt-1 h-11 w-full border border-border bg-background px-3 font-display text-sm font-bold outline-none focus:border-graphite"
           >
-            {events.map((e) => (
+            {eventList.length === 0 ? <option value="">Nenhum evento</option> : null}
+            {eventList.map((e) => (
               <option key={e.id} value={e.slug}>
                 {e.name}
               </option>
@@ -175,7 +193,20 @@ function EventControlPage() {
 
         {tab === "Kanban" ? (
           <div className="mt-6 border border-border bg-card p-4">
-            <OpsKanban slug={slug} />
+            {!activeSlug ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">
+                Nenhum evento seu ainda. Crie um evento para operar o kanban.
+              </p>
+            ) : eventConfig.isPending ? (
+              <div className="h-40 animate-pulse border border-border bg-background" aria-busy="true" />
+            ) : (
+              <OpsKanban
+                slug={activeSlug}
+                bestOfSets={eventConfig.data?.best_of_sets ?? 3}
+                pointsPerSet={eventConfig.data?.points_per_set ?? 21}
+                tiebreakPoints={eventConfig.data?.tiebreak_points ?? 15}
+              />
+            )}
           </div>
         ) : null}
 

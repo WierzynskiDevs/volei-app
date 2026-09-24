@@ -1,9 +1,20 @@
-import { Copy, Link2, Plus, Send, Share2, Star } from "lucide-react";
+/**
+ * Juízes do evento, ligado à API real (ADR 0013 §5/§6/§8, S8b).
+ *
+ * O link de convite agora carrega o TOKEN REAL devolvido por
+ * `POST .../referees/{referee}/invite` (antes: `refereeInviteLink()`, id
+ * fabricado no cliente). Ele aponta para `/juiz?convite={token}` — mesmo
+ * formato de URL do mock — mas `/juiz` ainda não lê esse parâmetro nem usa a
+ * sessão por token (ADR 0013 §5) que o backend já emite: essa tela
+ * (juiz abrindo o próprio link) é a próxima fatia, não esta
+ * (docs/DIVERGENCES.md). O que muda aqui é só o convite ser real.
+ */
+
+import { Copy, Link2, Plus, Send, Share2 } from "lucide-react";
 import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { refereeInviteLink, useOperations, type Referee } from "@/lib/operations";
-import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -12,40 +23,54 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ApiError } from "@/lib/api/client";
+import { courtsQuery } from "@/lib/api/courts";
+import { organizerMatchesQuery } from "@/lib/api/matches";
+import { queryKeys } from "@/lib/api/query-keys";
+import { addReferee, inviteReferee, refereesQuery, setRefereeCourt, type ApiReferee } from "@/lib/api/referees";
+import { cn } from "@/lib/utils";
 
-const inviteTone: Record<Referee["invite"], string> = {
-  NAO_ENVIADO: "bg-muted text-muted-foreground",
-  ENVIADO: "bg-warning/20 text-foreground",
-  ACEITO: "bg-success/15 text-success",
+const inviteTone: Record<ApiReferee["invite_status"], string> = {
+  NOT_SENT: "bg-muted text-muted-foreground",
+  SENT: "bg-warning/20 text-foreground",
+  ACCEPTED: "bg-success/15 text-success",
 };
 
-const inviteLabel: Record<Referee["invite"], string> = {
-  NAO_ENVIADO: "Convite não enviado",
-  ENVIADO: "Convite enviado",
-  ACEITO: "Aceito",
-};
+function inviteLink(token: string): string {
+  return `${window.location.origin}/juiz?convite=${encodeURIComponent(token)}`;
+}
+
+function reportError(e: unknown) {
+  if (e instanceof ApiError) toast.error(e.message);
+  else toast.error("Não foi possível concluir a operação. Tente novamente.");
+}
 
 export function InviteRefereeDialog({
+  slug,
   open,
   onOpenChange,
 }: {
+  slug: string;
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
-  const { addReferee, inviteReferee } = useOperations();
+  const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [link, setLink] = useState<string | null>(null);
 
-  function generate() {
-    if (!name.trim() || !phone.trim()) {
-      toast.error("Informe nome e telefone do juiz.");
-      return;
-    }
-    const ref = addReferee(name.trim(), phone.trim());
-    setLink(refereeInviteLink(ref));
-    toast.success("Link de convite gerado");
-  }
+  const generate = useMutation({
+    mutationFn: async () => {
+      const referee = await addReferee(slug, name.trim(), phone.trim());
+      return inviteReferee(slug, referee.id);
+    },
+    onSuccess: (result) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.referees.byEvent(slug) });
+      setLink(inviteLink(result.inviteToken));
+      toast.success("Link de convite gerado");
+    },
+    onError: reportError,
+  });
 
   return (
     <Dialog
@@ -93,7 +118,7 @@ export function InviteRefereeDialog({
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 onClick={() => {
-                  void navigator.clipboard?.writeText(`https://${link}`);
+                  void navigator.clipboard?.writeText(link);
                   toast.success("Link copiado");
                 }}
                 className="inline-flex h-10 items-center gap-2 border border-graphite px-4 font-display text-xs font-bold uppercase tracking-widest"
@@ -118,10 +143,21 @@ export function InviteRefereeDialog({
             Fechar
           </button>
           <button
-            onClick={link ? () => onOpenChange(false) : generate}
-            className="inline-flex h-11 items-center gap-2 bg-accent px-5 font-display text-xs font-bold uppercase tracking-widest text-accent-foreground"
+            onClick={() => {
+              if (link) {
+                onOpenChange(false);
+                return;
+              }
+              if (!name.trim() || !phone.trim()) {
+                toast.error("Informe nome e telefone do juiz.");
+                return;
+              }
+              generate.mutate();
+            }}
+            disabled={generate.isPending}
+            className="inline-flex h-11 items-center gap-2 bg-accent px-5 font-display text-xs font-bold uppercase tracking-widest text-accent-foreground disabled:opacity-60"
           >
-            <Link2 className="h-4 w-4" /> {link ? "Concluir" : "Gerar link"}
+            <Link2 className="h-4 w-4" /> {generate.isPending ? "Gerando…" : link ? "Concluir" : "Gerar link"}
           </button>
         </DialogFooter>
       </DialogContent>
@@ -130,9 +166,32 @@ export function InviteRefereeDialog({
 }
 
 export function RefereesPanel({ slug }: { slug: string }) {
-  const { config, referees, matchesFor, inviteReferee, setRefereeCourt } = useOperations();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const all = matchesFor(slug);
+  const referees = useQuery(refereesQuery(slug));
+  const courts = useQuery(courtsQuery(slug));
+  const matches = useQuery(organizerMatchesQuery(slug));
+
+  const setCourt = useMutation({
+    mutationFn: (args: { refereeId: string; courtId: string | null }) =>
+      setRefereeCourt(slug, args.refereeId, args.courtId),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: queryKeys.referees.byEvent(slug) }),
+    onError: reportError,
+  });
+
+  const resend = useMutation({
+    mutationFn: (refereeId: string) => inviteReferee(slug, refereeId),
+    onSuccess: (result) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.referees.byEvent(slug) });
+      const link = inviteLink(result.inviteToken);
+      void navigator.clipboard?.writeText(link);
+      toast.success("Convite copiado", { description: `${result.referee.name} · link na área de transferência` });
+    },
+    onError: reportError,
+  });
+
+  const courtList = courts.data ?? [];
+  const matchList = matches.data ?? [];
 
   return (
     <div>
@@ -152,8 +211,8 @@ export function RefereesPanel({ slug }: { slug: string }) {
       </div>
 
       <div className="mt-4 divide-y divide-border border border-border bg-card">
-        {referees.map((r) => {
-          const assigned = all.filter((m) => m.refereeId === r.id).length;
+        {(referees.data ?? []).map((r) => {
+          const assigned = matchList.filter((m) => m.referee_id === r.id).length;
           return (
             <div key={r.id} className="flex flex-wrap items-center gap-3 px-4 py-4">
               <div className="min-w-[180px] flex-1">
@@ -161,51 +220,48 @@ export function RefereesPanel({ slug }: { slug: string }) {
                 <p className="score-num text-sm text-muted-foreground">{r.phone}</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {assigned} partida{assigned === 1 ? "" : "s"} atribuída{assigned === 1 ? "" : "s"}
-                  {r.rating ? (
-                    <span className="ml-2 inline-flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-accent text-accent" /> {r.rating.toFixed(1)} arbitragem
-                    </span>
-                  ) : null}
                 </p>
               </div>
               <span
                 className={cn(
                   "px-2 py-1 font-display text-[10px] font-bold uppercase tracking-widest",
-                  inviteTone[r.invite],
+                  inviteTone[r.invite_status],
                 )}
               >
-                {inviteLabel[r.invite]}
+                {r.invite_status_label}
               </span>
               <label className="block">
                 <span className="sr-only">Quadra do juiz</span>
                 <select
-                  value={r.court ?? ""}
-                  onChange={(e) => setRefereeCourt(r.id, e.target.value || null)}
+                  value={r.court_id ?? ""}
+                  onChange={(e) => setCourt.mutate({ refereeId: r.id, courtId: e.target.value || null })}
+                  disabled={setCourt.isPending}
                   className="h-9 border border-border bg-background px-2 font-display text-[11px] font-bold uppercase tracking-widest outline-none"
                 >
                   <option value="">Sem quadra</option>
-                  {config.courts.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
+                  {courtList.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
                     </option>
                   ))}
                 </select>
               </label>
               <button
-                onClick={() => {
-                  inviteReferee(r.id);
-                  toast.success("Convite enviado", { description: `${r.name} · ${r.phone}` });
-                }}
-                className="inline-flex h-9 items-center gap-1.5 border border-border px-3 font-display text-[10px] font-bold uppercase tracking-widest"
+                onClick={() => resend.mutate(r.id)}
+                disabled={resend.isPending}
+                className="inline-flex h-9 items-center gap-1.5 border border-border px-3 font-display text-[10px] font-bold uppercase tracking-widest disabled:opacity-60"
               >
-                <Send className="h-3.5 w-3.5" /> Enviar convite
+                <Send className="h-3.5 w-3.5" /> {r.invite_status === "NOT_SENT" ? "Enviar convite" : "Reenviar convite"}
               </button>
             </div>
           );
         })}
+        {(referees.data ?? []).length === 0 && !referees.isPending ? (
+          <p className="px-4 py-10 text-center text-sm text-muted-foreground">Nenhum juiz cadastrado ainda.</p>
+        ) : null}
       </div>
 
-      <InviteRefereeDialog open={open} onOpenChange={setOpen} />
+      <InviteRefereeDialog slug={slug} open={open} onOpenChange={setOpen} />
     </div>
   );
 }
