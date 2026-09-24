@@ -41,7 +41,7 @@ jobs:
 
       # gerado pelo build (nitro preset cloudflare-module, deployConfig: true)
       - run: npx wrangler deploy
-        working-directory: dist
+        working-directory: .output/server
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
