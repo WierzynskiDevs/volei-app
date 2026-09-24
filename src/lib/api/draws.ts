@@ -1,15 +1,16 @@
 /**
  * Sorteio/chaveamento inicial (ADR 0011).
  *
- * Fala com `/organizer/events/{slug}/bracket*`. Igual a `events.ts`/
- * `registrations.ts`: schema Zod na fronteira, `queryOptions` para leitura,
- * função simples para escrita — a mutação em si fica na rota.
+ * Fala com `/organizer/events/{slug}/bracket*` (organizador, autenticado) e,
+ * mais abaixo, com `/events/{slug}/bracket` (público, ADR 0017/Q15). Igual a
+ * `events.ts`/`registrations.ts`: schema Zod na fronteira, `queryOptions`
+ * para leitura, função simples para escrita — a mutação em si fica na rota.
  */
 
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
-import { apiRequest, type Resource } from "./client";
+import { ApiError, apiRequest, type Resource } from "./client";
 import { queryKeys } from "./query-keys";
 
 const registrationGroupSchema = z.object({
@@ -74,3 +75,48 @@ export async function placeGroupInSlot(
   });
   return bracketSchema.parse(raw.data);
 }
+
+/* ------------------------------------------------------------------ *
+ * Chave pública do evento (ADR 0017, Q15)
+ *
+ * Allowlist deliberadamente mais estrita que a versão do organizador acima:
+ * nunca `members` (lista de nomes completos) nem `eligible_groups` (dado de
+ * trabalho do sorteio). Consumidor: aba "Chaveamento" de `eventos.$slug.tsx`.
+ * ------------------------------------------------------------------ */
+
+const publicRegistrationGroupSchema = z.object({
+  id: z.string(),
+  display_name: z.string(),
+});
+
+const publicSlotSchema = z.object({
+  position: z.number().int(),
+  is_bye: z.boolean(),
+  registration_group: publicRegistrationGroupSchema.nullable(),
+});
+
+const publicBracketSchema = z.object({
+  event_status: z.string(),
+  bracket_size: z.number().int(),
+  slots: z.array(publicSlotSchema),
+});
+
+export type ApiPublicBracket = z.infer<typeof publicBracketSchema>;
+
+async function fetchPublicBracket(slug: string, signal?: AbortSignal): Promise<ApiPublicBracket> {
+  const raw = await apiRequest<Resource<ApiPublicBracket>>(`/events/${encodeURIComponent(slug)}/bracket`, {
+    signal,
+  });
+  return publicBracketSchema.parse(raw.data);
+}
+
+/**
+ * 404 antes de `BRACKET_PUBLISHED` é esperado (chave em rascunho, ADR 0011
+ * §7) — não vale gastar 3 tentativas nele, só nos erros de fato inesperados.
+ */
+export const publicBracketQuery = (slug: string) =>
+  queryOptions({
+    queryKey: queryKeys.publicBracket.detail(slug),
+    queryFn: ({ signal }) => fetchPublicBracket(slug, signal),
+    retry: (failureCount, error) => !(error instanceof ApiError && error.status === 404) && failureCount < 2,
+  });

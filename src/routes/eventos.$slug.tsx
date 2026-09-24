@@ -1,16 +1,21 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Calendar, MapPin, Pencil, Share2, Trophy, UserPlus, Users } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { BracketTree } from "@/components/site/bracket-tree";
 import { AppShell } from "@/components/site/shell";
-import { EventStatusPill, MatchCard, SponsorBanner, Tag } from "@/components/site/cards";
+import { EmptyState, EventStatusPill, MatchCard, SponsorBanner, Tag } from "@/components/site/cards";
 import { RefereesPanel } from "@/components/site/ops-referees";
 import { ApiError } from "@/lib/api/client";
+import { publicBracketQuery } from "@/lib/api/draws";
 import { eventBySlugQuery } from "@/lib/api/events";
+import { publicMatchesQuery } from "@/lib/api/matches";
+import { publishedBracketRounds } from "@/lib/bracket";
 import { buildStandings, useOperations } from "@/lib/operations";
 import { useSession } from "@/lib/session";
-import { goldBracket, matches, pools, teams } from "@/lib/mock-data";
+import { pools, teams } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/eventos/$slug")({
@@ -20,8 +25,11 @@ export const Route = createFileRoute("/eventos/$slug")({
    * por link, e meta tag preenchida só depois da hidratação não serve para
    * prévia de link nem para busca.
    *
-   * As abas Duplas/Chave/Agenda/Classificação/Resultados continuam lendo mock:
-   * são o motor de competição, que é Fase 2 (docs/PHASE-2.md).
+   * Chaveamento/Agenda/Resultados já consomem a API real (ADR 0017, Q15):
+   * cada aba busca por conta própria via `useQuery`, não pelo loader, porque
+   * um 404 (chave ainda não publicada) é estado normal de tela, não erro de
+   * navegação. Duplas/Tabela continuam em mock: fase de grupos e avanço de
+   * chave são motor de competição, Fase 2 (docs/PHASE-2.md).
    */
   loader: async ({ params, context }) => {
     try {
@@ -167,10 +175,10 @@ function EventPage() {
         {tab === "Juízes" ? <RefereesPanel slug={event.slug} /> : null}
         {tab === "Informações" ? <InfoTab rules={event.rules} organizer={event.organizer} courts={event.courts} /> : null}
         {tab === "Duplas" ? <TeamsTab slug={event.slug} canEdit={isOrganizer} /> : null}
-        {tab === "Chaveamento" ? <BracketTab /> : null}
-        {tab === "Agenda" ? <ScheduleTab /> : null}
+        {tab === "Chaveamento" ? <BracketTab slug={event.slug} /> : null}
+        {tab === "Agenda" ? <ScheduleTab slug={event.slug} /> : null}
         {tab === "Tabela" ? <StandingsTab slug={event.slug} /> : null}
-        {tab === "Resultados" ? <ResultsTab /> : null}
+        {tab === "Resultados" ? <ResultsTab slug={event.slug} /> : null}
         <SponsorBanner label="Patrocinador do evento" />
       </div>
     </AppShell>
@@ -309,119 +317,109 @@ function TeamsTab({ slug, canEdit }: { slug: string; canEdit: boolean }) {
   );
 }
 
-const destinationTone: Record<string, string> = {
-  OURO: "bg-accent text-accent-foreground",
-  PRATA: "bg-graphite text-background",
-  ELIMINADO: "bg-muted text-muted-foreground",
-};
+/**
+ * Chaveamento público (ADR 0017, Q15). Substitui, de propósito, a fase de
+ * grupos + chave Gold/Silver do baseline: aquela marcação ilustrava um motor
+ * de pools e avanço de chave que nunca existiu no backend (é Fase 2,
+ * `docs/PHASE-2.md`) — mostrar dado fabricado ao lado da chave real seria
+ * pior do que não mostrar. `BracketTree` é o mesmo componente já aprovado
+ * para a tela de sorteio do organizador: 1ª rodada real, demais "a definir",
+ * sem placar (o placar mora na aba "Resultados"). Divergência registrada em
+ * `docs/DIVERGENCES.md` §32.
+ */
+function BracketTab({ slug }: { slug: string }) {
+  const bracket = useQuery(publicBracketQuery(slug));
+  const rounds = useMemo(
+    () => (bracket.data ? publishedBracketRounds(bracket.data.slots, bracket.data.bracket_size) : []),
+    [bracket.data],
+  );
 
-function BracketTab() {
-  const destinations = ["OURO", "PRATA", "PRATA", "ELIMINADO"];
+  if (bracket.isPending) {
+    return <div className="h-40 animate-pulse border border-border bg-card" aria-busy="true" />;
+  }
+
+  if (bracket.isError) {
+    const notPublished = bracket.error instanceof ApiError && bracket.error.status === 404;
+    return (
+      <EmptyState
+        title={notPublished ? "Chave ainda não publicada" : "Não foi possível carregar a chave"}
+        description={
+          notPublished
+            ? "O organizador ainda não sorteou ou publicou a chave deste evento."
+            : bracket.error.message
+        }
+      />
+    );
+  }
+
   return (
     <div>
-      <h2 className="text-xl">Fase de grupos</h2>
-      <p className="text-sm text-muted-foreground">
-        Cada grupo define quem segue para a chave Ouro, para a Prata ou encerra a participação.
+      <div className="flex flex-wrap items-center gap-3">
+        <h2 className="text-xl">Chave eliminatória</h2>
+        <span className="eyebrow">{bracket.data.bracket_size} posições · eliminação simples</span>
+      </div>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Avanço de rodada e placar ainda não estão disponíveis nesta fase — acompanhe os resultados na aba
+        "Resultados".
       </p>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {pools.map((pool) => (
-          <div key={pool.name} className="border border-border bg-card">
-            <p className="border-b border-border bg-sand px-4 py-2 font-display text-xs font-bold uppercase tracking-widest">
-              {pool.name}
-            </p>
-            <ul className="divide-y divide-border">
-              {pool.standings.map((s, i) => (
-                <li key={s.team} className="flex items-center gap-3 px-4 py-2.5">
-                  <span className="score-num w-6 text-muted-foreground">{i + 1}º</span>
-                  <span className="flex-1 truncate font-display text-sm font-bold">{s.team}</span>
-                  <span
-                    className={cn(
-                      "px-2 py-0.5 font-display text-[10px] font-bold uppercase tracking-widest",
-                      destinationTone[destinations[i] ?? "ELIMINADO"],
-                    )}
-                  >
-                    {destinations[i]}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-8 flex items-center gap-3">
-        <h2 className="text-xl">Chave Gold</h2>
-        <span className="eyebrow">8 duplas · eliminação simples</span>
-      </div>
-      <div className="mt-5 grid gap-6 overflow-x-auto md:grid-cols-3">
-        {goldBracket.map((round) => (
-          <div key={round.round} className="min-w-[240px] space-y-4">
-            <p className="eyebrow">{round.round}</p>
-            {round.matches.map((m, i) => (
-              <div key={i} className="border border-border bg-card">
-                {(["a", "b"] as const).map((side) => (
-                  <div
-                    key={side}
-                    className={cn(
-                      "flex items-center justify-between border-b border-border px-3 py-2.5 last:border-b-0",
-                      m.winner === side && "bg-sand",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "font-display text-sm font-bold",
-                        m.winner && m.winner !== side ? "text-muted-foreground" : "",
-                      )}
-                    >
-                      {side === "a" ? m.a : m.b}
-                    </span>
-                    <span className="score-num">{side === "a" ? (m.scoreA ?? "–") : (m.scoreB ?? "–")}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="mt-8 border border-dashed border-border bg-card p-5">
-        <p className="eyebrow">Chave Silver</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          As 8 duplas eliminadas na fase de grupos seguem jogando na chave Silver — publicada assim que a Gold chegar
-          às semifinais.
-        </p>
+      <div className="mt-5">
+        <BracketTree rounds={rounds} />
       </div>
     </div>
   );
 }
 
-function ScheduleTab() {
-  const byCourt = ["Quadra 1", "Quadra 2", "Quadra 3", "Quadra 4"];
+function ScheduleTab({ slug }: { slug: string }) {
+  const matchesQuery = useQuery(publicMatchesQuery(slug));
+
+  if (matchesQuery.isPending) {
+    return <div className="mt-4 h-40 animate-pulse border border-border bg-card" aria-busy="true" />;
+  }
+
+  if (matchesQuery.isError) {
+    const notPublished = matchesQuery.error instanceof ApiError && matchesQuery.error.status === 404;
+    return (
+      <EmptyState
+        title={notPublished ? "Agenda ainda não disponível" : "Não foi possível carregar a agenda"}
+        description={
+          notPublished
+            ? "A agenda aparece assim que o organizador publicar a chave."
+            : matchesQuery.error.message
+        }
+      />
+    );
+  }
+
+  const items = matchesQuery.data;
+  const courts = [...new Set(items.map((m) => m.court))];
+
   return (
     <div>
       <h2 className="text-xl">Agenda</h2>
-      <div className="mt-4 grid gap-4 md:grid-cols-4">
-        {byCourt.map((court) => (
-          <div key={court} className="border border-border bg-card">
-            <p className="border-b border-border bg-sand px-3 py-2 font-display text-xs font-bold uppercase tracking-widest">
-              {court}
-            </p>
-            <div className="divide-y divide-border">
-              {matches
-                .filter((m) => m.court === court)
-                .map((m) => (
-                  <div key={m.id} className="px-3 py-3">
-                    <p className="score-num text-sm">{m.time}</p>
-                    <p className="text-sm font-semibold">{m.teamA}</p>
-                    <p className="text-sm text-muted-foreground">vs {m.teamB}</p>
-                  </div>
-                ))}
-              {matches.filter((m) => m.court === court).length === 0 ? (
-                <p className="px-3 py-6 text-center text-xs text-muted-foreground">Sem partidas</p>
-              ) : null}
+      {courts.length === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">Nenhuma partida agendada ainda.</p>
+      ) : (
+        <div className="mt-4 grid gap-4 md:grid-cols-4">
+          {courts.map((court) => (
+            <div key={court} className="border border-border bg-card">
+              <p className="border-b border-border bg-sand px-3 py-2 font-display text-xs font-bold uppercase tracking-widest">
+                {court}
+              </p>
+              <div className="divide-y divide-border">
+                {items
+                  .filter((m) => m.court === court)
+                  .map((m) => (
+                    <div key={m.id} className="px-3 py-3">
+                      <p className="score-num text-sm">{m.time}</p>
+                      <p className="text-sm font-semibold">{m.teamA}</p>
+                      <p className="text-sm text-muted-foreground">vs {m.teamB}</p>
+                    </div>
+                  ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -514,15 +512,41 @@ function StandingsTab({ slug }: { slug: string }) {
   );
 }
 
-function ResultsTab() {
+function ResultsTab({ slug }: { slug: string }) {
+  const matchesQuery = useQuery(publicMatchesQuery(slug));
+
+  if (matchesQuery.isPending) {
+    return <div className="mt-4 h-40 animate-pulse border border-border bg-card" aria-busy="true" />;
+  }
+
+  if (matchesQuery.isError) {
+    const notPublished = matchesQuery.error instanceof ApiError && matchesQuery.error.status === 404;
+    return (
+      <EmptyState
+        title={notPublished ? "Resultados ainda não disponíveis" : "Não foi possível carregar os resultados"}
+        description={
+          notPublished
+            ? "Os resultados aparecem assim que o organizador publicar a chave e iniciar as partidas."
+            : matchesQuery.error.message
+        }
+      />
+    );
+  }
+
+  const items = matchesQuery.data;
+
   return (
     <div>
       <h2 className="text-xl">Resultados</h2>
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        {matches.map((m) => (
-          <MatchCard key={m.id} match={m} highlight={m.status === "IN_PROGRESS"} />
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">Nenhuma partida iniciada ainda.</p>
+      ) : (
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          {items.map((m) => (
+            <MatchCard key={m.id} match={m} highlight={m.status === "IN_PROGRESS"} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -3,11 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
-import {
-  BracketTree,
-  type BracketTreeRound,
-  type BracketTreeSide,
-} from "@/components/site/bracket-tree";
+import { BracketTree } from "@/components/site/bracket-tree";
 import { EmptyState } from "@/components/site/cards";
 import { AppShell, PageHeader } from "@/components/site/shell";
 import { ApiError } from "@/lib/api/client";
@@ -17,11 +13,10 @@ import {
   publishBracket,
   randomizeDraw,
   startDraw,
-  type ApiBracketSlot,
 } from "@/lib/api/draws";
 import { organizerEventBySlugQuery } from "@/lib/api/events";
 import { queryKeys } from "@/lib/api/query-keys";
-import { roundLabels, roundsFor } from "@/lib/bracket";
+import { publishedBracketRounds } from "@/lib/bracket";
 
 /**
  * Sorteio/chaveamento inicial (ADR 0011) — não existe no baseline
@@ -46,13 +41,6 @@ export const Route = createFileRoute("/organizador/sorteio/$slug")({
   }),
   component: DrawPage,
 });
-
-function sideFor(slot: ApiBracketSlot | undefined): BracketTreeSide {
-  if (!slot) return { label: "—", empty: true };
-  if (slot.is_bye) return { label: "Bye", empty: true };
-  if (!slot.registration_group) return { label: "—", empty: true };
-  return { label: slot.registration_group.display_name };
-}
 
 function DrawPage() {
   const { slug } = Route.useParams();
@@ -100,31 +88,10 @@ function DrawPage() {
     onError: reportError,
   });
 
-  const publishedRounds = useMemo<BracketTreeRound[]>(() => {
-    if (!data) return [];
-
-    const totalRounds = roundsFor(data.bracket_size);
-    const labels = roundLabels(totalRounds);
-
-    return labels.map((label, roundIndex) => {
-      if (roundIndex > 0) {
-        const matchesInRound = data.bracket_size / 2 ** (roundIndex + 1);
-        return {
-          label,
-          matches: Array.from({ length: matchesInRound }, () => ({
-            a: { label: "A definir", empty: true },
-            b: { label: "A definir", empty: true },
-          })),
-        };
-      }
-
-      const matches = [];
-      for (let i = 0; i < data.slots.length; i += 2) {
-        matches.push({ a: sideFor(data.slots[i]), b: sideFor(data.slots[i + 1]) });
-      }
-      return { label, matches };
-    });
-  }, [data]);
+  const publishedRounds = useMemo(
+    () => (data ? publishedBracketRounds(data.slots, data.bracket_size) : []),
+    [data],
+  );
 
   const ev = eventQuery.data;
   const status = data?.event_status;

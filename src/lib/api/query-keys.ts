@@ -66,6 +66,44 @@ export const queryKeys = {
     detail: (slug: string) => [...queryKeys.draws.all, "detail", slug] as const,
   },
 
+  /**
+   * Chave pública do evento (ADR 0017, Q15). Chave própria, separada de
+   * `draws` (organizador, autenticado): mesmo domínio, payload e allowlist
+   * diferentes — nunca podem compartilhar entrada de cache.
+   */
+  publicBracket: {
+    all: ["publicBracket"] as const,
+    detail: (slug: string) => [...queryKeys.publicBracket.all, "detail", slug] as const,
+  },
+
+  /** Partidas públicas do evento (ADR 0017, Q15). */
+  publicMatches: {
+    all: ["publicMatches"] as const,
+    byEvent: (slug: string) => [...queryKeys.publicMatches.all, "event", slug] as const,
+  },
+
+  /** Quadras do evento — organizador (ADR 0013 §2/§8, S8a). */
+  courts: {
+    all: ["courts"] as const,
+    byEvent: (slug: string) => [...queryKeys.courts.all, "event", slug] as const,
+  },
+
+  /** Juízes do evento — organizador (ADR 0013 §5/§6/§8, S8b). */
+  referees: {
+    all: ["referees"] as const,
+    byEvent: (slug: string) => [...queryKeys.referees.all, "event", slug] as const,
+  },
+
+  /**
+   * Partidas do evento — organizador (ADR 0013 §4/§8, S9). Chave própria,
+   * separada de `publicMatches`: mesmo domínio, payload e allowlist
+   * diferentes (esta inclui juiz e ids internos).
+   */
+  organizerMatches: {
+    all: ["organizerMatches"] as const,
+    byEvent: (slug: string) => [...queryKeys.organizerMatches.all, "event", slug] as const,
+  },
+
   /*
    * Painel administrativo (ADR 0010). Fica sob uma raiz própria para que
    * `["admin"]` invalide o painel inteiro — que é o que uma suspensão de conta

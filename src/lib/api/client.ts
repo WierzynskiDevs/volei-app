@@ -231,3 +231,6 @@ export type Paginated<T> = {
 
 /** Resposta de recurso único. */
 export type Resource<T> = { data: T };
+
+/** Resposta de coleção sem paginação (`Resource::collection` simples). */
+export type ResourceCollection<T> = { data: T[] };
