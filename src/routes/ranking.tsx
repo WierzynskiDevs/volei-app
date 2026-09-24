@@ -16,7 +16,10 @@ export const Route = createFileRoute("/ranking")({
           "Ranking nacional de vôlei de areia: pontos de performance conquistados em quadra e reputação avaliada pela comunidade.",
       },
       { property: "og:title", content: "Ranking de performance e reputação · BeacHub" },
-      { property: "og:description", content: "Duas métricas independentes: resultado competitivo e reputação." },
+      {
+        property: "og:description",
+        content: "Duas métricas independentes: resultado competitivo e reputação.",
+      },
     ],
   }),
   component: RankingPage,
@@ -33,7 +36,9 @@ function RankingPage() {
       context === "Masculino" ? p.gender === "M" : context === "Feminino" ? p.gender === "F" : true,
     )
     .sort((a, b) =>
-      mode === "performance" ? b.performancePoints - a.performancePoints : b.reputation - a.reputation,
+      mode === "performance"
+        ? b.performancePoints - a.performancePoints
+        : b.reputation - a.reputation,
     );
 
   return (
@@ -72,7 +77,9 @@ function RankingPage() {
               onClick={() => setContext(c)}
               className={cn(
                 "border px-3 py-1.5 font-display text-xs font-bold uppercase tracking-widest",
-                context === c ? "border-graphite bg-graphite text-background" : "border-border bg-card text-muted-foreground",
+                context === c
+                  ? "border-graphite bg-graphite text-background"
+                  : "border-border bg-card text-muted-foreground",
               )}
             >
               {c}
@@ -112,8 +119,8 @@ function RankingPage() {
         </ul>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Ranking de performance versão 1: vitória +2, derrota −1, derrota na final 0, vice +1, campeão +4. Cada ponto
-          possui uma transação auditável vinculada à partida.
+          Ranking de performance versão 1: vitória +2, derrota −1, derrota na final 0, vice +1,
+          campeão +4. Cada ponto possui uma transação auditável vinculada à partida.
         </p>
       </div>
     </AppShell>

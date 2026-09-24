@@ -18,7 +18,10 @@ export const Route = createFileRoute("/eventos/")({
           "Busque campeonatos de vôlei de areia por cidade, categoria, nível e formato. Inscrições abertas em todo o Brasil.",
       },
       { property: "og:title", content: "Campeonatos de vôlei de areia · BeacHub" },
-      { property: "og:description", content: "Encontre torneios 2x2, americanos, blind draw e ligas perto de você." },
+      {
+        property: "og:description",
+        content: "Encontre torneios 2x2, americanos, blind draw e ligas perto de você.",
+      },
     ],
   }),
   component: EventsPage,
@@ -146,7 +149,9 @@ function Chip({
       onClick={onClick}
       className={cn(
         "border px-3 py-1.5 font-display text-xs font-bold uppercase tracking-widest transition-colors",
-        active ? "border-graphite bg-graphite text-background" : "border-border bg-card text-muted-foreground",
+        active
+          ? "border-graphite bg-graphite text-background"
+          : "border-border bg-card text-muted-foreground",
       )}
     >
       {children}

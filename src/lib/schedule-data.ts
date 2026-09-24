@@ -293,7 +293,9 @@ export function estimatedStartMap(now: string = NOW) {
 
     let cursor = nowMin;
     if (live) {
-      const base = live.actualStartAt ? toMinutes(live.actualStartAt) : toMinutes(live.scheduledStartAt);
+      const base = live.actualStartAt
+        ? toMinutes(live.actualStartAt)
+        : toMinutes(live.scheduledStartAt);
       const dur = observedDuration(court) ?? live.estimatedDurationMin;
       cursor = Math.max(nowMin + 5, base + dur);
     }

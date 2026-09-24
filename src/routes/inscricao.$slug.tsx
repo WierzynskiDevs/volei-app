@@ -39,7 +39,12 @@ export const Route = createFileRoute("/inscricao/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Inscrição indisponível · BeacHub" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Inscrição indisponível · BeacHub" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     const title = `Inscrição — ${loaderData.event.name} · BeacHub`;
     const description = `Inscreva sua dupla no ${loaderData.event.name}, ${loaderData.event.dateLabel}, em ${loaderData.event.city}/${loaderData.event.state}.`;
@@ -65,7 +70,10 @@ export const Route = createFileRoute("/inscricao/$slug")({
     <AppShell>
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="text-2xl">Evento não encontrado</h1>
-        <Link to="/eventos" className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent">
+        <Link
+          to="/eventos"
+          className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent"
+        >
           Ver campeonatos
         </Link>
       </div>
@@ -149,7 +157,11 @@ function RegistrationPage() {
   return (
     <AppShell>
       <div className="mx-auto max-w-2xl px-4 py-8">
-        <Link to="/eventos/$slug" params={{ slug: event.slug }} className="eyebrow hover:text-foreground">
+        <Link
+          to="/eventos/$slug"
+          params={{ slug: event.slug }}
+          className="eyebrow hover:text-foreground"
+        >
           ← {event.name}
         </Link>
         <h1 className="mt-3 text-3xl">Inscrição</h1>
@@ -163,11 +175,12 @@ function RegistrationPage() {
               <AlertTriangle className="h-4 w-4" /> Atenção
             </p>
             <p className="mt-1 text-sm">
-              Seu nível está acima da categoria selecionada. Sua inscrição poderá ser analisada pelo organizador.
+              Seu nível está acima da categoria selecionada. Sua inscrição poderá ser analisada pelo
+              organizador.
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Seu nível: {currentPlayer.level} · categoria do evento: {event.level}. A inscrição segue normalmente —
-              nada é bloqueado automaticamente.
+              Seu nível: {currentPlayer.level} · categoria do evento: {event.level}. A inscrição
+              segue normalmente — nada é bloqueado automaticamente.
             </p>
           </div>
         ) : null}
@@ -198,9 +211,21 @@ function RegistrationPage() {
             <div className="mt-8 grid gap-3">
               {(
                 [
-                  { key: "parceiro", title: "Já tenho parceiro", desc: "Convide alguém que já está na plataforma." },
-                  { key: "buscar", title: "Encontrar parceiro", desc: "Entre na lista de quem procura dupla." },
-                  { key: "individual", title: "Participar individualmente", desc: "Sorteio ou formato rotativo." },
+                  {
+                    key: "parceiro",
+                    title: "Já tenho parceiro",
+                    desc: "Convide alguém que já está na plataforma.",
+                  },
+                  {
+                    key: "buscar",
+                    title: "Encontrar parceiro",
+                    desc: "Entre na lista de quem procura dupla.",
+                  },
+                  {
+                    key: "individual",
+                    title: "Participar individualmente",
+                    desc: "Sorteio ou formato rotativo.",
+                  },
                 ] as const
               ).map((opt) => (
                 <button
@@ -249,7 +274,9 @@ function RegistrationPage() {
                         onClick={() => setInvited(p.id)}
                         className={cn(
                           "flex h-9 items-center gap-1.5 px-3 font-display text-[10px] font-bold uppercase tracking-widest",
-                          invited === p.id ? "bg-accent text-accent-foreground" : "border border-border",
+                          invited === p.id
+                            ? "bg-accent text-accent-foreground"
+                            : "border border-border",
                         )}
                       >
                         <UserPlus className="h-3.5 w-3.5" />
@@ -272,8 +299,8 @@ function RegistrationPage() {
             ) : null}
 
             <div className="mt-6 border border-border bg-sand p-4 text-sm text-muted-foreground">
-              Ao se inscrever você aceita o regulamento v1.0 e a política de privacidade v2.0. Seu telefone e e-mail
-              nunca aparecem publicamente.
+              Ao se inscrever você aceita o regulamento v1.0 e a política de privacidade v2.0. Seu
+              telefone e e-mail nunca aparecem publicamente.
             </div>
 
             {error ? (

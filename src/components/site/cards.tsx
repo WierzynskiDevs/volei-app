@@ -3,7 +3,13 @@ import { MapPin, Star, Users } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { EVENT_STATUS_LABEL, type EventItem, type EventStatus, type Match, type Player } from "@/lib/mock-data";
+import {
+  EVENT_STATUS_LABEL,
+  type EventItem,
+  type EventStatus,
+  type Match,
+  type Player,
+} from "@/lib/mock-data";
 
 const statusTone: Record<EventStatus, string> = {
   RASCUNHO: "bg-muted text-muted-foreground",
@@ -25,7 +31,9 @@ export function EventStatusPill({ status }: { status: EventStatus }) {
         statusTone[status],
       )}
     >
-      {status === "EM_ANDAMENTO" ? <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-success" /> : null}
+      {status === "EM_ANDAMENTO" ? (
+        <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-success" />
+      ) : null}
       {EVENT_STATUS_LABEL[status]}
     </span>
   );
@@ -68,7 +76,9 @@ export function EventCard({ event }: { event: EventItem }) {
               {event.maxTeams === null ? "duplas · sem limite" : `/ ${event.maxTeams} duplas`}
             </span>
           </span>
-          <span className="font-display text-xs font-bold uppercase tracking-widest text-accent">Ver evento</span>
+          <span className="font-display text-xs font-bold uppercase tracking-widest text-accent">
+            Ver evento
+          </span>
         </div>
       </div>
     </Link>
@@ -77,11 +87,19 @@ export function EventCard({ event }: { event: EventItem }) {
 
 export function Tag({ children }: { children: ReactNode }) {
   return (
-    <span className="border border-border px-2 py-0.5 text-xs font-semibold text-muted-foreground">{children}</span>
+    <span className="border border-border px-2 py-0.5 text-xs font-semibold text-muted-foreground">
+      {children}
+    </span>
   );
 }
 
-export function PlayerAvatar({ initials, size = "md" }: { initials: string; size?: "sm" | "md" | "lg" }) {
+export function PlayerAvatar({
+  initials,
+  size = "md",
+}: {
+  initials: string;
+  size?: "sm" | "md" | "lg";
+}) {
   return (
     <span
       className={cn(
@@ -150,12 +168,7 @@ export function PlayerCard({ player, action }: { player: Player; action?: ReactN
 export function MatchCard({ match, highlight = false }: { match: Match; highlight?: boolean }) {
   const live = match.status === "IN_PROGRESS";
   return (
-    <div
-      className={cn(
-        "border bg-card",
-        highlight ? "border-accent" : "border-border",
-      )}
-    >
+    <div className={cn("border bg-card", highlight ? "border-accent" : "border-border")}>
       <div className="flex items-center justify-between border-b border-border px-4 py-2">
         <span className="eyebrow">{match.phase}</span>
         <span className="flex items-center gap-2 font-display text-xs font-bold uppercase tracking-widest">

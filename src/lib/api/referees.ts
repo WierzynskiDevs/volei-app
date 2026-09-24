@@ -69,9 +69,12 @@ export async function setRefereeCourt(
   refereeId: string,
   courtId: string | null,
 ): Promise<ApiReferee> {
-  const raw = await apiRequest<Resource<unknown>>(refereesPath(slug, `/${encodeURIComponent(refereeId)}`), {
-    method: "PATCH",
-    body: { court_id: courtId },
-  });
+  const raw = await apiRequest<Resource<unknown>>(
+    refereesPath(slug, `/${encodeURIComponent(refereeId)}`),
+    {
+      method: "PATCH",
+      body: { court_id: courtId },
+    },
+  );
   return refereeSchema.parse(raw.data);
 }

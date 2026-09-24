@@ -16,7 +16,8 @@ export const Route = createFileRoute("/ao-vivo")({
       { property: "og:title", content: "Ao vivo — painel de partidas · BeacHub" },
       {
         property: "og:description",
-        content: "Quem está jogando, em qual quadra, o resultado de cada set e a previsão dos próximos jogos.",
+        content:
+          "Quem está jogando, em qual quadra, o resultado de cada set e a previsão dos próximos jogos.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,14 +34,21 @@ function LivePanelPage() {
     <AppShell>
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <PageHeader eyebrow="Copa Areia Curitiba · Arena Norte Beach" title="Painel de partidas" />
-          <Link to="/placar" className="font-display text-xs font-bold uppercase tracking-widest text-accent">
+          <PageHeader
+            eyebrow="Copa Areia Curitiba · Arena Norte Beach"
+            title="Painel de partidas"
+          />
+          <Link
+            to="/placar"
+            className="font-display text-xs font-bold uppercase tracking-widest text-accent"
+          >
             Abrir modo telão →
           </Link>
         </div>
 
         <p className="mt-4 text-sm text-muted-foreground">
-          O placar não é ponto a ponto: cada set aparece aqui quando o responsável registra o resultado oficial.
+          O placar não é ponto a ponto: cada set aparece aqui quando o responsável registra o
+          resultado oficial.
         </p>
 
         <div className="mt-6 flex items-center justify-between border-b border-border pb-3">

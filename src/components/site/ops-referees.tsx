@@ -27,7 +27,13 @@ import { ApiError } from "@/lib/api/client";
 import { courtsQuery } from "@/lib/api/courts";
 import { organizerMatchesQuery } from "@/lib/api/matches";
 import { queryKeys } from "@/lib/api/query-keys";
-import { addReferee, inviteReferee, refereesQuery, setRefereeCourt, type ApiReferee } from "@/lib/api/referees";
+import {
+  addReferee,
+  inviteReferee,
+  refereesQuery,
+  setRefereeCourt,
+  type ApiReferee,
+} from "@/lib/api/referees";
 import { cn } from "@/lib/utils";
 
 const inviteTone: Record<ApiReferee["invite_status"], string> = {
@@ -157,7 +163,8 @@ export function InviteRefereeDialog({
             disabled={generate.isPending}
             className="inline-flex h-11 items-center gap-2 bg-accent px-5 font-display text-xs font-bold uppercase tracking-widest text-accent-foreground disabled:opacity-60"
           >
-            <Link2 className="h-4 w-4" /> {generate.isPending ? "Gerando…" : link ? "Concluir" : "Gerar link"}
+            <Link2 className="h-4 w-4" />{" "}
+            {generate.isPending ? "Gerando…" : link ? "Concluir" : "Gerar link"}
           </button>
         </DialogFooter>
       </DialogContent>
@@ -175,7 +182,8 @@ export function RefereesPanel({ slug }: { slug: string }) {
   const setCourt = useMutation({
     mutationFn: (args: { refereeId: string; courtId: string | null }) =>
       setRefereeCourt(slug, args.refereeId, args.courtId),
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: queryKeys.referees.byEvent(slug) }),
+    onSuccess: () =>
+      void queryClient.invalidateQueries({ queryKey: queryKeys.referees.byEvent(slug) }),
     onError: reportError,
   });
 
@@ -185,7 +193,9 @@ export function RefereesPanel({ slug }: { slug: string }) {
       void queryClient.invalidateQueries({ queryKey: queryKeys.referees.byEvent(slug) });
       const link = inviteLink(result.inviteToken);
       void navigator.clipboard?.writeText(link);
-      toast.success("Convite copiado", { description: `${result.referee.name} · link na área de transferência` });
+      toast.success("Convite copiado", {
+        description: `${result.referee.name} · link na área de transferência`,
+      });
     },
     onError: reportError,
   });
@@ -234,7 +244,9 @@ export function RefereesPanel({ slug }: { slug: string }) {
                 <span className="sr-only">Quadra do juiz</span>
                 <select
                   value={r.court_id ?? ""}
-                  onChange={(e) => setCourt.mutate({ refereeId: r.id, courtId: e.target.value || null })}
+                  onChange={(e) =>
+                    setCourt.mutate({ refereeId: r.id, courtId: e.target.value || null })
+                  }
                   disabled={setCourt.isPending}
                   className="h-9 border border-border bg-background px-2 font-display text-[11px] font-bold uppercase tracking-widest outline-none"
                 >
@@ -251,13 +263,16 @@ export function RefereesPanel({ slug }: { slug: string }) {
                 disabled={resend.isPending}
                 className="inline-flex h-9 items-center gap-1.5 border border-border px-3 font-display text-[10px] font-bold uppercase tracking-widest disabled:opacity-60"
               >
-                <Send className="h-3.5 w-3.5" /> {r.invite_status === "NOT_SENT" ? "Enviar convite" : "Reenviar convite"}
+                <Send className="h-3.5 w-3.5" />{" "}
+                {r.invite_status === "NOT_SENT" ? "Enviar convite" : "Reenviar convite"}
               </button>
             </div>
           );
         })}
         {(referees.data ?? []).length === 0 && !referees.isPending ? (
-          <p className="px-4 py-10 text-center text-sm text-muted-foreground">Nenhum juiz cadastrado ainda.</p>
+          <p className="px-4 py-10 text-center text-sm text-muted-foreground">
+            Nenhum juiz cadastrado ainda.
+          </p>
         ) : null}
       </div>
 

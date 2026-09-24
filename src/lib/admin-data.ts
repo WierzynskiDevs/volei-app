@@ -226,12 +226,7 @@ export function adsFor(position: AdPosition) {
 
 export type ReportTarget = "ORGANIZADOR" | "PARTICIPANTE" | "ARENA" | "EVENTO";
 export type ReportStatus =
-  | "PENDENTE"
-  | "EM_ANALISE"
-  | "SOLICITACAO_INFO"
-  | "RESOLVIDA"
-  | "IMPROCEDENTE"
-  | "ARQUIVADA";
+  "PENDENTE" | "EM_ANALISE" | "SOLICITACAO_INFO" | "RESOLVIDA" | "IMPROCEDENTE" | "ARQUIVADA";
 
 export const REPORT_STATUS_LABEL: Record<ReportStatus, string> = {
   PENDENTE: "Pendente",
@@ -263,7 +258,12 @@ export const REPORT_REASONS: Record<ReportTarget, string[]> = {
     "Cobrança indevida",
     "Condições diferentes das anunciadas",
   ],
-  EVENTO: ["Informações falsas", "Cancelamento sem aviso", "Premiação não entregue", "Regulamento não cumprido"],
+  EVENTO: [
+    "Informações falsas",
+    "Cancelamento sem aviso",
+    "Premiação não entregue",
+    "Regulamento não cumprido",
+  ],
 };
 
 export type Report = {
@@ -311,7 +311,8 @@ export const reports: Report[] = [
     reporter: "Player 03 · Marina Costa",
     event: "Circuito Litoral — Etapa 3",
     reason: "Agressão verbal",
-    description: "Ofensas à dupla adversária após a partida das quartas de final, presenciadas pelo árbitro.",
+    description:
+      "Ofensas à dupla adversária após a partida das quartas de final, presenciadas pelo árbitro.",
     date: "02/08/2026",
     status: "PENDENTE",
     priority: "Alta",

@@ -4,14 +4,24 @@ import { useQuery } from "@tanstack/react-query";
 import { AdminPageHeader, AdminShell, StatusPill } from "@/components/site/admin-shell";
 import { formatDateTime } from "@/components/site/admin-async";
 import { Stat } from "@/components/site/cards";
-import { adCampaigns, eventFeedbacks, feedbackAverage, partnerVenues, reports } from "@/lib/admin-data";
+import {
+  adCampaigns,
+  eventFeedbacks,
+  feedbackAverage,
+  partnerVenues,
+  reports,
+} from "@/lib/admin-data";
 import { adminAuditLogsQuery, adminOverviewQuery } from "@/lib/api/admin";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
       { title: "Dashboard global · Super Admin BeacHub" },
-      { name: "description", content: "Indicadores de usuários, eventos, arenas parceiras, denúncias e publicidade da plataforma BeacHub." },
+      {
+        name: "description",
+        content:
+          "Indicadores de usuários, eventos, arenas parceiras, denúncias e publicidade da plataforma BeacHub.",
+      },
       { property: "og:title", content: "Dashboard global · Super Admin BeacHub" },
       { property: "og:description", content: "Controle global da plataforma de vôlei de areia." },
     ],
@@ -28,7 +38,9 @@ function AdminDashboard() {
   const { data, isPending } = useQuery(adminOverviewQuery());
   const audit = useQuery(adminAuditLogsQuery());
 
-  const openReports = reports.filter((r) => ["PENDENTE", "EM_ANALISE", "SOLICITACAO_INFO"].includes(r.status)).length;
+  const openReports = reports.filter((r) =>
+    ["PENDENTE", "EM_ANALISE", "SOLICITACAO_INFO"].includes(r.status),
+  ).length;
   const activeAds = adCampaigns.filter((c) => c.status === "ATIVA").length;
 
   /** Enquanto carrega, "—" em vez de zero: zero é uma afirmação sobre a base. */
@@ -43,7 +55,11 @@ function AdminDashboard() {
         />
 
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
-          <Stat label="Usuários cadastrados" value={n(data?.users.total)} hint="contas ativas e suspensas" />
+          <Stat
+            label="Usuários cadastrados"
+            value={n(data?.users.total)}
+            hint="contas ativas e suspensas"
+          />
           <Stat label="Jogadores" value={n(data?.users.players)} />
           <Stat label="Organizadores" value={n(data?.users.organizers)} />
           <Stat label="Eventos ativos" value={n(data?.events.active)} />
@@ -51,7 +67,11 @@ function AdminDashboard() {
           <Stat label="Arenas parceiras" value={partnerVenues.length} />
           <Stat label="Denúncias abertas" value={openReports} hint="triagem e análise" />
           <Stat label="Feedbacks recentes" value={eventFeedbacks.length} />
-          <Stat label="Publicidade ativa" value={activeAds} hint={`${adCampaigns.length} campanhas`} />
+          <Stat
+            label="Publicidade ativa"
+            value={activeAds}
+            hint={`${adCampaigns.length} campanhas`}
+          />
           <Stat label="Receita de publicidade" value="—" hint="preparado para faturamento" />
         </div>
 
@@ -59,19 +79,29 @@ function AdminDashboard() {
           <section className="border border-border bg-card lg:col-span-2">
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <h2 className="text-lg">Denúncias prioritárias</h2>
-              <Link to="/admin/denuncias" className="font-display text-[10px] font-bold uppercase tracking-widest text-accent">
+              <Link
+                to="/admin/denuncias"
+                className="font-display text-[10px] font-bold uppercase tracking-widest text-accent"
+              >
                 Ver todas
               </Link>
             </div>
             <div className="divide-y divide-border">
               {reports.slice(0, 3).map((r) => (
-                <Link key={r.id} to="/admin/denuncias/$id" params={{ id: r.id }} className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-muted">
+                <Link
+                  key={r.id}
+                  to="/admin/denuncias/$id"
+                  params={{ id: r.id }}
+                  className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-muted"
+                >
                   <span className="font-display text-sm font-bold">{r.code}</span>
                   <span className="text-sm text-muted-foreground">
                     {r.target} · {r.reason}
                   </span>
                   <span className="ml-auto flex gap-2">
-                    <StatusPill tone={r.priority === "Alta" ? "danger" : "warn"}>{r.priority}</StatusPill>
+                    <StatusPill tone={r.priority === "Alta" ? "danger" : "warn"}>
+                      {r.priority}
+                    </StatusPill>
                   </span>
                 </Link>
               ))}
@@ -87,7 +117,8 @@ function AdminDashboard() {
                 <div key={f.id} className="px-4 py-3">
                   <p className="font-display text-sm font-bold">{f.event}</p>
                   <p className="text-xs text-muted-foreground">
-                    {f.author} · média <span className="score-num">{feedbackAverage(f).toFixed(1)}</span>
+                    {f.author} · média{" "}
+                    <span className="score-num">{feedbackAverage(f).toFixed(1)}</span>
                   </p>
                 </div>
               ))}
@@ -98,7 +129,10 @@ function AdminDashboard() {
         <section className="mt-8 border border-border bg-card">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <h2 className="text-lg">Últimas ações administrativas</h2>
-            <Link to="/admin/auditoria" className="font-display text-[10px] font-bold uppercase tracking-widest text-accent">
+            <Link
+              to="/admin/auditoria"
+              className="font-display text-[10px] font-bold uppercase tracking-widest text-accent"
+            >
               Auditoria
             </Link>
           </div>

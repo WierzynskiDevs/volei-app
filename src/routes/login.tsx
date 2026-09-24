@@ -10,7 +10,11 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Entrar · BeacHub" },
-      { name: "description", content: "Acesse sua conta BeacHub para participar de campeonatos, ver ranking e organizar eventos de vôlei de areia." },
+      {
+        name: "description",
+        content:
+          "Acesse sua conta BeacHub para participar de campeonatos, ver ranking e organizar eventos de vôlei de areia.",
+      },
       { property: "og:title", content: "Entrar · BeacHub" },
       { property: "og:description", content: "Login da plataforma de vôlei de areia." },
     ],
@@ -45,7 +49,9 @@ function LoginPage() {
       // quem sabe se foi credencial inválida, conta suspensa ou excesso de
       // tentativas — e a tela não deve adivinhar.
       setError(
-        e instanceof ApiError ? e.message : "Não foi possível entrar. Tente novamente em instantes.",
+        e instanceof ApiError
+          ? e.message
+          : "Não foi possível entrar. Tente novamente em instantes.",
       );
     } finally {
       setPending(false);
@@ -106,10 +112,16 @@ function LoginPage() {
               {pending ? "Entrando…" : "Entrar"}
             </button>
             <div className="flex items-center justify-between text-sm">
-              <button type="button" className="text-muted-foreground underline-offset-4 hover:underline">
+              <button
+                type="button"
+                className="text-muted-foreground underline-offset-4 hover:underline"
+              >
                 Esqueci minha senha
               </button>
-              <Link to="/cadastro" className="font-semibold text-accent underline-offset-4 hover:underline">
+              <Link
+                to="/cadastro"
+                className="font-semibold text-accent underline-offset-4 hover:underline"
+              >
                 Criar minha conta
               </Link>
             </div>
@@ -123,7 +135,8 @@ function LoginPage() {
           <p className="eyebrow">Modo demonstração</p>
           <h2 className="mt-1 text-2xl">Contas de teste</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Cada conta abre uma experiência diferente: permissões, menus e telas mudam conforme o papel.
+            Cada conta abre uma experiência diferente: permissões, menus e telas mudam conforme o
+            papel.
           </p>
           <div className="mt-5 divide-y divide-border border border-border">
             {accounts.map((a) => (
@@ -145,7 +158,9 @@ function LoginPage() {
                     {a.roles.map((r) => ROLE_LABEL[r]).join(" + ")} · {a.city}/{a.state}
                   </span>
                 </span>
-                <span className="font-display text-[10px] font-bold uppercase tracking-widest text-accent">Entrar</span>
+                <span className="font-display text-[10px] font-bold uppercase tracking-widest text-accent">
+                  Entrar
+                </span>
               </button>
             ))}
           </div>
@@ -155,7 +170,15 @@ function LoginPage() {
   );
 }
 
-export function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+export function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
       <span className="eyebrow">{label}</span>

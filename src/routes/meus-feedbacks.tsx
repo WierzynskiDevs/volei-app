@@ -10,7 +10,11 @@ export const Route = createFileRoute("/meus-feedbacks")({
   head: () => ({
     meta: [
       { title: "Meus feedbacks · BeacHub" },
-      { name: "description", content: "Veja os feedbacks que você deixou sobre campeonatos de vôlei de areia e os eventos que ainda aguardam avaliação." },
+      {
+        name: "description",
+        content:
+          "Veja os feedbacks que você deixou sobre campeonatos de vôlei de areia e os eventos que ainda aguardam avaliação.",
+      },
       { property: "og:title", content: "Meus feedbacks · BeacHub" },
       { property: "og:description", content: "Histórico de avaliações de experiência em eventos." },
     ],
@@ -52,7 +56,10 @@ function MyFeedbacksPage() {
           </div>
         ) : (
           <div className="mt-3">
-            <EmptyState title="Nada pendente" description="Você avaliou todos os eventos que participou." />
+            <EmptyState
+              title="Nada pendente"
+              description="Você avaliou todos os eventos que participou."
+            />
           </div>
         )}
 

@@ -104,9 +104,12 @@ const publicBracketSchema = z.object({
 export type ApiPublicBracket = z.infer<typeof publicBracketSchema>;
 
 async function fetchPublicBracket(slug: string, signal?: AbortSignal): Promise<ApiPublicBracket> {
-  const raw = await apiRequest<Resource<ApiPublicBracket>>(`/events/${encodeURIComponent(slug)}/bracket`, {
-    signal,
-  });
+  const raw = await apiRequest<Resource<ApiPublicBracket>>(
+    `/events/${encodeURIComponent(slug)}/bracket`,
+    {
+      signal,
+    },
+  );
   return publicBracketSchema.parse(raw.data);
 }
 
@@ -118,5 +121,6 @@ export const publicBracketQuery = (slug: string) =>
   queryOptions({
     queryKey: queryKeys.publicBracket.detail(slug),
     queryFn: ({ signal }) => fetchPublicBracket(slug, signal),
-    retry: (failureCount, error) => !(error instanceof ApiError && error.status === 404) && failureCount < 2,
+    retry: (failureCount, error) =>
+      !(error instanceof ApiError && error.status === 404) && failureCount < 2,
   });

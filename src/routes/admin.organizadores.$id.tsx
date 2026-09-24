@@ -3,7 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 
 import { AdminPageHeader, AdminShell, AdminTable, StatusPill } from "@/components/site/admin-shell";
 import { AdminTableState, formatDate } from "@/components/site/admin-async";
-import { FinanceAlert, GatewayBadge, MoneyCard, PaymentStatusPill } from "@/components/site/finance";
+import {
+  FinanceAlert,
+  GatewayBadge,
+  MoneyCard,
+  PaymentStatusPill,
+} from "@/components/site/finance";
 import { adminOrganizerQuery, adminPaymentsQuery } from "@/lib/api/admin";
 import { brlOrUnavailable, paymentPillStatus } from "@/lib/api/format";
 import { brl, pct } from "@/lib/finance-data";
@@ -12,7 +17,11 @@ export const Route = createFileRoute("/admin/organizadores/$id")({
   head: () => ({
     meta: [
       { title: "Organizador · Super Admin BeacHub" },
-      { name: "description", content: "Conta, plano, taxas, pagamentos e reembolsos de um organizador da plataforma BeacHub." },
+      {
+        name: "description",
+        content:
+          "Conta, plano, taxas, pagamentos e reembolsos de um organizador da plataforma BeacHub.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Organizador · Super Admin BeacHub" },
     ],
@@ -83,7 +92,11 @@ function AdminOrganizerDetail() {
             <div className="flex flex-wrap items-center gap-2">
               <StatusPill
                 tone={
-                  organizer.status === "REGULAR" ? "ok" : organizer.status === "ATTENTION" ? "warn" : "danger"
+                  organizer.status === "REGULAR"
+                    ? "ok"
+                    : organizer.status === "ATTENTION"
+                      ? "warn"
+                      : "danger"
                 }
               >
                 {organizer.status_label}
@@ -96,8 +109,8 @@ function AdminOrganizerDetail() {
         {organizer.status === "BLOCKED" ? (
           <div className="mt-4">
             <FinanceAlert tone="danger" title="Organizador bloqueado">
-              Criação de eventos e recebimento de novas inscrições estão bloqueados. A liberação é feita
-              na lista de organizadores, com motivo registrado em auditoria.
+              Criação de eventos e recebimento de novas inscrições estão bloqueados. A liberação é
+              feita na lista de organizadores, com motivo registrado em auditoria.
             </FinanceAlert>
           </div>
         ) : null}
@@ -105,20 +118,38 @@ function AdminOrganizerDetail() {
         {!organizer.can_receive_payments && organizer.status !== "BLOCKED" ? (
           <div className="mt-4">
             <FinanceAlert tone="warn" title="Conta de recebimento não vinculada">
-              Sem conta vinculada, este organizador não consegue publicar evento pago — não há destino
-              para o repasse.
+              Sem conta vinculada, este organizador não consegue publicar evento pago — não há
+              destino para o repasse.
             </FinanceAlert>
           </div>
         ) : null}
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MoneyCard label="GMV" cents={finance?.gross_cents ?? 0} hint="bruto arrecadado" emphasis />
-          <MoneyCard label="Receita da plataforma" cents={finance?.platform_revenue_cents ?? 0} hint="taxas cobradas" tone="ok" />
-          <MoneyCard label="Taxas Asaas" cents={finance?.asaas_fee_cents ?? 0} hint="custo de processamento" />
+          <MoneyCard
+            label="GMV"
+            cents={finance?.gross_cents ?? 0}
+            hint="bruto arrecadado"
+            emphasis
+          />
+          <MoneyCard
+            label="Receita da plataforma"
+            cents={finance?.platform_revenue_cents ?? 0}
+            hint="taxas cobradas"
+            tone="ok"
+          />
+          <MoneyCard
+            label="Taxas Asaas"
+            cents={finance?.asaas_fee_cents ?? 0}
+            hint="custo de processamento"
+          />
           <MoneyCard
             label="Líquido do organizador"
             cents={finance?.organizer_net_cents ?? 0}
-            hint={finance && !finance.net_is_complete ? "parcial — falta taxa do gateway" : "após taxas e estornos"}
+            hint={
+              finance && !finance.net_is_complete
+                ? "parcial — falta taxa do gateway"
+                : "após taxas e estornos"
+            }
           />
         </div>
 
@@ -158,10 +189,16 @@ function AdminOrganizerDetail() {
                 (organizer.plan_history ?? []).map((h) => (
                   <div key={h.id} className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <span className="font-display text-sm font-bold">{h.plan_name ?? h.plan_code ?? "—"}</span>
+                      <span className="font-display text-sm font-bold">
+                        {h.plan_name ?? h.plan_code ?? "—"}
+                      </span>
                       {/* Taxa vigente à época da mudança, não a de hoje. */}
-                      <span className="score-num text-sm">{pct(h.platform_fee_basis_points / 100)}</span>
-                      <span className="ml-auto text-xs text-muted-foreground">{formatDate(h.effective_at)}</span>
+                      <span className="score-num text-sm">
+                        {pct(h.platform_fee_basis_points / 100)}
+                      </span>
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        {formatDate(h.effective_at)}
+                      </span>
                     </div>
                     {h.note ? <p className="text-xs text-muted-foreground">{h.note}</p> : null}
                   </div>
@@ -172,10 +209,10 @@ function AdminOrganizerDetail() {
         </section>
 
         {/*
-          * Reembolsos: a operação de estorno ainda não existe no backend
-          * (ADR 0010 §1 e ADR 0009 §21.4). A seção fica, dizendo a verdade, em
-          * vez de listar dado inventado.
-          */}
+         * Reembolsos: a operação de estorno ainda não existe no backend
+         * (ADR 0010 §1 e ADR 0009 §21.4). A seção fica, dizendo a verdade, em
+         * vez de listar dado inventado.
+         */}
         <section className="mt-8">
           <h2 className="text-xl">Reembolsos</h2>
           <p className="mt-3 border border-border bg-card px-4 py-6 text-sm text-muted-foreground">
@@ -186,7 +223,9 @@ function AdminOrganizerDetail() {
 
         <section className="mt-8">
           <h2 className="text-xl">Pagamentos</h2>
-          <AdminTable head={["Cobrança", "Evento", "Participante", "Valor", "Taxa", "Líquido", "Status", ""]}>
+          <AdminTable
+            head={["Cobrança", "Evento", "Participante", "Valor", "Taxa", "Líquido", "Status", ""]}
+          >
             <AdminTableState
               columns={8}
               isPending={payments.isPending}
@@ -201,7 +240,9 @@ function AdminOrganizerDetail() {
                   <td className="px-4 py-3 font-display text-sm font-bold">
                     {p.external_reference ?? p.id.slice(0, 8)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{p.event?.name ?? "—"}</td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
+                    {p.event?.name ?? "—"}
+                  </td>
                   <td className="px-4 py-3 text-sm">{p.payer?.name ?? "—"}</td>
                   <td className="score-num px-4 py-3 tabular-nums">{brl(p.gross_cents)}</td>
                   <td className="score-num px-4 py-3 tabular-nums">

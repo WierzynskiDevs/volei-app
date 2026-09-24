@@ -82,7 +82,8 @@ export function ScoreDialog({
         <DialogHeader>
           <DialogTitle className="font-display text-xl">Registrar placar</DialogTitle>
           <DialogDescription>
-            {match.phase} · {match.court ?? "sem quadra"} · melhor de {maxSets} · sets até {config.pointsPerSet}
+            {match.phase} · {match.court ?? "sem quadra"} · melhor de {maxSets} · sets até{" "}
+            {config.pointsPerSet}
             {maxSets > 1 ? ` (decisivo ${config.tiebreakPoints})` : ""}.
           </DialogDescription>
         </DialogHeader>
@@ -100,7 +101,10 @@ export function ScoreDialog({
 
         <div className="space-y-2">
           {sets.map((s, i) => (
-            <div key={s.index} className="flex items-center gap-3 border border-border bg-card px-3 py-2">
+            <div
+              key={s.index}
+              className="flex items-center gap-3 border border-border bg-card px-3 py-2"
+            >
               <span className="eyebrow w-12">Set {s.index}</span>
               <input
                 type="number"
@@ -127,7 +131,8 @@ export function ScoreDialog({
 
         {readOnlyTeams ? null : (
           <p className="text-xs text-muted-foreground">
-            Sets sem pontuação não são registrados. O resultado pode ser corrigido depois com registro de auditoria.
+            Sets sem pontuação não são registrados. O resultado pode ser corrigido depois com
+            registro de auditoria.
           </p>
         )}
 
@@ -172,8 +177,8 @@ function StartDialog({
         <DialogHeader>
           <DialogTitle className="font-display text-xl">Iniciar jogo</DialogTitle>
           <DialogDescription>
-            {match.teamA} × {match.teamB} — {match.court ?? "sem quadra definida"}. O horário de início será
-            registrado agora.
+            {match.teamA} × {match.teamB} — {match.court ?? "sem quadra definida"}. O horário de
+            início será registrado agora.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -228,7 +233,9 @@ export function MatchOpsCard({
       )}
     >
       <div className="flex items-start gap-2">
-        {draggable ? <GripVertical className="mt-0.5 hidden h-4 w-4 shrink-0 text-muted-foreground md:block" /> : null}
+        {draggable ? (
+          <GripVertical className="mt-0.5 hidden h-4 w-4 shrink-0 text-muted-foreground md:block" />
+        ) : null}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <OpsStatusPill status={match.status} />
@@ -307,7 +314,10 @@ export function MatchOpsCard({
 
       <div className="mt-2 flex flex-wrap gap-1.5">
         {match.status === "FINALIZADO" ? (
-          <button onClick={() => setScoreOpen(true)} className={cn(actionClass, "border border-border")}>
+          <button
+            onClick={() => setScoreOpen(true)}
+            className={cn(actionClass, "border border-border")}
+          >
             <Repeat className="h-3.5 w-3.5" /> Corrigir placar
           </button>
         ) : match.status === "EM_ANDAMENTO" ? (
@@ -318,7 +328,10 @@ export function MatchOpsCard({
             >
               <Square className="h-3.5 w-3.5" /> Finalizar jogo
             </button>
-            <button onClick={() => setScoreOpen(true)} className={cn(actionClass, "border border-border")}>
+            <button
+              onClick={() => setScoreOpen(true)}
+              className={cn(actionClass, "border border-border")}
+            >
               Registrar placar
             </button>
           </>
@@ -336,7 +349,10 @@ export function MatchOpsCard({
             >
               <Play className="h-3.5 w-3.5" /> Iniciar jogo
             </button>
-            <button onClick={() => setScoreOpen(true)} className={cn(actionClass, "border border-border")}>
+            <button
+              onClick={() => setScoreOpen(true)}
+              className={cn(actionClass, "border border-border")}
+            >
               <UserCheck className="h-3.5 w-3.5" /> Registrar placar
             </button>
           </>
@@ -383,7 +399,12 @@ function Column({
         over && "border-accent",
       )}
     >
-      <div className={cn("border-b border-border px-3 py-2", tone === "pending" ? "bg-muted" : "bg-sand")}>
+      <div
+        className={cn(
+          "border-b border-border px-3 py-2",
+          tone === "pending" ? "bg-muted" : "bg-sand",
+        )}
+      >
         <p className="font-display text-xs font-bold uppercase tracking-widest">{title}</p>
         <p className="text-[11px] text-muted-foreground">
           {matches.length} partida{matches.length === 1 ? "" : "s"}
@@ -420,17 +441,24 @@ export function OpsKanban({ slug }: { slug: string }) {
         <div>
           <h2 className="text-xl">Operacional</h2>
           <p className="text-sm text-muted-foreground">
-            Arraste as partidas pendentes para a quadra. O sistema não sorteia — quem decide é o organizador.
+            Arraste as partidas pendentes para a quadra. O sistema não sorteia — quem decide é o
+            organizador.
           </p>
         </div>
         <p className="eyebrow">
-          {config.courts.length} quadras · melhor de {config.bestOf} · {config.matchDurationMin} min por partida
+          {config.courts.length} quadras · melhor de {config.bestOf} · {config.matchDurationMin} min
+          por partida
         </p>
       </div>
 
       {/* Desktop: kanban */}
       <div className="mt-4 hidden gap-3 overflow-x-auto pb-2 md:flex">
-        <Column title="Partidas pendentes" tone="pending" matches={pending} onDropMatch={(id) => assignCourt(id, null)} />
+        <Column
+          title="Partidas pendentes"
+          tone="pending"
+          matches={pending}
+          onDropMatch={(id) => assignCourt(id, null)}
+        />
         {config.courts.map((court) => (
           <Column
             key={court}

@@ -19,7 +19,11 @@ export const Route = createFileRoute("/organizador/alterar-evento/$slug")({
   head: () => ({
     meta: [
       { title: "Alterar evento · Organizador BeacHub" },
-      { name: "description", content: "Altere data, horário ou local com justificativa obrigatória e comunicação automática aos inscritos." },
+      {
+        name: "description",
+        content:
+          "Altere data, horário ou local com justificativa obrigatória e comunicação automática aos inscritos.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Alterar evento · Organizador BeacHub" },
     ],
@@ -65,7 +69,9 @@ function ChangeEventPage() {
   const changed = [
     currentDate !== originalDate ? { label: "Data", from: originalDate, to: currentDate } : null,
     currentTime !== originalTime ? { label: "Horário", from: originalTime, to: currentTime } : null,
-    currentVenue !== originalVenue ? { label: "Local", from: originalVenue, to: currentVenue } : null,
+    currentVenue !== originalVenue
+      ? { label: "Local", from: originalVenue, to: currentVenue }
+      : null,
   ].filter(Boolean) as { label: string; from: string; to: string }[];
 
   /**
@@ -138,7 +144,10 @@ function ChangeEventPage() {
         <div className="mx-auto max-w-xl px-4 py-20 text-center">
           <h1 className="text-2xl">Evento não encontrado</h1>
           <p className="mt-2 text-sm text-muted-foreground">{event.error?.message}</p>
-          <Link to="/organizador/eventos" className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent">
+          <Link
+            to="/organizador/eventos"
+            className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent"
+          >
             Meus eventos
           </Link>
         </div>
@@ -155,16 +164,18 @@ function ChangeEventPage() {
         <PageHeader eyebrow={ev.name} title="Alterar evento" />
 
         <FinanceAlert tone="warn" title="Alterações geram obrigação de reembolso">
-          Participantes impedidos de participar pela nova configuração podem solicitar reembolso, que é responsabilidade
-          financeira do organizador e é processado pelo Asaas. {paid} inscrições pagas serão notificadas.
+          Participantes impedidos de participar pela nova configuração podem solicitar reembolso,
+          que é responsabilidade financeira do organizador e é processado pelo Asaas. {paid}{" "}
+          inscrições pagas serão notificadas.
         </FinanceAlert>
 
         {isCancelled ? (
           <div className="mt-6 border border-destructive/40 bg-destructive/10 p-6">
             <p className="font-display text-lg font-bold">Evento cancelado</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              O cancelamento foi registrado com a justificativa e ficou na trilha de auditoria. {paid} inscrições
-              pagas dão direito a reembolso — o processamento do estorno ainda não está implementado.
+              O cancelamento foi registrado com a justificativa e ficou na trilha de auditoria.{" "}
+              {paid} inscrições pagas dão direito a reembolso — o processamento do estorno ainda não
+              está implementado.
             </p>
             <Link
               to="/organizador/financeiro"
@@ -177,8 +188,8 @@ function ChangeEventPage() {
           <div className="mt-6 border border-success/40 bg-success/10 p-6">
             <p className="font-display text-lg font-bold">Alteração salva</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              A mudança foi gravada com a justificativa e registrada na auditoria. O envio automático da
-              notificação aos {paid} inscritos ainda não está implementado.
+              A mudança foi gravada com a justificativa e registrada na auditoria. O envio
+              automático da notificação aos {paid} inscritos ainda não está implementado.
             </p>
             <Link
               to="/organizador/eventos"
@@ -189,7 +200,9 @@ function ChangeEventPage() {
           </div>
         ) : step === "confirm" ? (
           <div className="mt-6 border border-graphite bg-card p-6">
-            <p className="font-display text-lg font-bold">Você está alterando informações importantes deste evento.</p>
+            <p className="font-display text-lg font-bold">
+              Você está alterando informações importantes deste evento.
+            </p>
             <div className="mt-4 divide-y divide-border border border-border">
               {changed.map((c) => (
                 <div key={c.label} className="grid gap-1 px-4 py-3 sm:grid-cols-3">
@@ -229,15 +242,29 @@ function ChangeEventPage() {
             <div className="mt-6 grid gap-4 border border-border bg-card p-4 sm:grid-cols-2">
               <label className="block">
                 <span className="eyebrow">Data</span>
-                <input type="date" value={currentDate} onChange={(e) => setDate(e.target.value)} className={field} />
+                <input
+                  type="date"
+                  value={currentDate}
+                  onChange={(e) => setDate(e.target.value)}
+                  className={field}
+                />
               </label>
               <label className="block">
                 <span className="eyebrow">Horário de início</span>
-                <input type="time" value={currentTime} onChange={(e) => setTime(e.target.value)} className={field} />
+                <input
+                  type="time"
+                  value={currentTime}
+                  onChange={(e) => setTime(e.target.value)}
+                  className={field}
+                />
               </label>
               <label className="block sm:col-span-2">
                 <span className="eyebrow">Local</span>
-                <input value={currentVenue} onChange={(e) => setVenue(e.target.value)} className={field} />
+                <input
+                  value={currentVenue}
+                  onChange={(e) => setVenue(e.target.value)}
+                  className={field}
+                />
               </label>
               <label className="block sm:col-span-2">
                 <span className="eyebrow">Justificativa (obrigatória)</span>
@@ -267,8 +294,8 @@ function ChangeEventPage() {
             <div className="mt-8 border border-destructive/40 p-4">
               <p className="font-display text-sm font-bold text-destructive">Cancelar evento</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                O cancelamento gera reembolso obrigatório para todos os participantes pagantes, processado pelo Asaas.
-                A justificativa acima é obrigatória e vai para a auditoria.
+                O cancelamento gera reembolso obrigatório para todos os participantes pagantes,
+                processado pelo Asaas. A justificativa acima é obrigatória e vai para a auditoria.
               </p>
               {cancel.isError ? (
                 <p className="mt-2 text-sm text-destructive">{(cancel.error as Error).message}</p>

@@ -29,7 +29,10 @@ export const Route = createFileRoute("/meus-jogos")({
           "Seu próximo jogo, quadra, horário programado, previsão de início, alertas de atraso e avaliações pendentes.",
       },
       { property: "og:title", content: "Meus jogos — horários e estimativas · BeacHub" },
-      { property: "og:description", content: "Quando você joga, em qual quadra, contra quem e qual a previsão atual." },
+      {
+        property: "og:description",
+        content: "Quando você joga, em qual quadra, contra quem e qual a previsão atual.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -71,12 +74,17 @@ function MyGamesPage() {
               </div>
               <div>
                 <p className="eyebrow text-accent">Previsão de início</p>
-                <p className="score-num text-3xl text-accent">{nextEst?.estimated ?? nextMatch.scheduledStartAt}</p>
+                <p className="score-num text-3xl text-accent">
+                  {nextEst?.estimated ?? nextMatch.scheduledStartAt}
+                </p>
               </div>
             </div>
             <p className="mt-3 text-background/80">
               Começa em aproximadamente{" "}
-              {humanDuration(toMinutes(nextEst?.estimated ?? nextMatch.scheduledStartAt) - toMinutes(NOW))}.
+              {humanDuration(
+                toMinutes(nextEst?.estimated ?? nextMatch.scheduledStartAt) - toMinutes(NOW),
+              )}
+              .
             </p>
             <p className="mt-1 text-xs text-background/60">
               Horário estimado. Pode sofrer alterações conforme a duração das partidas anteriores.
@@ -85,7 +93,8 @@ function MyGamesPage() {
             {nextEst && nextEst.delta > 0 ? (
               <p className="mt-4 flex items-start gap-2 border border-warning/50 bg-warning/10 p-3 text-sm text-warning">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-                Seu próximo jogo pode atrasar. Motivo: partidas anteriores na {nextMatch.court} estão atrasadas
+                Seu próximo jogo pode atrasar. Motivo: partidas anteriores na {nextMatch.court}{" "}
+                estão atrasadas
                 {courtDelay > 0 ? ` (+${courtDelay} min)` : ""}.
               </p>
             ) : null}
@@ -115,8 +124,9 @@ function MyGamesPage() {
             </p>
             {risks.map((r) => (
               <p key={r.second.id} className="mt-2 text-muted-foreground">
-                Jogo 1: {r.first.scheduledStartAt} · {r.first.court} — Jogo 2: {r.second.scheduledStartAt} ·{" "}
-                {r.second.court}. Folga estimada de {Math.max(0, r.gap)} min entre eles.
+                Jogo 1: {r.first.scheduledStartAt} · {r.first.court} — Jogo 2:{" "}
+                {r.second.scheduledStartAt} · {r.second.court}. Folga estimada de{" "}
+                {Math.max(0, r.gap)} min entre eles.
               </p>
             ))}
           </div>
@@ -126,7 +136,8 @@ function MyGamesPage() {
           <>
             <h2 className="mt-10 text-xl">Sua partida em andamento</h2>
             <p className="text-sm text-muted-foreground">
-              Set atual: {currentSet(liveNow) ? `Set ${currentSet(liveNow)!.index} em andamento` : "—"}
+              Set atual:{" "}
+              {currentSet(liveNow) ? `Set ${currentSet(liveNow)!.index} em andamento` : "—"}
             </p>
             <div className="mt-3">
               <LiveMatchCard match={liveNow} />
@@ -164,7 +175,9 @@ function MyGamesPage() {
                     <Star
                       className={cn(
                         "h-5 w-5",
-                        rated.includes(p.id) ? "fill-warning text-warning" : "text-border hover:text-warning",
+                        rated.includes(p.id)
+                          ? "fill-warning text-warning"
+                          : "text-border hover:text-warning",
                       )}
                     />
                   </button>

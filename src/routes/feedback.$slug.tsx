@@ -10,9 +10,16 @@ export const Route = createFileRoute("/feedback/$slug")({
   head: () => ({
     meta: [
       { title: "Feedback do evento · BeacHub" },
-      { name: "description", content: "Avalie organização, estrutura, pontualidade e ambiente do campeonato de vôlei de areia que você participou." },
+      {
+        name: "description",
+        content:
+          "Avalie organização, estrutura, pontualidade e ambiente do campeonato de vôlei de areia que você participou.",
+      },
       { property: "og:title", content: "Feedback do evento · BeacHub" },
-      { property: "og:description", content: "Feedback do evento — diferente da avaliação de jogadores." },
+      {
+        property: "og:description",
+        content: "Feedback do evento — diferente da avaliação de jogadores.",
+      },
     ],
   }),
   component: EventFeedbackPage,
@@ -30,7 +37,9 @@ function EventFeedbackPage() {
         <div className="mx-auto max-w-xl px-4 py-20 text-center">
           <p className="eyebrow">Obrigado</p>
           <h1 className="mt-1 text-3xl">Feedback registrado</h1>
-          <p className="mt-2 text-muted-foreground">Ele fica disponível em Meus feedbacks e ajuda o organizador a melhorar.</p>
+          <p className="mt-2 text-muted-foreground">
+            Ele fica disponível em Meus feedbacks e ajuda o organizador a melhorar.
+          </p>
           <Link
             to="/meus-feedbacks"
             className="mt-6 inline-flex h-11 items-center bg-accent px-6 font-display text-xs font-bold uppercase tracking-widest text-accent-foreground"
@@ -59,7 +68,10 @@ function EventFeedbackPage() {
           }}
         >
           {FEEDBACK_CRITERIA.map((c) => (
-            <div key={c.key} className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4 last:border-0">
+            <div
+              key={c.key}
+              className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4 last:border-0"
+            >
               <span className="font-display text-sm font-bold">{c.label}</span>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
@@ -72,7 +84,9 @@ function EventFeedbackPage() {
                   >
                     <Star
                       className={`h-6 w-6 ${
-                        (scores[c.key] ?? 0) >= n ? "fill-accent text-accent" : "text-muted-foreground/40"
+                        (scores[c.key] ?? 0) >= n
+                          ? "fill-accent text-accent"
+                          : "text-muted-foreground/40"
                       }`}
                     />
                   </button>
@@ -83,7 +97,12 @@ function EventFeedbackPage() {
 
           <label className="block">
             <span className="eyebrow">Conte um pouco mais sobre sua experiência</span>
-            <textarea rows={4} maxLength={1000} className="input-base mt-2" placeholder="Opcional" />
+            <textarea
+              rows={4}
+              maxLength={1000}
+              className="input-base mt-2"
+              placeholder="Opcional"
+            />
           </label>
 
           <button
@@ -94,7 +113,10 @@ function EventFeedbackPage() {
           </button>
           <p className="text-center text-sm text-muted-foreground">
             Quer avaliar quem jogou com você?{" "}
-            <Link to="/meus-jogos" className="font-semibold text-accent underline-offset-4 hover:underline">
+            <Link
+              to="/meus-jogos"
+              className="font-semibold text-accent underline-offset-4 hover:underline"
+            >
               Avaliações de jogadores
             </Link>
           </p>

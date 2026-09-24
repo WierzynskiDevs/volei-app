@@ -1,5 +1,14 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronDown, LogOut, Receipt, Settings, ShieldCheck, User, Users, Wallet } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  Receipt,
+  Settings,
+  ShieldCheck,
+  User,
+  Users,
+  Wallet,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -91,7 +100,8 @@ export function UserMenu() {
                   navigate({ to: homeForRole(role) });
                 }}
               >
-                {role === "ORGANIZER" ? "🏆" : "🏐"} <span className="ml-2">{ROLE_LABEL[role]}</span>
+                {role === "ORGANIZER" ? "🏆" : "🏐"}{" "}
+                <span className="ml-2">{ROLE_LABEL[role]}</span>
               </DropdownMenuItem>
             ))}
           </>
@@ -118,7 +128,9 @@ export function UserMenu() {
                 });
               }}
               className={`border px-2 py-1 text-left text-[10px] font-semibold uppercase tracking-wide ${
-                a.id === account.id ? "border-accent text-accent" : "border-border text-muted-foreground"
+                a.id === account.id
+                  ? "border-accent text-accent"
+                  : "border-border text-muted-foreground"
               }`}
             >
               {a.label}

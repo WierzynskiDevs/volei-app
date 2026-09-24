@@ -57,7 +57,12 @@ export const plans: Plan[] = [
     platformFeeFixedCents: 0,
     eventLimit: 3,
     registrationLimit: 120,
-    features: ["Inscrições online", "Chaves e resultados", "Ranking de performance", "Suporte por e-mail"],
+    features: [
+      "Inscrições online",
+      "Chaves e resultados",
+      "Ranking de performance",
+      "Suporte por e-mail",
+    ],
   },
   {
     id: "plan-pro",
@@ -132,7 +137,12 @@ export const organizerFinances: OrganizerFinance[] = [
     status: "REGULAR",
     planHistory: [
       { at: "11/2024", plan: "FREE", rate: 5, note: "Cadastro inicial" },
-      { at: "03/2026", plan: "PRO", rate: 3.5, note: "Migração para PRO — cobranças anteriores mantêm 5%" },
+      {
+        at: "03/2026",
+        plan: "PRO",
+        rate: 3.5,
+        note: "Migração para PRO — cobranças anteriores mantêm 5%",
+      },
     ],
   },
   {
@@ -253,21 +263,54 @@ export type Payment = {
 
 function ledgerFor(p: Omit<Payment, "ledger">): LedgerEntry[] {
   const base: LedgerEntry[] = [
-    { at: p.createdAt, label: "Cobrança criada", detail: `${PAYMENT_METHOD_LABEL[p.method]} · ${p.gatewayId}`, amountCents: p.amountCents },
+    {
+      at: p.createdAt,
+      label: "Cobrança criada",
+      detail: `${PAYMENT_METHOD_LABEL[p.method]} · ${p.gatewayId}`,
+      amountCents: p.amountCents,
+    },
   ];
   if (p.paidAt) {
-    base.push({ at: p.paidAt, label: "Pagamento confirmado", detail: "Webhook Asaas · PAYMENT_RECEIVED", amountCents: p.amountCents });
-    base.push({ at: p.paidAt, label: "Split processado", detail: "Divisão plataforma / organizador" });
-    base.push({ at: p.paidAt, label: "Taxa da plataforma", detail: `${pct(p.platformFeeRate)} congelada na transação`, amountCents: -p.platformFeeCents });
-    base.push({ at: p.paidAt, label: "Taxa Asaas", detail: "Custo de processamento (organizador)", amountCents: -p.gatewayFeeCents });
-    base.push({ at: p.paidAt, label: "Saldo do organizador", detail: "Disponível conforme prazo do gateway", amountCents: p.netCents });
+    base.push({
+      at: p.paidAt,
+      label: "Pagamento confirmado",
+      detail: "Webhook Asaas · PAYMENT_RECEIVED",
+      amountCents: p.amountCents,
+    });
+    base.push({
+      at: p.paidAt,
+      label: "Split processado",
+      detail: "Divisão plataforma / organizador",
+    });
+    base.push({
+      at: p.paidAt,
+      label: "Taxa da plataforma",
+      detail: `${pct(p.platformFeeRate)} congelada na transação`,
+      amountCents: -p.platformFeeCents,
+    });
+    base.push({
+      at: p.paidAt,
+      label: "Taxa Asaas",
+      detail: "Custo de processamento (organizador)",
+      amountCents: -p.gatewayFeeCents,
+    });
+    base.push({
+      at: p.paidAt,
+      label: "Saldo do organizador",
+      detail: "Disponível conforme prazo do gateway",
+      amountCents: p.netCents,
+    });
   }
   return base;
 }
 
-function mkPayment(p: Omit<Payment, "ledger" | "platformFeeCents" | "gatewayFeeCents" | "netCents"> & Partial<Pick<Payment, "gatewayFeeCents">>): Payment {
+function mkPayment(
+  p: Omit<Payment, "ledger" | "platformFeeCents" | "gatewayFeeCents" | "netCents"> &
+    Partial<Pick<Payment, "gatewayFeeCents">>,
+): Payment {
   const platformFeeCents = Math.round((p.amountCents * p.platformFeeRate) / 100);
-  const gatewayFeeCents = p.gatewayFeeCents ?? (p.method === "PIX" ? 199 : Math.round(p.amountCents * 0.0299) + 39);
+  const gatewayFeeCents =
+    p.gatewayFeeCents ?? (p.method === "PIX" ? 199 : Math.round(p.amountCents * 0.0299) + 39);
   const netCents = p.amountCents - platformFeeCents - gatewayFeeCents;
   const full = { ...p, platformFeeCents, gatewayFeeCents, netCents } as Payment;
   return { ...full, ledger: ledgerFor(full) };
@@ -522,7 +565,8 @@ export function paymentsByPayer(name: string) {
  * REEMBOLSOS
  * ------------------------------------------------------------------ */
 
-export type RefundStatus = "REQUESTED" | "APPROVED" | "PROCESSING" | "REFUNDED" | "FAILED" | "REJECTED";
+export type RefundStatus =
+  "REQUESTED" | "APPROVED" | "PROCESSING" | "REFUNDED" | "FAILED" | "REJECTED";
 
 export const REFUND_STATUS_LABEL: Record<RefundStatus, string> = {
   REQUESTED: "Solicitado",
@@ -584,10 +628,23 @@ export const refunds: Refund[] = [
     status: "REFUNDED",
     gatewayRefundId: "rfd_5c19ab77",
     timeline: [
-      { at: "24/07 09:10", label: "Solicitação enviada", detail: "Participante sinalizou impedimento após alteração" },
-      { at: "24/07 15:00", label: "Aprovado pelo organizador", detail: "Obrigatório — alteração de data" },
+      {
+        at: "24/07 09:10",
+        label: "Solicitação enviada",
+        detail: "Participante sinalizou impedimento após alteração",
+      },
+      {
+        at: "24/07 15:00",
+        label: "Aprovado pelo organizador",
+        detail: "Obrigatório — alteração de data",
+      },
       { at: "25/07 08:12", label: "Refund solicitado no Asaas", detail: "rfd_5c19ab77" },
-      { at: "26/07 11:30", label: "Reembolso confirmado", detail: "Webhook Asaas · PAYMENT_REFUNDED", amountCents: 14000 },
+      {
+        at: "26/07 11:30",
+        label: "Reembolso confirmado",
+        detail: "Webhook Asaas · PAYMENT_REFUNDED",
+        amountCents: 14000,
+      },
     ],
   },
   {
@@ -605,9 +662,17 @@ export const refunds: Refund[] = [
     status: "PROCESSING",
     gatewayRefundId: "rfd_7710de02",
     timeline: [
-      { at: "05/08 10:00", label: "Evento cancelado", detail: "Reembolso obrigatório gerado automaticamente" },
+      {
+        at: "05/08 10:00",
+        label: "Evento cancelado",
+        detail: "Reembolso obrigatório gerado automaticamente",
+      },
       { at: "06/08 09:20", label: "Refund solicitado no Asaas", detail: "rfd_7710de02" },
-      { at: "07/08 14:05", label: "Processando no gateway", detail: "Aguardando confirmação do emissor" },
+      {
+        at: "07/08 14:05",
+        label: "Processando no gateway",
+        detail: "Aguardando confirmação do emissor",
+      },
     ],
   },
   {
@@ -623,7 +688,13 @@ export const refunds: Refund[] = [
     requestedAt: "05/08/2026",
     deadline: "12/08/2026",
     status: "REQUESTED",
-    timeline: [{ at: "05/08 10:00", label: "Evento cancelado", detail: "Reembolso obrigatório gerado automaticamente" }],
+    timeline: [
+      {
+        at: "05/08 10:00",
+        label: "Evento cancelado",
+        detail: "Reembolso obrigatório gerado automaticamente",
+      },
+    ],
   },
   {
     id: "ref-4",
@@ -639,8 +710,16 @@ export const refunds: Refund[] = [
     deadline: "—",
     status: "REJECTED",
     timeline: [
-      { at: "02/08 12:00", label: "Solicitação enviada", detail: "Evento permanece conforme publicado" },
-      { at: "03/08 09:30", label: "Recusado pelo organizador", detail: "Fora do prazo da política de cancelamento" },
+      {
+        at: "02/08 12:00",
+        label: "Solicitação enviada",
+        detail: "Evento permanece conforme publicado",
+      },
+      {
+        at: "03/08 09:30",
+        label: "Recusado pelo organizador",
+        detail: "Fora do prazo da política de cancelamento",
+      },
     ],
   },
   {
@@ -658,9 +737,17 @@ export const refunds: Refund[] = [
     status: "FAILED",
     gatewayRefundId: "rfd_90cc1a34",
     timeline: [
-      { at: "08/08 19:00", label: "Solicitação enviada", detail: "Impedimento após alteração de horário" },
+      {
+        at: "08/08 19:00",
+        label: "Solicitação enviada",
+        detail: "Impedimento após alteração de horário",
+      },
       { at: "09/08 08:00", label: "Refund solicitado no Asaas", detail: "rfd_90cc1a34" },
-      { at: "09/08 16:40", label: "Falha no reembolso", detail: "Saldo insuficiente na conta do organizador" },
+      {
+        at: "09/08 16:40",
+        label: "Falha no reembolso",
+        detail: "Saldo insuficiente na conta do organizador",
+      },
     ],
   },
 ];
@@ -673,10 +760,17 @@ export function refundsByOrganizer(orgId: string) {
   return refunds.filter((r) => r.organizerId === orgId);
 }
 
-export const pendingRefundStatuses: RefundStatus[] = ["REQUESTED", "APPROVED", "PROCESSING", "FAILED"];
+export const pendingRefundStatuses: RefundStatus[] = [
+  "REQUESTED",
+  "APPROVED",
+  "PROCESSING",
+  "FAILED",
+];
 
 export function pendingRefunds(orgId?: string) {
-  return refunds.filter((r) => pendingRefundStatuses.includes(r.status) && (!orgId || r.organizerId === orgId));
+  return refunds.filter(
+    (r) => pendingRefundStatuses.includes(r.status) && (!orgId || r.organizerId === orgId),
+  );
 }
 
 /* ------------------------------------------------------------------ *
@@ -718,7 +812,13 @@ export const eventChanges: EventChange[] = [
     eventName: "Copa Areia Curitiba",
     organizerId: "org-1",
     at: "09/08/2026 17:20",
-    fields: [{ label: "Local", from: "Arena Norte Beach — Quadra 1 a 4", to: "Arena Norte Beach — Quadras cobertas 5 a 8" }],
+    fields: [
+      {
+        label: "Local",
+        from: "Arena Norte Beach — Quadra 1 a 4",
+        to: "Arena Norte Beach — Quadras cobertas 5 a 8",
+      },
+    ],
     justification: "Manutenção emergencial na areia das quadras descobertas.",
     notified: false,
     affected: 32,
@@ -761,8 +861,10 @@ export const eventFinances: EventFinance[] = [
     feeUnit: "dupla",
     methods: ["PIX", "CREDITO"],
     cancellationDeadline: "12/08/2026, 20h00",
-    cancellationPolicy: "Desistências até 12/08 são reembolsadas em 50%. Após o sorteio das chaves não há reembolso por desistência.",
-    refundPolicy: "Cancelamento ou alteração do evento pelo organizador gera direito a reembolso integral.",
+    cancellationPolicy:
+      "Desistências até 12/08 são reembolsadas em 50%. Após o sorteio das chaves não há reembolso por desistência.",
+    refundPolicy:
+      "Cancelamento ou alteração do evento pelo organizador gera direito a reembolso integral.",
     changePolicy: "Toda alteração é registrada com justificativa e notificada aos inscritos.",
   },
 ];
@@ -774,8 +876,10 @@ export const defaultEventFinance: Omit<EventFinance, "slug"> = {
   cancellationDeadline: "48h antes do evento",
   cancellationPolicy:
     "Desistência do participante em evento que permanece conforme publicado não gera reembolso automático — a decisão é do organizador.",
-  refundPolicy: "Cancelamento ou alteração do evento pelo organizador gera direito a solicitar reembolso.",
-  changePolicy: "Alterações de data, horário ou local exigem justificativa e notificação a todos os inscritos.",
+  refundPolicy:
+    "Cancelamento ou alteração do evento pelo organizador gera direito a solicitar reembolso.",
+  changePolicy:
+    "Alterações de data, horário ou local exigem justificativa e notificação a todos os inscritos.",
 };
 
 export function getEventFinance(slug: string): EventFinance {
@@ -804,7 +908,9 @@ export type FinanceSummary = {
 export function summarize(list: Payment[]): FinanceSummary {
   const paid = list.filter((p) => PAID_LIKE.includes(p.status));
   const pendingList = list.filter((p) => p.status === "PENDING" || p.status === "PROCESSING");
-  const refundedList = list.filter((p) => p.status === "REFUNDED" || p.status === "PARTIALLY_REFUNDED");
+  const refundedList = list.filter(
+    (p) => p.status === "REFUNDED" || p.status === "PARTIALLY_REFUNDED",
+  );
   const chargebackList = list.filter((p) => p.status === "CHARGEBACK");
 
   const gross = paid.reduce((s, p) => s + p.amountCents, 0);
@@ -840,7 +946,12 @@ export function eventsWithFinance() {
   const slugs = [...new Set(payments.map((p) => p.eventSlug))];
   return slugs.map((slug) => {
     const list = paymentsByEvent(slug);
-    return { slug, name: list[0]!.eventName, organizerId: list[0]!.organizerId, ...summarize(list) };
+    return {
+      slug,
+      name: list[0]!.eventName,
+      organizerId: list[0]!.organizerId,
+      ...summarize(list),
+    };
   });
 }
 

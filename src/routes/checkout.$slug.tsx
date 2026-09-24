@@ -6,7 +6,12 @@ import { AppShell } from "@/components/site/shell";
 import { FinancePill, GatewayBadge, MoneyRow } from "@/components/site/finance";
 import { eventBySlugQuery } from "@/lib/api/events";
 import { myRegistrationsQuery, teamLabel } from "@/lib/api/registrations";
-import { createPayment, paymentQuery, PAYMENT_METHODS, type PaymentMethod } from "@/lib/api/payments";
+import {
+  createPayment,
+  paymentQuery,
+  PAYMENT_METHODS,
+  type PaymentMethod,
+} from "@/lib/api/payments";
 import { queryKeys } from "@/lib/api/query-keys";
 import { deadlineLabel, eventDateLabel } from "@/lib/api/format";
 import { brl } from "@/lib/finance-data";
@@ -16,7 +21,10 @@ export const Route = createFileRoute("/checkout/$slug")({
   head: () => ({
     meta: [
       { title: "Pagamento da inscrição · BeacHub" },
-      { name: "description", content: "Pague a inscrição por PIX, cartão ou boleto e confirme sua vaga." },
+      {
+        name: "description",
+        content: "Pague a inscrição por PIX, cartão ou boleto e confirme sua vaga.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Pagamento da inscrição · BeacHub" },
     ],
@@ -114,7 +122,10 @@ function CheckoutPage() {
       <AppShell>
         <div className="mx-auto max-w-xl px-4 py-20 text-center">
           <h1 className="text-2xl">Evento não encontrado</h1>
-          <Link to="/eventos" className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent">
+          <Link
+            to="/eventos"
+            className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent"
+          >
             Ver campeonatos
           </Link>
         </div>
@@ -210,11 +221,17 @@ function CheckoutPage() {
               <FinancePill tone="warn">Pagamento pendente</FinancePill>
               <h1 className="mt-3 text-3xl">Falta pagar para confirmar</h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Sua inscrição fica reservada até o vencimento. Ela só é confirmada após a confirmação do pagamento.
+                Sua inscrição fica reservada até o vencimento. Ela só é confirmada após a
+                confirmação do pagamento.
               </p>
             </div>
             <div className="mt-4 divide-y divide-border border border-border bg-card">
-              <MoneyRow label="Valor" cents={current.gross_cents} detail={`Inscrição — ${ev.name}`} strong />
+              <MoneyRow
+                label="Valor"
+                cents={current.gross_cents}
+                detail={`Inscrição — ${ev.name}`}
+                strong
+              />
               <div className="flex flex-wrap gap-2 px-4 py-3 text-sm">
                 <span className="min-w-[140px] text-muted-foreground">Método</span>
                 <span className="font-display font-bold">{current.method_label}</span>
@@ -296,28 +313,36 @@ function CheckoutPage() {
               <p className="eyebrow">Termos financeiros do evento</p>
               <dl className="mt-2 space-y-2 text-muted-foreground">
                 <div>
-                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">Valor da inscrição</dt>
+                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">
+                    Valor da inscrição
+                  </dt>
                   <dd>{brl(ev.feeCents)} por jogador.</dd>
                 </div>
                 <div>
-                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">Confirmação da vaga</dt>
+                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">
+                    Confirmação da vaga
+                  </dt>
                   <dd>
-                    A vaga é confirmada quando o gateway confirma o pagamento. Até lá ela fica reservada
-                    até o vencimento da cobrança.
+                    A vaga é confirmada quando o gateway confirma o pagamento. Até lá ela fica
+                    reservada até o vencimento da cobrança.
                   </dd>
                 </div>
                 <div>
-                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">Alteração do evento</dt>
+                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">
+                    Alteração do evento
+                  </dt>
                   <dd>
-                    Mudança de data, horário ou local dá direito a reembolso, e o organizador precisa
-                    justificar a alteração.
+                    Mudança de data, horário ou local dá direito a reembolso, e o organizador
+                    precisa justificar a alteração.
                   </dd>
                 </div>
                 <div>
-                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">Condições de reembolso</dt>
+                  <dt className="font-display text-xs font-bold uppercase tracking-widest text-foreground">
+                    Condições de reembolso
+                  </dt>
                   <dd>
-                    Cancelamento do evento pelo organizador gera reembolso. Desistência do participante em
-                    evento mantido conforme publicado não gera reembolso automático.
+                    Cancelamento do evento pelo organizador gera reembolso. Desistência do
+                    participante em evento mantido conforme publicado não gera reembolso automático.
                   </dd>
                 </div>
               </dl>

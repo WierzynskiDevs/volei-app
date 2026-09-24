@@ -23,7 +23,12 @@ export function StarInput({
           onClick={() => onChange(n)}
           className="p-0.5"
         >
-          <Star className={cn("h-6 w-6", n <= value ? "fill-accent text-accent" : "text-muted-foreground")} />
+          <Star
+            className={cn(
+              "h-6 w-6",
+              n <= value ? "fill-accent text-accent" : "text-muted-foreground",
+            )}
+          />
         </button>
       ))}
     </div>

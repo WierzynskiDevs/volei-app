@@ -6,7 +6,8 @@ import { getReport, REPORT_STATUS_LABEL, type Report, type ReportStatus } from "
 
 function statusTone(status: ReportStatus) {
   if (status === "RESOLVIDA") return "ok" as const;
-  if (status === "PENDENTE" || status === "EM_ANALISE" || status === "SOLICITACAO_INFO") return "warn" as const;
+  if (status === "PENDENTE" || status === "EM_ANALISE" || status === "SOLICITACAO_INFO")
+    return "warn" as const;
   return "neutral" as const;
 }
 
@@ -18,13 +19,21 @@ export const Route = createFileRoute("/admin/denuncias/$id")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Denúncia não encontrada · BeacHub" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Denúncia não encontrada · BeacHub" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     const title = `${loaderData.report.code} · Super Admin BeacHub`;
     return {
       meta: [
         { title },
-        { name: "description", content: `Análise da denúncia sobre ${loaderData.report.reported}: ${loaderData.report.reason}.` },
+        {
+          name: "description",
+          content: `Análise da denúncia sobre ${loaderData.report.reported}: ${loaderData.report.reason}.`,
+        },
         { name: "robots", content: "noindex" },
         { property: "og:title", content: title },
         { property: "og:description", content: "Detalhe e resolução de denúncia." },
@@ -55,7 +64,11 @@ function ReportDetail() {
         <AdminPageHeader
           title={report.code}
           description={`${report.target} · aberta em ${report.date}`}
-          action={<StatusPill tone={statusTone(report.status)}>{REPORT_STATUS_LABEL[report.status]}</StatusPill>}
+          action={
+            <StatusPill tone={statusTone(report.status)}>
+              {REPORT_STATUS_LABEL[report.status]}
+            </StatusPill>
+          }
         />
 
         <div className="mt-6 grid gap-4 lg:grid-cols-3">
@@ -77,7 +90,10 @@ function ReportDetail() {
               <div className="mt-3 flex flex-wrap gap-2">
                 {report.evidence.length ? (
                   report.evidence.map((e) => (
-                    <span key={e} className="border border-border px-3 py-1.5 text-xs text-muted-foreground">
+                    <span
+                      key={e}
+                      className="border border-border px-3 py-1.5 text-xs text-muted-foreground"
+                    >
                       {e}
                     </span>
                   ))
@@ -132,7 +148,8 @@ function ReportDetail() {
               Registrar decisão
             </button>
             <p className="mt-2 text-xs text-muted-foreground">
-              Sanções disponíveis: advertência, suspensão temporária, suspensão definitiva ou remoção de conteúdo.
+              Sanções disponíveis: advertência, suspensão temporária, suspensão definitiva ou
+              remoção de conteúdo.
             </p>
           </aside>
         </div>

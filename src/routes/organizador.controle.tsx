@@ -29,7 +29,10 @@ export const Route = createFileRoute("/organizador/controle")({
           "Registre o resultado dos sets encerrados, acompanhe atrasos por quadra e a estimativa de horário das próximas partidas.",
       },
       { property: "og:title", content: "Operação do evento — partidas e sets · BeacHub" },
-      { property: "og:description", content: "Sets oficiais, atraso por quadra e previsão dos próximos jogos." },
+      {
+        property: "og:description",
+        content: "Sets oficiais, atraso por quadra e previsão dos próximos jogos.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -95,8 +98,8 @@ function SetForm({ match }: { match: ScheduledMatch }) {
         Registrar set encerrado
       </button>
       <p className="mt-2 text-xs text-muted-foreground">
-        O sistema não acompanha o ponto a ponto: informe apenas a pontuação final do set encerrado. Correções ficam
-        registradas no histórico.
+        O sistema não acompanha o ponto a ponto: informe apenas a pontuação final do set encerrado.
+        Correções ficam registradas no histórico.
       </p>
     </div>
   );
@@ -169,7 +172,12 @@ function EventControlPage() {
 
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <Stat label="Em quadra" value={String(live.length)} />
-          <Stat label="Sets a registrar" value={String(live.filter((m) => m.sets.some((s) => s.status === "IN_PROGRESS")).length)} />
+          <Stat
+            label="Sets a registrar"
+            value={String(
+              live.filter((m) => m.sets.some((s) => s.status === "IN_PROGRESS")).length,
+            )}
+          />
           <Stat label="Atraso máximo" value={`${maxDelay} min`} />
           <Stat label="Partidas restantes" value={String(remaining)} />
         </div>
@@ -182,7 +190,9 @@ function EventControlPage() {
                 onClick={() => setTab(t)}
                 className={cn(
                   "whitespace-nowrap border-b-2 px-3 py-3 font-display text-xs font-bold uppercase tracking-widest",
-                  tab === t ? "border-accent text-foreground" : "border-transparent text-muted-foreground",
+                  tab === t
+                    ? "border-accent text-foreground"
+                    : "border-transparent text-muted-foreground",
                 )}
               >
                 {t}
@@ -198,7 +208,10 @@ function EventControlPage() {
                 Nenhum evento seu ainda. Crie um evento para operar o kanban.
               </p>
             ) : eventConfig.isPending ? (
-              <div className="h-40 animate-pulse border border-border bg-background" aria-busy="true" />
+              <div
+                className="h-40 animate-pulse border border-border bg-background"
+                aria-busy="true"
+              />
             ) : (
               <OpsKanban
                 slug={activeSlug}
@@ -257,8 +270,9 @@ function EventControlPage() {
                     {m.teamA} <span className="text-muted-foreground">×</span> {m.teamB}
                   </p>
                   <p className="mt-1 text-muted-foreground">
-                    {[...m.playersA, ...m.playersB].join(", ") || "Duplas a definir"} — serão notificados se a
-                    estimativa mudar em relação ao horário programado ({m.scheduledStartAt}).
+                    {[...m.playersA, ...m.playersB].join(", ") || "Duplas a definir"} — serão
+                    notificados se a estimativa mudar em relação ao horário programado (
+                    {m.scheduledStartAt}).
                   </p>
                 </div>
               ))}
@@ -280,7 +294,8 @@ function EventControlPage() {
                       className="flex flex-wrap items-center justify-between gap-2 border border-border bg-card p-4 text-sm"
                     >
                       <span className="font-display font-bold">
-                        {m.teamA} ({w.a}) <span className="text-muted-foreground">×</span> ({w.b}) {m.teamB}
+                        {m.teamA} ({w.a}) <span className="text-muted-foreground">×</span> ({w.b}){" "}
+                        {m.teamB}
                       </span>
                       <span className="text-muted-foreground">
                         {m.sets.map((s) => `${s.a}×${s.b}`).join(" · ")} — {m.court}

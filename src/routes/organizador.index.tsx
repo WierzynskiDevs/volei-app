@@ -16,17 +16,20 @@ import {
 import { events, matches } from "@/lib/mock-data";
 import { toast } from "sonner";
 
-
 export const Route = createFileRoute("/organizador/")({
   head: () => ({
     meta: [
       { title: "Painel do organizador · BeacHub" },
       {
         name: "description",
-        content: "Crie campeonatos, receba inscrições, gere chaves e agenda, lance resultados e feche o ranking.",
+        content:
+          "Crie campeonatos, receba inscrições, gere chaves e agenda, lance resultados e feche o ranking.",
       },
       { property: "og:title", content: "Painel do organizador · BeacHub" },
-      { property: "og:description", content: "Tudo para operar um campeonato de vôlei de areia do início ao fim." },
+      {
+        property: "og:description",
+        content: "Tudo para operar um campeonato de vôlei de areia do início ao fim.",
+      },
     ],
   }),
   component: OrganizerDashboard,
@@ -73,13 +76,16 @@ function OrganizerDashboard() {
 
         <PendingRegistrations />
 
-
         <h2 className="mt-10 text-xl">Meus eventos</h2>
         <div className="mt-3 divide-y divide-border border border-border bg-card">
           {events.slice(0, 4).map((e) => (
             <div key={e.id} className="flex flex-wrap items-center gap-3 px-4 py-4">
               <div className="min-w-[200px] flex-1">
-                <Link to="/eventos/$slug" params={{ slug: e.slug }} className="font-display text-base font-bold hover:text-accent">
+                <Link
+                  to="/eventos/$slug"
+                  params={{ slug: e.slug }}
+                  className="font-display text-base font-bold hover:text-accent"
+                >
                   {e.name}
                 </Link>
                 <p className="text-sm text-muted-foreground">
@@ -108,7 +114,8 @@ const LEVEL_TEXT: Record<string, string> = {
   FREE: "Livre",
 };
 
-const levelText = (value: string | null) => (value === null ? "não informado" : LEVEL_TEXT[value] ?? value);
+const levelText = (value: string | null) =>
+  value === null ? "não informado" : (LEVEL_TEXT[value] ?? value);
 
 function PendingRegistrations() {
   const queryClient = useQueryClient();
@@ -198,10 +205,15 @@ function PendingRegistrations() {
           );
         })}
         {!pendingQuery.isPending && !pendingQuery.isError && waiting.length === 0 ? (
-          <p className="px-4 py-8 text-center text-sm text-muted-foreground">Nenhuma inscrição aguardando análise.</p>
+          <p className="px-4 py-8 text-center text-sm text-muted-foreground">
+            Nenhuma inscrição aguardando análise.
+          </p>
         ) : null}
         {reviewed.map((p: ApiRegistration) => (
-          <div key={p.id} className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground">
+          <div
+            key={p.id}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground"
+          >
             {p.player?.name ?? "Atleta"} — reprovada
           </div>
         ))}

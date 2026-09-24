@@ -14,10 +14,14 @@ export const Route = createFileRoute("/juiz")({
       { title: "Área do juiz · BeacHub" },
       {
         name: "description",
-        content: "Visão simplificada da arbitragem: apenas as partidas autorizadas, com início, placar e resultado.",
+        content:
+          "Visão simplificada da arbitragem: apenas as partidas autorizadas, com início, placar e resultado.",
       },
       { property: "og:title", content: "Área do juiz · BeacHub" },
-      { property: "og:description", content: "Meus jogos, placar por set e finalização direto da quadra." },
+      {
+        property: "og:description",
+        content: "Meus jogos, placar por set e finalização direto da quadra.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),

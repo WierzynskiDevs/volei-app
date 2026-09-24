@@ -42,7 +42,9 @@ export function FinancePill({ tone = "neutral", children }: { tone?: Tone; child
 }
 
 export function PaymentStatusPill({ status }: { status: PaymentStatus }) {
-  return <FinancePill tone={PAYMENT_STATUS_TONE[status]}>{PAYMENT_STATUS_LABEL[status]}</FinancePill>;
+  return (
+    <FinancePill tone={PAYMENT_STATUS_TONE[status]}>{PAYMENT_STATUS_LABEL[status]}</FinancePill>
+  );
 }
 
 export function RefundStatusPill({ status }: { status: RefundStatus }) {
@@ -101,12 +103,20 @@ export function MoneyRow({
   strong?: boolean;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-baseline gap-2 px-4 py-3", strong && "bg-sand-deep/30")}>
+    <div
+      className={cn("flex flex-wrap items-baseline gap-2 px-4 py-3", strong && "bg-sand-deep/30")}
+    >
       <div className="min-w-[180px] flex-1">
         <p className={cn("text-sm", strong && "font-display font-bold")}>{label}</p>
         {detail ? <p className="text-xs text-muted-foreground">{detail}</p> : null}
       </div>
-      <span className={cn("score-num tabular-nums", strong ? "text-lg font-bold" : "text-sm", negative && "text-destructive")}>
+      <span
+        className={cn(
+          "score-num tabular-nums",
+          strong ? "text-lg font-bold" : "text-sm",
+          negative && "text-destructive",
+        )}
+      >
         {negative ? "− " : ""}
         {brl(Math.abs(cents))}
       </span>
@@ -124,7 +134,12 @@ export function FinanceTimeline({ entries }: { entries: LedgerEntry[] }) {
           <div className="flex flex-wrap items-baseline gap-2">
             <p className="font-display text-sm font-bold">{e.label}</p>
             {typeof e.amountCents === "number" ? (
-              <span className={cn("score-num text-sm tabular-nums", e.amountCents < 0 && "text-destructive")}>
+              <span
+                className={cn(
+                  "score-num text-sm tabular-nums",
+                  e.amountCents < 0 && "text-destructive",
+                )}
+              >
                 {e.amountCents < 0 ? "− " : ""}
                 {brl(Math.abs(e.amountCents))}
               </span>
@@ -167,7 +182,11 @@ export function FinanceAlert({
     <div
       className={cn(
         "flex flex-wrap items-center gap-3 border p-4",
-        tone === "danger" ? "border-destructive/40 bg-destructive/10" : tone === "ok" ? "border-success/40 bg-success/10" : "border-warning/40 bg-warning/10",
+        tone === "danger"
+          ? "border-destructive/40 bg-destructive/10"
+          : tone === "ok"
+            ? "border-success/40 bg-success/10"
+            : "border-warning/40 bg-warning/10",
       )}
     >
       <div className="min-w-[220px] flex-1">
@@ -197,7 +216,9 @@ export function FilterTabs<T extends string>({
           onClick={() => onChange(o)}
           className={cn(
             "border px-3 py-1.5 font-display text-[10px] font-bold uppercase tracking-widest",
-            value === o ? "border-graphite bg-graphite text-background" : "border-border bg-card text-muted-foreground",
+            value === o
+              ? "border-graphite bg-graphite text-background"
+              : "border-border bg-card text-muted-foreground",
           )}
         >
           {o}

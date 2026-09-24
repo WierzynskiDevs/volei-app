@@ -109,7 +109,16 @@ export function feeLabel(cents: number): string {
  */
 export function paymentPillStatus(
   status: string,
-): "PENDING" | "PROCESSING" | "PAID" | "FAILED" | "EXPIRED" | "CANCELLED" | "REFUNDED" | "PARTIALLY_REFUNDED" | "CHARGEBACK" {
+):
+  | "PENDING"
+  | "PROCESSING"
+  | "PAID"
+  | "FAILED"
+  | "EXPIRED"
+  | "CANCELLED"
+  | "REFUNDED"
+  | "PARTIALLY_REFUNDED"
+  | "CHARGEBACK" {
   switch (status) {
     case "DRAFT":
     case "PENDING":
@@ -139,6 +148,9 @@ export function paymentPillStatus(
  * existe até lá (ADR 0009 §5). Mostrar R$ 0,00 afirmaria que o organizador não
  * recebe nada — que é uma afirmação financeira falsa.
  */
-export function brlOrUnavailable(cents: number | null | undefined, format: (c: number) => string): string {
+export function brlOrUnavailable(
+  cents: number | null | undefined,
+  format: (c: number) => string,
+): string {
   return cents === null || cents === undefined ? "—" : format(cents);
 }

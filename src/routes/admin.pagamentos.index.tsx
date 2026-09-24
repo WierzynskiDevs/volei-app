@@ -13,7 +13,11 @@ export const Route = createFileRoute("/admin/pagamentos/")({
   head: () => ({
     meta: [
       { title: "Pagamentos · Super Admin BeacHub" },
-      { name: "description", content: "Todas as cobranças da plataforma BeacHub com taxa congelada, taxa do gateway e valor líquido do organizador." },
+      {
+        name: "description",
+        content:
+          "Todas as cobranças da plataforma BeacHub com taxa congelada, taxa do gateway e valor líquido do organizador.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Pagamentos · Super Admin BeacHub" },
       { property: "og:description", content: "Visão completa das transações." },
@@ -60,7 +64,19 @@ function AdminPayments() {
           <FilterTabs options={filters} value={filter} onChange={setFilter} />
         </div>
 
-        <AdminTable head={["Cobrança", "Participante", "Evento", "Valor", "Taxa plataforma", "Taxa Asaas", "Líquido", "Status", ""]}>
+        <AdminTable
+          head={[
+            "Cobrança",
+            "Participante",
+            "Evento",
+            "Valor",
+            "Taxa plataforma",
+            "Taxa Asaas",
+            "Líquido",
+            "Status",
+            "",
+          ]}
+        >
           <AdminTableState
             columns={9}
             isPending={isPending}
@@ -73,7 +89,9 @@ function AdminPayments() {
             {list.map((p) => (
               <tr key={p.id}>
                 <td className="px-4 py-3">
-                  <p className="font-display text-sm font-bold">{p.external_reference ?? p.id.slice(0, 8)}</p>
+                  <p className="font-display text-sm font-bold">
+                    {p.external_reference ?? p.id.slice(0, 8)}
+                  </p>
                   <p className="text-xs text-muted-foreground">{p.provider}</p>
                 </td>
                 <td className="px-4 py-3">
@@ -85,11 +103,17 @@ function AdminPayments() {
                 <td className="score-num px-4 py-3 tabular-nums">
                   {brl(p.platform_fee_cents)}
                   {/* Alíquota congelada da cobrança, não a taxa atual do plano (§7.5). */}
-                  <span className="ml-1 text-xs text-muted-foreground">{pct(p.platform_fee_basis_points / 100)}</span>
+                  <span className="ml-1 text-xs text-muted-foreground">
+                    {pct(p.platform_fee_basis_points / 100)}
+                  </span>
                 </td>
                 {/* `—` e não R$ 0,00: taxa desconhecida é diferente de taxa zero. */}
-                <td className="score-num px-4 py-3 tabular-nums">{brlOrUnavailable(p.asaas_fee_cents, brl)}</td>
-                <td className="score-num px-4 py-3 tabular-nums">{brlOrUnavailable(p.organizer_net_cents, brl)}</td>
+                <td className="score-num px-4 py-3 tabular-nums">
+                  {brlOrUnavailable(p.asaas_fee_cents, brl)}
+                </td>
+                <td className="score-num px-4 py-3 tabular-nums">
+                  {brlOrUnavailable(p.organizer_net_cents, brl)}
+                </td>
                 <td className="px-4 py-3">
                   <PaymentStatusPill status={paymentPillStatus(p.status)} />
                 </td>

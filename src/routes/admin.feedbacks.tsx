@@ -9,9 +9,16 @@ export const Route = createFileRoute("/admin/feedbacks")({
   head: () => ({
     meta: [
       { title: "Feedbacks de eventos · Super Admin BeacHub" },
-      { name: "description", content: "Avaliações de experiência dos eventos: organização, pontualidade, estrutura, arbitragem e comunicação." },
+      {
+        name: "description",
+        content:
+          "Avaliações de experiência dos eventos: organização, pontualidade, estrutura, arbitragem e comunicação.",
+      },
       { property: "og:title", content: "Feedbacks de eventos · Super Admin BeacHub" },
-      { property: "og:description", content: "Qualidade dos campeonatos vista pelos participantes." },
+      {
+        property: "og:description",
+        content: "Qualidade dos campeonatos vista pelos participantes.",
+      },
     ],
   }),
   component: AdminFeedbacks,
@@ -32,8 +39,14 @@ function AdminFeedbacks() {
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <Stat label="Feedbacks" value={eventFeedbacks.length} />
           <Stat label="Média geral" value={overall.toFixed(1)} hint="de 5 estrelas" />
-          <Stat label="Eventos avaliados" value={new Set(eventFeedbacks.map((f) => f.event)).size} />
-          <Stat label="Comentários públicos" value={eventFeedbacks.filter((f) => f.comment).length} />
+          <Stat
+            label="Eventos avaliados"
+            value={new Set(eventFeedbacks.map((f) => f.event)).size}
+          />
+          <Stat
+            label="Comentários públicos"
+            value={eventFeedbacks.filter((f) => f.comment).length}
+          />
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">

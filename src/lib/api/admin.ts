@@ -264,7 +264,9 @@ export type EventGroup = (typeof EVENT_GROUPS)[number];
  * publicado, inscrições abertas e inscrições encerradas. `status` continua
  * disponível para um estado exato.
  */
-export const adminEventsQuery = (filters: { group?: EventGroup; status?: string; q?: string } = {}) =>
+export const adminEventsQuery = (
+  filters: { group?: EventGroup; status?: string; q?: string } = {},
+) =>
   queryOptions({
     queryKey: queryKeys.admin.events(filters),
     queryFn: async ({ signal }) => {

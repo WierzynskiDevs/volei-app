@@ -2,11 +2,20 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 
 import { LiveMatchCard, UpcomingMatchCard } from "@/components/site/live";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ESTIMATE_DISCLAIMER, COURTS, liveMatches, upcomingMatches } from "@/lib/schedule-data";
 
 const searchSchema = z.object({
-  quadra: z.enum(["TODAS", ...COURTS] as [string, ...string[]]).optional().default("TODAS"),
+  quadra: z
+    .enum(["TODAS", ...COURTS] as [string, ...string[]])
+    .optional()
+    .default("TODAS"),
 });
 
 export const Route = createFileRoute("/placar")({
@@ -16,10 +25,14 @@ export const Route = createFileRoute("/placar")({
       { title: "Modo telão — painel de partidas · BeacHub" },
       {
         name: "description",
-        content: "Todas as partidas em andamento por quadra, sets oficiais e próximos jogos, em tela cheia para a arena.",
+        content:
+          "Todas as partidas em andamento por quadra, sets oficiais e próximos jogos, em tela cheia para a arena.",
       },
       { property: "og:title", content: "Modo telão — painel de partidas · BeacHub" },
-      { property: "og:description", content: "Sets oficiais, set atual e próximos jogos da arena." },
+      {
+        property: "og:description",
+        content: "Sets oficiais, set atual e próximos jogos da arena.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -47,7 +60,9 @@ function ScoreboardPage() {
             <span className="font-display text-xl font-extrabold tracking-tight">
               Beac<span className="text-accent">Hub</span>
             </span>
-            <span className="eyebrow ml-3 text-background/60">Copa Areia Curitiba · Arena Norte Beach</span>
+            <span className="eyebrow ml-3 text-background/60">
+              Copa Areia Curitiba · Arena Norte Beach
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="eyebrow text-background/60">Exibir</span>
@@ -78,7 +93,9 @@ function ScoreboardPage() {
             <LiveMatchCard key={m.id} match={m} dark />
           ))}
           {live.length === 0 ? (
-            <p className="text-background/60">Nenhuma partida em andamento para {title.toLowerCase()}.</p>
+            <p className="text-background/60">
+              Nenhuma partida em andamento para {title.toLowerCase()}.
+            </p>
           ) : null}
         </div>
 
@@ -96,4 +113,3 @@ function ScoreboardPage() {
     </div>
   );
 }
-

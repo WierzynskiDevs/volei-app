@@ -12,7 +12,11 @@ export const Route = createFileRoute("/admin/financeiro")({
   head: () => ({
     meta: [
       { title: "Financeiro global · Super Admin BeacHub" },
-      { name: "description", content: "GMV, receita da plataforma, taxas de pagamento, reembolsos, chargebacks e receita por organizador, evento e período." },
+      {
+        name: "description",
+        content:
+          "GMV, receita da plataforma, taxas de pagamento, reembolsos, chargebacks e receita por organizador, evento e período.",
+      },
       { property: "og:title", content: "Financeiro global · Super Admin BeacHub" },
       { property: "og:description", content: "Quanto a plataforma movimenta e quanto ela ganha." },
     ],
@@ -22,7 +26,20 @@ export const Route = createFileRoute("/admin/financeiro")({
 
 /** Rótulo do mês a partir de `YYYY-MM`, sem passar por `new Date`. */
 function monthLabel(period: string): string {
-  const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const months = [
+    "jan",
+    "fev",
+    "mar",
+    "abr",
+    "mai",
+    "jun",
+    "jul",
+    "ago",
+    "set",
+    "out",
+    "nov",
+    "dez",
+  ];
   const [year, month] = period.split("-");
   const index = Number(month) - 1;
   return `${months[index] ?? month}/${(year ?? "").slice(2)}`;
@@ -54,7 +71,9 @@ function AdminFinance() {
 
         {isError ? (
           <div className="mt-6 border border-destructive/40 bg-destructive/10 p-5">
-            <p className="font-display text-sm font-bold">Não foi possível carregar o financeiro.</p>
+            <p className="font-display text-sm font-bold">
+              Não foi possível carregar o financeiro.
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">{error.message}</p>
             <button
               type="button"
@@ -67,21 +86,49 @@ function AdminFinance() {
         ) : null}
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MoneyCard label="GMV total" cents={platform?.gross_cents ?? 0} hint="valor bruto movimentado" emphasis />
-          <MoneyCard label="Receita da plataforma" cents={platform?.platform_revenue_cents ?? 0} hint="taxas congeladas por transação" tone="ok" />
-          <MoneyCard label="Taxas de pagamento (Asaas)" cents={platform?.asaas_fee_cents ?? 0} hint="custo do organizador" />
-          <MoneyCard label="Reembolsos" cents={platform?.refunded_cents ?? 0} hint="estornos confirmados" tone="danger" />
+          <MoneyCard
+            label="GMV total"
+            cents={platform?.gross_cents ?? 0}
+            hint="valor bruto movimentado"
+            emphasis
+          />
+          <MoneyCard
+            label="Receita da plataforma"
+            cents={platform?.platform_revenue_cents ?? 0}
+            hint="taxas congeladas por transação"
+            tone="ok"
+          />
+          <MoneyCard
+            label="Taxas de pagamento (Asaas)"
+            cents={platform?.asaas_fee_cents ?? 0}
+            hint="custo do organizador"
+          />
+          <MoneyCard
+            label="Reembolsos"
+            cents={platform?.refunded_cents ?? 0}
+            hint="estornos confirmados"
+            tone="danger"
+          />
         </div>
 
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <MoneyCard label="Chargebacks" cents={platform?.chargeback_cents ?? 0} hint="contestações de cartão" tone="danger" />
+          <MoneyCard
+            label="Chargebacks"
+            cents={platform?.chargeback_cents ?? 0}
+            hint="contestações de cartão"
+            tone="danger"
+          />
           <MoneyCard
             label="Pagamentos pendentes"
             cents={data?.pending.gross_cents ?? 0}
             hint={`${data?.pending.count ?? 0} cobranças`}
           />
           <Stat label="Pagamentos confirmados" value={paidCount} hint="inscrições pagas" />
-          <Stat label="Gateway" value={GATEWAY.name} hint={`${GATEWAY.status} · ${GATEWAY.environment}`} />
+          <Stat
+            label="Gateway"
+            value={GATEWAY.name}
+            hint={`${GATEWAY.status} · ${GATEWAY.environment}`}
+          />
         </div>
 
         <section className="mt-8 border border-border bg-card">
@@ -89,9 +136,21 @@ function AdminFinance() {
             <h2 className="text-lg">Composição do GMV</h2>
           </div>
           <div className="divide-y divide-border">
-            <MoneyRow label="GMV" cents={platform?.gross_cents ?? 0} detail="Total pago pelos participantes" />
-            <MoneyRow label="Receita da plataforma" cents={platform?.platform_revenue_cents ?? 0} detail="Receita do SaaS" />
-            <MoneyRow label="Taxas Asaas" cents={platform?.asaas_fee_cents ?? 0} detail="Custo de processamento repassado ao organizador" />
+            <MoneyRow
+              label="GMV"
+              cents={platform?.gross_cents ?? 0}
+              detail="Total pago pelos participantes"
+            />
+            <MoneyRow
+              label="Receita da plataforma"
+              cents={platform?.platform_revenue_cents ?? 0}
+              detail="Receita do SaaS"
+            />
+            <MoneyRow
+              label="Taxas Asaas"
+              cents={platform?.asaas_fee_cents ?? 0}
+              detail="Custo de processamento repassado ao organizador"
+            />
             <MoneyRow
               label="Reembolsos e chargebacks"
               cents={(platform?.refunded_cents ?? 0) + (platform?.chargeback_cents ?? 0)}
@@ -99,10 +158,10 @@ function AdminFinance() {
               negative
             />
             {/*
-              * O líquido só fecha quando toda taxa de gateway foi informada.
-              * Enquanto não fecha, dizer o número seria afirmar um repasse que
-              * o gateway ainda não confirmou (ADR 0009 §5).
-              */}
+             * O líquido só fecha quando toda taxa de gateway foi informada.
+             * Enquanto não fecha, dizer o número seria afirmar um repasse que
+             * o gateway ainda não confirmou (ADR 0009 §5).
+             */}
             <MoneyRow
               label="Repassado a organizadores"
               cents={platform?.organizer_net_cents ?? 0}
@@ -118,7 +177,9 @@ function AdminFinance() {
 
         <section className="mt-8">
           <h2 className="text-xl">Receita por organizador</h2>
-          <AdminTable head={["Organizador", "Plano", "Taxa atual", "Eventos", "GMV", "Receita SaaS", ""]}>
+          <AdminTable
+            head={["Organizador", "Plano", "Taxa atual", "Eventos", "GMV", "Receita SaaS", ""]}
+          >
             <AdminTableState
               columns={7}
               isPending={isPending}
@@ -148,7 +209,9 @@ function AdminFinance() {
                   </td>
                   <td className="score-num px-4 py-3">—</td>
                   <td className="score-num px-4 py-3 tabular-nums">{brl(o.gross_cents)}</td>
-                  <td className="score-num px-4 py-3 tabular-nums">{brl(o.platform_revenue_cents)}</td>
+                  <td className="score-num px-4 py-3 tabular-nums">
+                    {brl(o.platform_revenue_cents)}
+                  </td>
                   <td className="px-4 py-3">
                     <Link
                       to="/admin/organizadores/$id"
@@ -166,7 +229,9 @@ function AdminFinance() {
 
         <section className="mt-8">
           <h2 className="text-xl">Receita por evento</h2>
-          <AdminTable head={["Evento", "GMV", "Receita SaaS", "Taxas Asaas", "Reembolsos", "Chargebacks"]}>
+          <AdminTable
+            head={["Evento", "GMV", "Receita SaaS", "Taxas Asaas", "Reembolsos", "Chargebacks"]}
+          >
             <AdminTableState
               columns={6}
               isPending={isPending}
@@ -180,7 +245,11 @@ function AdminFinance() {
                 <tr key={e.event_id}>
                   <td className="px-4 py-3">
                     {e.event_slug ? (
-                      <Link to="/eventos/$slug" params={{ slug: e.event_slug }} className="font-display text-sm font-bold hover:text-accent">
+                      <Link
+                        to="/eventos/$slug"
+                        params={{ slug: e.event_slug }}
+                        className="font-display text-sm font-bold hover:text-accent"
+                      >
                         {e.event_name ?? "—"}
                       </Link>
                     ) : (
@@ -188,7 +257,9 @@ function AdminFinance() {
                     )}
                   </td>
                   <td className="score-num px-4 py-3 tabular-nums">{brl(e.gross_cents)}</td>
-                  <td className="score-num px-4 py-3 tabular-nums">{brl(e.platform_revenue_cents)}</td>
+                  <td className="score-num px-4 py-3 tabular-nums">
+                    {brl(e.platform_revenue_cents)}
+                  </td>
                   <td className="score-num px-4 py-3 tabular-nums">{brl(e.asaas_fee_cents)}</td>
                   <td className="score-num px-4 py-3 tabular-nums">{brl(e.refunded_cents)}</td>
                   <td className="score-num px-4 py-3 tabular-nums">{brl(e.chargeback_cents)}</td>
@@ -203,7 +274,8 @@ function AdminFinance() {
           <div className="mt-3 border border-border bg-card p-4">
             {periods.length === 0 ? (
               <p className="py-10 text-center text-sm text-muted-foreground">
-                Ainda não há meses com movimento. O gráfico se forma a partir do primeiro pagamento confirmado.
+                Ainda não há meses com movimento. O gráfico se forma a partir do primeiro pagamento
+                confirmado.
               </p>
             ) : (
               <div className="flex items-end gap-4">
@@ -217,7 +289,10 @@ function AdminFinance() {
                         {brl(p.platform_revenue_cents)}
                       </span>
                       <div className="flex h-40 w-full items-end bg-sand-deep/30">
-                        <div className="w-full bg-graphite" style={{ height: `${(p.gross_cents / max) * 100}%` }} />
+                        <div
+                          className="w-full bg-graphite"
+                          style={{ height: `${(p.gross_cents / max) * 100}%` }}
+                        />
                       </div>
                       <span className="font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                         {monthLabel(p.period)}
@@ -228,7 +303,9 @@ function AdminFinance() {
                 })}
               </div>
             )}
-            <p className="mt-3 text-xs text-muted-foreground">Barra = GMV do período · valor acima = receita da plataforma.</p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Barra = GMV do período · valor acima = receita da plataforma.
+            </p>
           </div>
         </section>
       </div>

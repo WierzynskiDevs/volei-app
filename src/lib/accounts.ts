@@ -13,7 +13,7 @@
  */
 
 /** Senha das contas semeadas em desenvolvimento. Igual à do `DemoAccountSeeder`. */
-export const DEMO_PASSWORD = import.meta.env['VITE_DEMO_PASSWORD'] ?? "saque123456";
+export const DEMO_PASSWORD = import.meta.env["VITE_DEMO_PASSWORD"] ?? "saque123456";
 
 export type Role = "PLAYER" | "ORGANIZER" | "SUPER_ADMIN";
 

@@ -12,9 +12,16 @@ export const Route = createFileRoute("/minhas-inscricoes")({
   head: () => ({
     meta: [
       { title: "Minhas inscrições e pagamentos · BeacHub" },
-      { name: "description", content: "Veja quanto pagou, se a inscrição está confirmada, alterações do evento e o status dos seus reembolsos." },
+      {
+        name: "description",
+        content:
+          "Veja quanto pagou, se a inscrição está confirmada, alterações do evento e o status dos seus reembolsos.",
+      },
       { property: "og:title", content: "Minhas inscrições e pagamentos · BeacHub" },
-      { property: "og:description", content: "Situação financeira de cada inscrição, do PIX ao reembolso." },
+      {
+        property: "og:description",
+        content: "Situação financeira de cada inscrição, do PIX ao reembolso.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -99,7 +106,9 @@ function MyRegistrations() {
                       </p>
                     </div>
                     <span className="score-num text-lg tabular-nums">{brl(amountCents)}</span>
-                    {payment ? <PaymentStatusPill status={paymentPillStatus(payment.status)} /> : null}
+                    {payment ? (
+                      <PaymentStatusPill status={paymentPillStatus(payment.status)} />
+                    ) : null}
                   </div>
 
                   <div className="grid gap-2 px-4 py-3 text-sm text-muted-foreground sm:grid-cols-3">
@@ -117,10 +126,10 @@ function MyRegistrations() {
                   </div>
 
                   {/*
-                    * A vaga só é do atleta quando o pagamento confirma (ADR
-                    * 0003). Enquanto o backend não disser que confirmou, a tela
-                    * diz exatamente isso — e oferece o caminho para pagar.
-                    */}
+                   * A vaga só é do atleta quando o pagamento confirma (ADR
+                   * 0003). Enquanto o backend não disser que confirmou, a tela
+                   * diz exatamente isso — e oferece o caminho para pagar.
+                   */}
                   {r.status === "PENDING_PAYMENT" ? (
                     <div className="border-t border-border px-4 py-3">
                       <p className="text-sm text-muted-foreground">
@@ -141,8 +150,8 @@ function MyRegistrations() {
                   {r.status === "PENDING_ACCEPTANCE" ? (
                     <div className="border-t border-border px-4 py-3">
                       <p className="text-sm text-muted-foreground">
-                        Aguardando o aceite do seu parceiro. A cobrança é individual: cada atleta paga
-                        a própria inscrição.
+                        Aguardando o aceite do seu parceiro. A cobrança é individual: cada atleta
+                        paga a própria inscrição.
                       </p>
                     </div>
                   ) : null}

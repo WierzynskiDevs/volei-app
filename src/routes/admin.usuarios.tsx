@@ -2,10 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, AdminTable, StatusPill } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  AdminTable,
+  StatusPill,
+} from "@/components/site/admin-shell";
 import { AdminTableState, formatDate } from "@/components/site/admin-async";
 import { ROLE_LABEL } from "@/lib/accounts";
-import { adminUsersQuery, setUserBlocked, type AdminUser, type AdminUserFilter } from "@/lib/api/admin";
+import {
+  adminUsersQuery,
+  setUserBlocked,
+  type AdminUser,
+  type AdminUserFilter,
+} from "@/lib/api/admin";
 import { queryKeys } from "@/lib/api/query-keys";
 import {
   AlertDialog,
@@ -22,7 +33,11 @@ export const Route = createFileRoute("/admin/usuarios")({
   head: () => ({
     meta: [
       { title: "Controle de usuários · Super Admin BeacHub" },
-      { name: "description", content: "Visualize, filtre, suspenda ou exclua contas de jogadores e organizadores da plataforma BeacHub." },
+      {
+        name: "description",
+        content:
+          "Visualize, filtre, suspenda ou exclua contas de jogadores e organizadores da plataforma BeacHub.",
+      },
       { property: "og:title", content: "Controle de usuários · Super Admin BeacHub" },
       { property: "og:description", content: "Gestão de contas com trilha de auditoria." },
     ],
@@ -104,7 +119,9 @@ function AdminUsers() {
               type="button"
               onClick={() => setFilter(f)}
               className={`border px-3 py-1.5 font-display text-[11px] font-bold uppercase tracking-widest ${
-                filter === f ? "border-graphite bg-graphite text-background" : "border-border text-muted-foreground"
+                filter === f
+                  ? "border-graphite bg-graphite text-background"
+                  : "border-border text-muted-foreground"
               }`}
             >
               {f}
@@ -112,7 +129,18 @@ function AdminUsers() {
           ))}
         </div>
 
-        <AdminTable head={["Usuário", "Contato", "Tipo", "Status", "Eventos", "Participações", "Cadastro", "Ações"]}>
+        <AdminTable
+          head={[
+            "Usuário",
+            "Contato",
+            "Tipo",
+            "Status",
+            "Eventos",
+            "Participações",
+            "Cadastro",
+            "Ações",
+          ]}
+        >
           <AdminTableState
             columns={8}
             isPending={isPending}
@@ -144,20 +172,29 @@ function AdminUsers() {
                   {(a.roles ?? []).map((r) => ROLE_LABEL[r]).join(" + ") || "—"}
                 </td>
                 <td className="px-4 py-3">
-                  <StatusPill tone={a.status === "ACTIVE" ? "ok" : "danger"}>{a.status_label}</StatusPill>
+                  <StatusPill tone={a.status === "ACTIVE" ? "ok" : "danger"}>
+                    {a.status_label}
+                  </StatusPill>
                 </td>
                 {/*
-                  * Eventos e participações por conta não existem no contrato da
-                  * API. Preferir "—" a somar número no cliente: contagem
-                  * inventada em tela de governança é pior do que coluna vazia.
-                  */}
+                 * Eventos e participações por conta não existem no contrato da
+                 * API. Preferir "—" a somar número no cliente: contagem
+                 * inventada em tela de governança é pior do que coluna vazia.
+                 */}
                 <td className="score-num px-4 py-3">—</td>
                 <td className="score-num px-4 py-3">—</td>
-                <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(a.created_at)}</td>
+                <td className="px-4 py-3 text-xs text-muted-foreground">
+                  {formatDate(a.created_at)}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1.5">
                     <AdminAction>Visualizar</AdminAction>
-                    <AdminAction onClick={() => { setToToggle(a); setReason(""); }}>
+                    <AdminAction
+                      onClick={() => {
+                        setToToggle(a);
+                        setReason("");
+                      }}
+                    >
                       {a.status === "ACTIVE" ? "Suspender" : "Reativar"}
                     </AdminAction>
                     <AdminAction tone="danger" onClick={() => setToDelete(a)}>
@@ -172,10 +209,10 @@ function AdminUsers() {
       </div>
 
       {/*
-        * Suspensão e reativação: o motivo é exigido pela API (mínimo de 10
-        * caracteres) e vai para a trilha de auditoria. Sem ele a chamada volta
-        * 422 — então o botão só habilita quando há texto suficiente.
-        */}
+       * Suspensão e reativação: o motivo é exigido pela API (mínimo de 10
+       * caracteres) e vai para a trilha de auditoria. Sem ele a chamada volta
+       * 422 — então o botão só habilita quando há texto suficiente.
+       */}
       <AlertDialog
         open={!!toToggle}
         onOpenChange={(o) => {
@@ -195,8 +232,8 @@ function AdminUsers() {
               {toToggle ? `${toToggle.name} (${toToggle.email}). ` : ""}
               {toToggle?.status === "ACTIVE"
                 ? "A pessoa perde o acesso imediatamente, inclusive na sessão que estiver aberta agora."
-                : "A pessoa volta a acessar a plataforma normalmente."}
-              {" "}A decisão é registrada na auditoria com o motivo informado.
+                : "A pessoa volta a acessar a plataforma normalmente."}{" "}
+              A decisão é registrada na auditoria com o motivo informado.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <label className="block">
@@ -233,24 +270,28 @@ function AdminUsers() {
       </AlertDialog>
 
       {/*
-        * Exclusão de conta permanece sem backend, por decisão do ADR 0010 §1:
-        * apagar titular é o direito de anonimização do §12, não um DELETE de
-        * linha — e exclusão simples abriria caminho para apagar pessoa com
-        * pagamento associado. O diálogo do baseline segue aqui, inalterado.
-        */}
+       * Exclusão de conta permanece sem backend, por decisão do ADR 0010 §1:
+       * apagar titular é o direito de anonimização do §12, não um DELETE de
+       * linha — e exclusão simples abriria caminho para apagar pessoa com
+       * pagamento associado. O diálogo do baseline segue aqui, inalterado.
+       */}
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <AlertDialogContent className="rounded-none border-border">
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza que deseja excluir esta conta?</AlertDialogTitle>
             <AlertDialogDescription>
               {toDelete ? `${toDelete.name} (${toDelete.email}). ` : ""}
-              Essa ação afetará o acesso do usuário e poderá anonimizar dados relacionados ao histórico esportivo.
-              A exclusão é registrada na auditoria com o motivo informado.
+              Essa ação afetará o acesso do usuário e poderá anonimizar dados relacionados ao
+              histórico esportivo. A exclusão é registrada na auditoria com o motivo informado.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <label className="block">
             <span className="eyebrow">Motivo da exclusão</span>
-            <textarea rows={3} className="input-base mt-1.5" placeholder="Fraude, abuso, violação das regras, denúncia grave…" />
+            <textarea
+              rows={3}
+              className="input-base mt-1.5"
+              placeholder="Fraude, abuso, violação das regras, denúncia grave…"
+            />
           </label>
           <AlertDialogFooter>
             <AlertDialogCancel className="rounded-none">Cancelar</AlertDialogCancel>

@@ -6,7 +6,13 @@ import { toast } from "sonner";
 
 import { BracketTree } from "@/components/site/bracket-tree";
 import { AppShell } from "@/components/site/shell";
-import { EmptyState, EventStatusPill, MatchCard, SponsorBanner, Tag } from "@/components/site/cards";
+import {
+  EmptyState,
+  EventStatusPill,
+  MatchCard,
+  SponsorBanner,
+  Tag,
+} from "@/components/site/cards";
 import { RefereesPanel } from "@/components/site/ops-referees";
 import { ApiError } from "@/lib/api/client";
 import { publicBracketQuery } from "@/lib/api/draws";
@@ -41,7 +47,9 @@ export const Route = createFileRoute("/eventos/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Evento indisponível · BeacHub" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Evento indisponível · BeacHub" }, { name: "robots", content: "noindex" }],
+      };
     }
     const { event } = loaderData;
     const title = `${event.name} · ${event.city}/${event.state} · BeacHub`;
@@ -61,7 +69,10 @@ export const Route = createFileRoute("/eventos/$slug")({
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
         <h1 className="text-2xl">Não foi possível carregar este evento</h1>
         <p className="mt-2 text-muted-foreground">{error.message}</p>
-        <Link to="/eventos" className="mt-6 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent">
+        <Link
+          to="/eventos"
+          className="mt-6 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent"
+        >
           Voltar para campeonatos
         </Link>
       </div>
@@ -74,7 +85,10 @@ export const Route = createFileRoute("/eventos/$slug")({
         <p className="mt-2 text-muted-foreground">
           O link pode ter expirado ou o organizador removeu o evento da vitrine pública.
         </p>
-        <Link to="/eventos" className="mt-6 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent">
+        <Link
+          to="/eventos"
+          className="mt-6 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent"
+        >
           Ver campeonatos abertos
         </Link>
       </div>
@@ -82,7 +96,14 @@ export const Route = createFileRoute("/eventos/$slug")({
   ),
 });
 
-const publicTabs = ["Informações", "Duplas", "Chaveamento", "Agenda", "Tabela", "Resultados"] as const;
+const publicTabs = [
+  "Informações",
+  "Duplas",
+  "Chaveamento",
+  "Agenda",
+  "Tabela",
+  "Resultados",
+] as const;
 const organizerTabs = ["Juízes"] as const;
 type TabName = (typeof publicTabs)[number] | (typeof organizerTabs)[number];
 
@@ -135,7 +156,9 @@ function EventPage() {
             <div className="w-full max-w-xs border border-graphite bg-card p-4">
               <p className="eyebrow">Inscrição</p>
               <p className="score-num mt-1 text-2xl">{event.fee}</p>
-              <p className="mt-1 text-sm text-muted-foreground">Encerra em {event.registrationClose}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Encerra em {event.registrationClose}
+              </p>
               <Link
                 to="/inscricao/$slug"
                 params={{ slug: event.slug }}
@@ -162,7 +185,9 @@ function EventPage() {
               onClick={() => setTab(t)}
               className={cn(
                 "whitespace-nowrap border-b-2 px-3 py-3 font-display text-xs font-bold uppercase tracking-widest",
-                tab === t ? "border-accent text-foreground" : "border-transparent text-muted-foreground",
+                tab === t
+                  ? "border-accent text-foreground"
+                  : "border-transparent text-muted-foreground",
               )}
             >
               {t}
@@ -173,7 +198,9 @@ function EventPage() {
 
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-8">
         {tab === "Juízes" ? <RefereesPanel slug={event.slug} /> : null}
-        {tab === "Informações" ? <InfoTab rules={event.rules} organizer={event.organizer} courts={event.courts} /> : null}
+        {tab === "Informações" ? (
+          <InfoTab rules={event.rules} organizer={event.organizer} courts={event.courts} />
+        ) : null}
         {tab === "Duplas" ? <TeamsTab slug={event.slug} canEdit={isOrganizer} /> : null}
         {tab === "Chaveamento" ? <BracketTab slug={event.slug} /> : null}
         {tab === "Agenda" ? <ScheduleTab slug={event.slug} /> : null}
@@ -185,7 +212,15 @@ function EventPage() {
   );
 }
 
-function InfoTab({ rules, organizer, courts }: { rules: string[]; organizer: string; courts: number }) {
+function InfoTab({
+  rules,
+  organizer,
+  courts,
+}: {
+  rules: string[];
+  organizer: string;
+  courts: number;
+}) {
   return (
     <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
       <div className="border border-border bg-card p-6">
@@ -199,20 +234,24 @@ function InfoTab({ rules, organizer, courts }: { rules: string[]; organizer: str
           ))}
         </ul>
         <p className="mt-6 border-t border-border pt-4 text-xs text-muted-foreground">
-          Regulamento versionado (v1.0). Alterações após a publicação da chave ficam registradas no log de auditoria e
-          não afetam eventos já finalizados.
+          Regulamento versionado (v1.0). Alterações após a publicação da chave ficam registradas no
+          log de auditoria e não afetam eventos já finalizados.
         </p>
       </div>
       <div className="space-y-4">
         <div className="border border-border bg-card p-5">
           <p className="eyebrow">Organizador</p>
           <p className="mt-1 font-display text-lg font-bold">{organizer}</p>
-          <p className="mt-1 text-sm text-muted-foreground">Contato disponível após a inscrição confirmada.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Contato disponível após a inscrição confirmada.
+          </p>
         </div>
         <div className="border border-border bg-card p-5">
           <p className="eyebrow">Estrutura</p>
           <p className="mt-1 font-display text-lg font-bold">{courts} quadras</p>
-          <p className="mt-1 text-sm text-muted-foreground">Iluminação, vestiário e hidratação inclusos.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Iluminação, vestiário e hidratação inclusos.
+          </p>
         </div>
       </div>
     </div>
@@ -229,9 +268,7 @@ function TeamsTab({ slug, canEdit }: { slug: string; canEdit: boolean }) {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl">Duplas inscritas</h2>
-        {canEdit ? (
-          <p className="eyebrow">Evento {slug}</p>
-        ) : null}
+        {canEdit ? <p className="eyebrow">Evento {slug}</p> : null}
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         {teams.map((t) => {
@@ -246,7 +283,8 @@ function TeamsTab({ slug, canEdit }: { slug: string; canEdit: boolean }) {
                     value={label}
                     onChange={(e) => setNames((prev) => ({ ...prev, [t.id]: e.target.value }))}
                     onBlur={() => {
-                      if (!(names[t.id] ?? "").trim()) setNames((prev) => ({ ...prev, [t.id]: t.name }));
+                      if (!(names[t.id] ?? "").trim())
+                        setNames((prev) => ({ ...prev, [t.id]: t.name }));
                       setEditing(null);
                       toast.success("Representação da dupla atualizada");
                     }}
@@ -272,7 +310,10 @@ function TeamsTab({ slug, canEdit }: { slug: string; canEdit: boolean }) {
           );
         })}
         {guests.map((g) => (
-          <div key={g.id} className="flex items-center gap-4 border border-dashed border-border bg-card p-4">
+          <div
+            key={g.id}
+            className="flex items-center gap-4 border border-dashed border-border bg-card p-4"
+          >
             <span className="score-num w-8 text-lg text-muted-foreground">–</span>
             <div>
               <p className="font-display text-base font-bold">{g.name}</p>
@@ -286,8 +327,8 @@ function TeamsTab({ slug, canEdit }: { slug: string; canEdit: boolean }) {
         <div className="mt-6 border border-border bg-card p-5">
           <p className="eyebrow">Adicionar jogador convidado</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Use quando o capitão chegar com outro parceiro no dia. O nome aparece na dupla, na tabela, no placar e no
-            chaveamento — nenhum perfil completo é criado.
+            Use quando o capitão chegar com outro parceiro no dia. O nome aparece na dupla, na
+            tabela, no placar e no chaveamento — nenhum perfil completo é criado.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <input
@@ -330,7 +371,8 @@ function TeamsTab({ slug, canEdit }: { slug: string; canEdit: boolean }) {
 function BracketTab({ slug }: { slug: string }) {
   const bracket = useQuery(publicBracketQuery(slug));
   const rounds = useMemo(
-    () => (bracket.data ? publishedBracketRounds(bracket.data.slots, bracket.data.bracket_size) : []),
+    () =>
+      bracket.data ? publishedBracketRounds(bracket.data.slots, bracket.data.bracket_size) : [],
     [bracket.data],
   );
 
@@ -359,8 +401,8 @@ function BracketTab({ slug }: { slug: string }) {
         <span className="eyebrow">{bracket.data.bracket_size} posições · eliminação simples</span>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        Avanço de rodada e placar ainda não estão disponíveis nesta fase — acompanhe os resultados na aba
-        "Resultados".
+        Avanço de rodada e placar ainda não estão disponíveis nesta fase — acompanhe os resultados
+        na aba "Resultados".
       </p>
       <div className="mt-5">
         <BracketTree rounds={rounds} />
@@ -373,11 +415,14 @@ function ScheduleTab({ slug }: { slug: string }) {
   const matchesQuery = useQuery(publicMatchesQuery(slug));
 
   if (matchesQuery.isPending) {
-    return <div className="mt-4 h-40 animate-pulse border border-border bg-card" aria-busy="true" />;
+    return (
+      <div className="mt-4 h-40 animate-pulse border border-border bg-card" aria-busy="true" />
+    );
   }
 
   if (matchesQuery.isError) {
-    const notPublished = matchesQuery.error instanceof ApiError && matchesQuery.error.status === 404;
+    const notPublished =
+      matchesQuery.error instanceof ApiError && matchesQuery.error.status === 404;
     return (
       <EmptyState
         title={notPublished ? "Agenda ainda não disponível" : "Não foi possível carregar a agenda"}
@@ -432,7 +477,9 @@ function StandingsTab({ slug }: { slug: string }) {
     <div className="space-y-6">
       <div className="border border-border bg-card">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-sand px-4 py-2">
-          <p className="font-display text-xs font-bold uppercase tracking-widest">Tabela geral do evento</p>
+          <p className="font-display text-xs font-bold uppercase tracking-widest">
+            Tabela geral do evento
+          </p>
           <p className="text-[11px] text-muted-foreground">
             Vitória {config.scoring.win} · derrota {config.scoring.loss} pts
           </p>
@@ -442,7 +489,10 @@ function StandingsTab({ slug }: { slug: string }) {
             <thead>
               <tr className="border-b border-border text-left">
                 {["#", "Dupla", "J", "V", "D", "Sets", "Pts"].map((h) => (
-                  <th key={h} className="px-3 py-2 font-display text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <th
+                    key={h}
+                    className="px-3 py-2 font-display text-[10px] uppercase tracking-widest text-muted-foreground"
+                  >
                     {h}
                   </th>
                 ))}
@@ -450,7 +500,10 @@ function StandingsTab({ slug }: { slug: string }) {
             </thead>
             <tbody>
               {live.map((s, i) => (
-                <tr key={s.team} className={cn("border-b border-border last:border-0", i < 2 && "bg-sand/60")}>
+                <tr
+                  key={s.team}
+                  className={cn("border-b border-border last:border-0", i < 2 && "bg-sand/60")}
+                >
                   <td className="score-num px-3 py-2.5">{i + 1}</td>
                   <td className="px-3 py-2.5 font-semibold">{s.team}</td>
                   <td className="score-num px-3 py-2.5">{s.games}</td>
@@ -472,41 +525,48 @@ function StandingsTab({ slug }: { slug: string }) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-      {pools.map((pool) => (
-        <div key={pool.name} className="border border-border bg-card">
-          <p className="border-b border-border bg-sand px-4 py-2 font-display text-xs font-bold uppercase tracking-widest">
-            {pool.name}
-          </p>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border text-left">
-                {["Dupla", "J", "V", "D", "Sets", "Pts"].map((h) => (
-                  <th key={h} className="px-3 py-2 font-display text-[10px] uppercase tracking-widest text-muted-foreground">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {pool.standings.map((s, i) => (
-                <tr key={s.team} className={cn("border-b border-border last:border-0", i < 2 && "bg-sand/60")}>
-                  <td className="px-3 py-2.5 font-semibold">{s.team}</td>
-                  <td className="score-num px-3 py-2.5">{s.j}</td>
-                  <td className="score-num px-3 py-2.5">{s.v}</td>
-                  <td className="score-num px-3 py-2.5">{s.d}</td>
-                  <td className="score-num px-3 py-2.5">
-                    {s.setsWon}/{s.setsLost}
-                  </td>
-                  <td className="score-num px-3 py-2.5">{s.classificationPoints}</td>
+        {pools.map((pool) => (
+          <div key={pool.name} className="border border-border bg-card">
+            <p className="border-b border-border bg-sand px-4 py-2 font-display text-xs font-bold uppercase tracking-widest">
+              {pool.name}
+            </p>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left">
+                  {["Dupla", "J", "V", "D", "Sets", "Pts"].map((h) => (
+                    <th
+                      key={h}
+                      className="px-3 py-2 font-display text-[10px] uppercase tracking-widest text-muted-foreground"
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="border-t border-border px-4 py-2 text-xs text-muted-foreground">
-            Top 2 avançam para a Gold · critérios: vitórias, pontos, saldo de sets, saldo de pontos, confronto direto.
-          </p>
-        </div>
-      ))}
+              </thead>
+              <tbody>
+                {pool.standings.map((s, i) => (
+                  <tr
+                    key={s.team}
+                    className={cn("border-b border-border last:border-0", i < 2 && "bg-sand/60")}
+                  >
+                    <td className="px-3 py-2.5 font-semibold">{s.team}</td>
+                    <td className="score-num px-3 py-2.5">{s.j}</td>
+                    <td className="score-num px-3 py-2.5">{s.v}</td>
+                    <td className="score-num px-3 py-2.5">{s.d}</td>
+                    <td className="score-num px-3 py-2.5">
+                      {s.setsWon}/{s.setsLost}
+                    </td>
+                    <td className="score-num px-3 py-2.5">{s.classificationPoints}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="border-t border-border px-4 py-2 text-xs text-muted-foreground">
+              Top 2 avançam para a Gold · critérios: vitórias, pontos, saldo de sets, saldo de
+              pontos, confronto direto.
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -516,14 +576,21 @@ function ResultsTab({ slug }: { slug: string }) {
   const matchesQuery = useQuery(publicMatchesQuery(slug));
 
   if (matchesQuery.isPending) {
-    return <div className="mt-4 h-40 animate-pulse border border-border bg-card" aria-busy="true" />;
+    return (
+      <div className="mt-4 h-40 animate-pulse border border-border bg-card" aria-busy="true" />
+    );
   }
 
   if (matchesQuery.isError) {
-    const notPublished = matchesQuery.error instanceof ApiError && matchesQuery.error.status === 404;
+    const notPublished =
+      matchesQuery.error instanceof ApiError && matchesQuery.error.status === 404;
     return (
       <EmptyState
-        title={notPublished ? "Resultados ainda não disponíveis" : "Não foi possível carregar os resultados"}
+        title={
+          notPublished
+            ? "Resultados ainda não disponíveis"
+            : "Não foi possível carregar os resultados"
+        }
         description={
           notPublished
             ? "Os resultados aparecem assim que o organizador publicar a chave e iniciar as partidas."

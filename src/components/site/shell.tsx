@@ -29,8 +29,14 @@ export function BeacHubMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
       <circle cx="20" cy="20" r="18" className="fill-graphite" />
-      <path d="M20 6a14 14 0 0 1 13 9c-6-3-13-2-18 3-3 3-4 7-3 11A14 14 0 0 1 20 6Z" className="fill-teal" />
-      <path d="M34 20a14 14 0 0 1-20 12.6c5 0 9-2 12-6 3-4 3-9 1-13a14 14 0 0 1 7 6.4Z" className="fill-accent" />
+      <path
+        d="M20 6a14 14 0 0 1 13 9c-6-3-13-2-18 3-3 3-4 7-3 11A14 14 0 0 1 20 6Z"
+        className="fill-teal"
+      />
+      <path
+        d="M34 20a14 14 0 0 1-20 12.6c5 0 9-2 12-6 3-4 3-9 1-13a14 14 0 0 1 7 6.4Z"
+        className="fill-accent"
+      />
       <circle cx="15.5" cy="13.5" r="1.5" className="fill-sand" />
       <circle cx="12" cy="19" r="1.1" className="fill-sand" />
     </svg>
@@ -47,7 +53,6 @@ export function Wordmark({ className }: { className?: string }) {
     </Link>
   );
 }
-
 
 export function SiteHeader() {
   const { account } = useSession();
@@ -102,15 +107,24 @@ export function SiteHeader() {
                     {item.label}
                   </Link>
                 ))}
-                <Link to="/placar" className="border-b border-border py-3 font-display text-base font-bold">
+                <Link
+                  to="/placar"
+                  className="border-b border-border py-3 font-display text-base font-bold"
+                >
                   Modo Telão
                 </Link>
                 {account?.roles.includes("SUPER_ADMIN") ? (
-                  <Link to="/admin" className="border-b border-border py-3 font-display text-base font-bold text-accent">
+                  <Link
+                    to="/admin"
+                    className="border-b border-border py-3 font-display text-base font-bold text-accent"
+                  >
                     Super Admin
                   </Link>
                 ) : null}
-                <Link to="/configuracoes" className="border-b border-border py-3 font-display text-base font-bold">
+                <Link
+                  to="/configuracoes"
+                  className="border-b border-border py-3 font-display text-base font-bold"
+                >
                   Configurações
                 </Link>
               </div>
@@ -128,7 +142,10 @@ export function MobileNav() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-card md:hidden">
       {mobileNav.map((item) => {
-        const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to.split("/").slice(0, 2).join("/"));
+        const active =
+          item.to === "/"
+            ? pathname === "/"
+            : pathname.startsWith(item.to.split("/").slice(0, 2).join("/"));
         return (
           <Link
             key={item.to}

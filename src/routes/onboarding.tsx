@@ -9,7 +9,11 @@ export const Route = createFileRoute("/onboarding")({
   head: () => ({
     meta: [
       { title: "Como você participa? · BeacHub" },
-      { name: "description", content: "Defina se você usa o BeacHub como jogador, organizador de campeonatos ou os dois." },
+      {
+        name: "description",
+        content:
+          "Defina se você usa o BeacHub como jogador, organizador de campeonatos ou os dois.",
+      },
       { property: "og:title", content: "Como você participa? · BeacHub" },
       { property: "og:description", content: "Personalize sua experiência no vôlei de areia." },
     ],
@@ -17,10 +21,30 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
 });
 
-const options: { key: "PLAYER" | "ORGANIZER" | "BOTH"; icon: string; title: string; desc: string }[] = [
-  { key: "PLAYER", icon: "🏐", title: "Jogador", desc: "Disputo campeonatos, procuro parceiro e acompanho meu ranking." },
-  { key: "ORGANIZER", icon: "🏆", title: "Organizador", desc: "Crio campeonatos, recebo inscrições e opero o dia do evento." },
-  { key: "BOTH", icon: "🏐🏆", title: "Os dois", desc: "Jogo e também organizo. Tenho acesso aos dois módulos." },
+const options: {
+  key: "PLAYER" | "ORGANIZER" | "BOTH";
+  icon: string;
+  title: string;
+  desc: string;
+}[] = [
+  {
+    key: "PLAYER",
+    icon: "🏐",
+    title: "Jogador",
+    desc: "Disputo campeonatos, procuro parceiro e acompanho meu ranking.",
+  },
+  {
+    key: "ORGANIZER",
+    icon: "🏆",
+    title: "Organizador",
+    desc: "Crio campeonatos, recebo inscrições e opero o dia do evento.",
+  },
+  {
+    key: "BOTH",
+    icon: "🏐🏆",
+    title: "Os dois",
+    desc: "Jogo e também organizo. Tenho acesso aos dois módulos.",
+  },
 ];
 
 function OnboardingPage() {
@@ -33,7 +57,9 @@ function OnboardingPage() {
       <div className="mx-auto max-w-2xl px-4 py-12">
         <p className="eyebrow">Onboarding</p>
         <h1 className="mt-1 text-4xl">Como você participa do vôlei de areia?</h1>
-        <p className="mt-2 text-muted-foreground">Isso define o seu menu e as telas iniciais. Dá para mudar depois.</p>
+        <p className="mt-2 text-muted-foreground">
+          Isso define o seu menu e as telas iniciais. Dá para mudar depois.
+        </p>
 
         <div className="mt-8 grid gap-3">
           {options.map((o) => (
@@ -42,7 +68,9 @@ function OnboardingPage() {
               type="button"
               onClick={() => setChoice(o.key)}
               className={`flex items-start gap-4 border p-5 text-left transition-colors ${
-                choice === o.key ? "border-accent bg-accent/5" : "border-border bg-card hover:bg-muted"
+                choice === o.key
+                  ? "border-accent bg-accent/5"
+                  : "border-border bg-card hover:bg-muted"
               }`}
             >
               <span className="text-2xl">{o.icon}</span>

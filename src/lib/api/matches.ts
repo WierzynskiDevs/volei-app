@@ -32,7 +32,15 @@ const matchSetSchema = z.object({
 const publicMatchSchema = z.object({
   id: z.string(),
   phase: z.string(),
-  status: z.enum(["PENDENTE", "ATRIBUIDA", "PRONTA", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA", "ADIADA"]),
+  status: z.enum([
+    "PENDENTE",
+    "ATRIBUIDA",
+    "PRONTA",
+    "EM_ANDAMENTO",
+    "FINALIZADA",
+    "CANCELADA",
+    "ADIADA",
+  ]),
   status_label: z.string(),
   court_label: z.string().nullable(),
   team_a_name: z.string().nullable(),
@@ -96,9 +104,12 @@ function toMatchItem(match: ApiPublicMatch): Match {
 }
 
 async function fetchPublicMatches(slug: string, signal?: AbortSignal): Promise<Match[]> {
-  const raw = await apiRequest<ResourceCollection<unknown>>(`/events/${encodeURIComponent(slug)}/matches`, {
-    signal,
-  });
+  const raw = await apiRequest<ResourceCollection<unknown>>(
+    `/events/${encodeURIComponent(slug)}/matches`,
+    {
+      signal,
+    },
+  );
   return raw.data.map((item) => toMatchItem(publicMatchSchema.parse(item)));
 }
 
@@ -110,7 +121,8 @@ export const publicMatchesQuery = (slug: string) =>
   queryOptions({
     queryKey: queryKeys.publicMatches.byEvent(slug),
     queryFn: ({ signal }) => fetchPublicMatches(slug, signal),
-    retry: (failureCount, error) => !(error instanceof ApiError && error.status === 404) && failureCount < 2,
+    retry: (failureCount, error) =>
+      !(error instanceof ApiError && error.status === 404) && failureCount < 2,
   });
 
 /* ------------------------------------------------------------------ *
@@ -130,7 +142,15 @@ const organizerMatchSchema = z.object({
   id: z.string(),
   event_id: z.string(),
   phase: z.string().nullable(),
-  status: z.enum(["PENDENTE", "ATRIBUIDA", "PRONTA", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA", "ADIADA"]),
+  status: z.enum([
+    "PENDENTE",
+    "ATRIBUIDA",
+    "PRONTA",
+    "EM_ANDAMENTO",
+    "FINALIZADA",
+    "CANCELADA",
+    "ADIADA",
+  ]),
   status_label: z.string(),
   court_id: z.string().nullable(),
   court_label: z.string().nullable().optional(),
@@ -152,7 +172,10 @@ function organizerMatchesPath(slug: string, suffix = ""): string {
   return `/organizer/events/${encodeURIComponent(slug)}/matches${suffix}`;
 }
 
-async function fetchOrganizerMatches(slug: string, signal?: AbortSignal): Promise<ApiOrganizerMatch[]> {
+async function fetchOrganizerMatches(
+  slug: string,
+  signal?: AbortSignal,
+): Promise<ApiOrganizerMatch[]> {
   const raw = await apiRequest<ResourceCollection<unknown>>(organizerMatchesPath(slug), { signal });
   return raw.data.map((item) => organizerMatchSchema.parse(item));
 }
@@ -193,15 +216,22 @@ export async function assignMatchReferee(
   matchId: string,
   refereeId: string | null,
 ): Promise<ApiOrganizerMatch> {
-  const raw = await apiRequest<Resource<unknown>>(organizerMatchesPath(slug, `/${matchId}/referee`), {
-    method: "POST",
-    body: { referee_id: refereeId },
-  });
+  const raw = await apiRequest<Resource<unknown>>(
+    organizerMatchesPath(slug, `/${matchId}/referee`),
+    {
+      method: "POST",
+      body: { referee_id: refereeId },
+    },
+  );
   return organizerMatchSchema.parse(raw.data);
 }
 
 /** Exige `idempotencyKey` — gerada uma vez por tentativa de início (CLAUDE.md §8). */
-export async function startMatch(slug: string, matchId: string, idempotencyKey: string): Promise<ApiOrganizerMatch> {
+export async function startMatch(
+  slug: string,
+  matchId: string,
+  idempotencyKey: string,
+): Promise<ApiOrganizerMatch> {
   const raw = await apiRequest<Resource<unknown>>(organizerMatchesPath(slug, `/${matchId}/start`), {
     method: "POST",
     headers: { "Idempotency-Key": idempotencyKey },
@@ -225,17 +255,27 @@ export async function recordMatchSet(
 }
 
 /** Exige `idempotencyKey` — gerada uma vez por tentativa de finalização (CLAUDE.md §8). */
-export async function finishMatch(slug: string, matchId: string, idempotencyKey: string): Promise<ApiOrganizerMatch> {
-  const raw = await apiRequest<Resource<unknown>>(organizerMatchesPath(slug, `/${matchId}/finish`), {
-    method: "POST",
-    headers: { "Idempotency-Key": idempotencyKey },
-  });
+export async function finishMatch(
+  slug: string,
+  matchId: string,
+  idempotencyKey: string,
+): Promise<ApiOrganizerMatch> {
+  const raw = await apiRequest<Resource<unknown>>(
+    organizerMatchesPath(slug, `/${matchId}/finish`),
+    {
+      method: "POST",
+      headers: { "Idempotency-Key": idempotencyKey },
+    },
+  );
   return organizerMatchSchema.parse(raw.data);
 }
 
 export async function cancelMatch(slug: string, matchId: string): Promise<ApiOrganizerMatch> {
-  const raw = await apiRequest<Resource<unknown>>(organizerMatchesPath(slug, `/${matchId}/cancel`), {
-    method: "POST",
-  });
+  const raw = await apiRequest<Resource<unknown>>(
+    organizerMatchesPath(slug, `/${matchId}/cancel`),
+    {
+      method: "POST",
+    },
+  );
   return organizerMatchSchema.parse(raw.data);
 }

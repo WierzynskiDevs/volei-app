@@ -44,7 +44,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <div className="border-t border-border bg-card">
           <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 py-1.5">
             {adminNav.map((item) => {
-              const active = item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
+              const active =
+                item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
               return (
                 <Link
                   key={item.to}
@@ -69,7 +70,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <p className="eyebrow">Acesso restrito</p>
             <h1 className="mt-2 text-3xl">Área do Super Admin</h1>
             <p className="mt-2 text-muted-foreground">
-              Entre com a conta <strong>Super Admin</strong> para acessar o controle global da plataforma.
+              Entre com a conta <strong>Super Admin</strong> para acessar o controle global da
+              plataforma.
             </p>
             <Link
               to="/login"
@@ -113,7 +115,10 @@ export function AdminTable({ head, children }: { head: string[]; children: React
         <thead>
           <tr className="border-b border-border bg-sand-deep/40 text-left">
             {head.map((h) => (
-              <th key={h} className="px-4 py-3 font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              <th
+                key={h}
+                className="px-4 py-3 font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+              >
                 {h}
               </th>
             ))}
@@ -125,7 +130,13 @@ export function AdminTable({ head, children }: { head: string[]; children: React
   );
 }
 
-export function StatusPill({ tone = "neutral", children }: { tone?: "ok" | "warn" | "danger" | "neutral"; children: ReactNode }) {
+export function StatusPill({
+  tone = "neutral",
+  children,
+}: {
+  tone?: "ok" | "warn" | "danger" | "neutral";
+  children: ReactNode;
+}) {
   const tones = {
     ok: "border-success/40 bg-success/10 text-success",
     warn: "border-warning/40 bg-warning/10 text-warning",
@@ -133,20 +144,35 @@ export function StatusPill({ tone = "neutral", children }: { tone?: "ok" | "warn
     neutral: "border-border bg-muted text-muted-foreground",
   } as const;
   return (
-    <span className={cn("inline-flex border px-2 py-0.5 font-display text-[10px] font-bold uppercase tracking-widest", tones[tone])}>
+    <span
+      className={cn(
+        "inline-flex border px-2 py-0.5 font-display text-[10px] font-bold uppercase tracking-widest",
+        tones[tone],
+      )}
+    >
       {children}
     </span>
   );
 }
 
-export function AdminAction({ children, onClick, tone = "default" }: { children: ReactNode; onClick?: () => void; tone?: "default" | "danger" }) {
+export function AdminAction({
+  children,
+  onClick,
+  tone = "default",
+}: {
+  children: ReactNode;
+  onClick?: () => void;
+  tone?: "default" | "danger";
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
         "border px-3 py-1.5 font-display text-[10px] font-bold uppercase tracking-widest",
-        tone === "danger" ? "border-destructive/50 text-destructive hover:bg-destructive/10" : "border-border hover:bg-muted",
+        tone === "danger"
+          ? "border-destructive/50 text-destructive hover:bg-destructive/10"
+          : "border-border hover:bg-muted",
       )}
     >
       {children}

@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, AdminTable } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  AdminTable,
+} from "@/components/site/admin-shell";
 import { FinanceAlert, FilterTabs, MoneyCard, RefundStatusPill } from "@/components/site/finance";
 import {
   brl,
@@ -15,9 +20,16 @@ export const Route = createFileRoute("/admin/reembolsos")({
   head: () => ({
     meta: [
       { title: "Reembolsos · Super Admin BeacHub" },
-      { name: "description", content: "Fila de reembolsos pendentes por organizador, evento e participante, com motivo, prazo e status no gateway." },
+      {
+        name: "description",
+        content:
+          "Fila de reembolsos pendentes por organizador, evento e participante, com motivo, prazo e status no gateway.",
+      },
       { property: "og:title", content: "Reembolsos · Super Admin BeacHub" },
-      { property: "og:description", content: "Governança dos estornos obrigatórios da plataforma." },
+      {
+        property: "og:description",
+        content: "Governança dos estornos obrigatórios da plataforma.",
+      },
     ],
   }),
   component: AdminRefunds,
@@ -30,12 +42,15 @@ function AdminRefunds() {
 
   const list = refunds.filter((r) => {
     if (filter === "Todos") return true;
-    if (filter === "Pendentes") return pendingRefundStatuses.includes(r.status) && r.status !== "FAILED";
+    if (filter === "Pendentes")
+      return pendingRefundStatuses.includes(r.status) && r.status !== "FAILED";
     if (filter === "Concluídos") return r.status === "REFUNDED" || r.status === "REJECTED";
     return r.status === "FAILED";
   });
 
-  const mandatoryPending = refunds.filter((r) => r.mandatory && pendingRefundStatuses.includes(r.status));
+  const mandatoryPending = refunds.filter(
+    (r) => r.mandatory && pendingRefundStatuses.includes(r.status),
+  );
   const blocked = organizerFinances.filter((o) => o.status === "BLOQUEADO");
 
   return (
@@ -55,13 +70,17 @@ function AdminRefunds() {
           />
           <MoneyCard
             label="Reembolsos confirmados"
-            cents={refunds.filter((r) => r.status === "REFUNDED").reduce((s, r) => s + r.amountCents, 0)}
+            cents={refunds
+              .filter((r) => r.status === "REFUNDED")
+              .reduce((s, r) => s + r.amountCents, 0)}
             hint="estornados pelo gateway"
             tone="ok"
           />
           <MoneyCard
             label="Falhas de reembolso"
-            cents={refunds.filter((r) => r.status === "FAILED").reduce((s, r) => s + r.amountCents, 0)}
+            cents={refunds
+              .filter((r) => r.status === "FAILED")
+              .reduce((s, r) => s + r.amountCents, 0)}
             hint="exigem ação do organizador"
             tone="danger"
           />
@@ -81,8 +100,8 @@ function AdminRefunds() {
                 </Link>
               }
             >
-              {blocked.map((o) => o.name).join(", ")} — reembolsos obrigatórios não comprovados. Criação de eventos e
-              recebimento de novas inscrições bloqueados.
+              {blocked.map((o) => o.name).join(", ")} — reembolsos obrigatórios não comprovados.
+              Criação de eventos e recebimento de novas inscrições bloqueados.
             </FinanceAlert>
           </div>
         ) : null}
@@ -91,13 +110,30 @@ function AdminRefunds() {
           <FilterTabs options={filters} value={filter} onChange={setFilter} />
         </div>
 
-        <AdminTable head={["Organizador", "Evento", "Participante", "Valor", "Motivo", "Solicitado", "Prazo", "Gateway", "Status", "Ações"]}>
+        <AdminTable
+          head={[
+            "Organizador",
+            "Evento",
+            "Participante",
+            "Valor",
+            "Motivo",
+            "Solicitado",
+            "Prazo",
+            "Gateway",
+            "Status",
+            "Ações",
+          ]}
+        >
           {list.map((r) => {
             const org = organizerFinances.find((o) => o.id === r.organizerId);
             return (
               <tr key={r.id}>
                 <td className="px-4 py-3">
-                  <Link to="/admin/organizadores/$id" params={{ id: r.organizerId }} className="font-display text-sm font-bold hover:text-accent">
+                  <Link
+                    to="/admin/organizadores/$id"
+                    params={{ id: r.organizerId }}
+                    className="font-display text-sm font-bold hover:text-accent"
+                  >
                     {org?.name ?? "—"}
                   </Link>
                 </td>
@@ -112,7 +148,9 @@ function AdminRefunds() {
                 </td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{r.requestedAt}</td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{r.deadline}</td>
-                <td className="px-4 py-3 text-xs text-muted-foreground">{r.gatewayRefundId ?? "—"}</td>
+                <td className="px-4 py-3 text-xs text-muted-foreground">
+                  {r.gatewayRefundId ?? "—"}
+                </td>
                 <td className="px-4 py-3">
                   <RefundStatusPill status={r.status} />
                 </td>
@@ -125,7 +163,9 @@ function AdminRefunds() {
                     >
                       Ledger
                     </Link>
-                    {pendingRefundStatuses.includes(r.status) ? <AdminAction tone="danger">Cobrar organizador</AdminAction> : null}
+                    {pendingRefundStatuses.includes(r.status) ? (
+                      <AdminAction tone="danger">Cobrar organizador</AdminAction>
+                    ) : null}
                   </div>
                 </td>
               </tr>
@@ -134,8 +174,8 @@ function AdminRefunds() {
         </AdminTable>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          O organizador não pode marcar um reembolso como concluído manualmente: o status só muda com a confirmação do
-          Asaas via webhook.
+          O organizador não pode marcar um reembolso como concluído manualmente: o status só muda
+          com a confirmação do Asaas via webhook.
         </p>
       </div>
     </AdminShell>

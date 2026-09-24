@@ -2,16 +2,31 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, AdminTable, StatusPill } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  AdminTable,
+  StatusPill,
+} from "@/components/site/admin-shell";
 import { AdminTableState, formatDateTime } from "@/components/site/admin-async";
-import { adminEventsQuery, cancelEventAsAdmin, type AdminEvent, type EventGroup } from "@/lib/api/admin";
+import {
+  adminEventsQuery,
+  cancelEventAsAdmin,
+  type AdminEvent,
+  type EventGroup,
+} from "@/lib/api/admin";
 import { queryKeys } from "@/lib/api/query-keys";
 
 export const Route = createFileRoute("/admin/eventos")({
   head: () => ({
     meta: [
       { title: "Moderação de eventos · Super Admin BeacHub" },
-      { name: "description", content: "Suspenda, cancele ou exclua eventos com motivo registrado em auditoria na plataforma BeacHub." },
+      {
+        name: "description",
+        content:
+          "Suspenda, cancele ou exclua eventos com motivo registrado em auditoria na plataforma BeacHub.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Moderação de eventos · Super Admin BeacHub" },
       { property: "og:description", content: "Governança de eventos publicados." },
@@ -20,7 +35,15 @@ export const Route = createFileRoute("/admin/eventos")({
   component: AdminEvents,
 });
 
-const filters = ["Todos", "Rascunho", "Ativo", "Em andamento", "Finalizado", "Cancelado", "Denunciado"] as const;
+const filters = [
+  "Todos",
+  "Rascunho",
+  "Ativo",
+  "Em andamento",
+  "Finalizado",
+  "Cancelado",
+  "Denunciado",
+] as const;
 
 /**
  * Abas viram filtro do servidor. "Em andamento" mapeia para os estados do motor
@@ -86,7 +109,9 @@ function AdminEvents() {
               type="button"
               onClick={() => setFilter(f)}
               className={`border px-3 py-1.5 font-display text-[11px] font-bold uppercase tracking-widest ${
-                filter === f ? "border-graphite bg-graphite text-background" : "border-border text-muted-foreground"
+                filter === f
+                  ? "border-graphite bg-graphite text-background"
+                  : "border-border text-muted-foreground"
               }`}
             >
               {f}
@@ -122,20 +147,38 @@ function AdminEvents() {
                 <td className="px-4 py-3 text-sm">
                   {e.city}/{e.state}
                 </td>
-                <td className="px-4 py-3 text-xs text-muted-foreground">{formatDateTime(e.start_at)}</td>
+                <td className="px-4 py-3 text-xs text-muted-foreground">
+                  {formatDateTime(e.start_at)}
+                </td>
                 <td className="px-4 py-3">
                   <StatusPill tone={tone(e.status)}>{e.status_label}</StatusPill>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1.5">
                     <AdminAction>Visualizar</AdminAction>
-                    <AdminAction onClick={() => { setAction({ event: e, kind: "Suspender evento" }); setReason(""); }}>
+                    <AdminAction
+                      onClick={() => {
+                        setAction({ event: e, kind: "Suspender evento" });
+                        setReason("");
+                      }}
+                    >
                       Suspender
                     </AdminAction>
-                    <AdminAction onClick={() => { setAction({ event: e, kind: "Cancelar evento" }); setReason(""); }}>
+                    <AdminAction
+                      onClick={() => {
+                        setAction({ event: e, kind: "Cancelar evento" });
+                        setReason("");
+                      }}
+                    >
                       Cancelar
                     </AdminAction>
-                    <AdminAction tone="danger" onClick={() => { setAction({ event: e, kind: "Excluir evento" }); setReason(""); }}>
+                    <AdminAction
+                      tone="danger"
+                      onClick={() => {
+                        setAction({ event: e, kind: "Excluir evento" });
+                        setReason("");
+                      }}
+                    >
                       Excluir
                     </AdminAction>
                   </div>
@@ -156,10 +199,10 @@ function AdminEvents() {
                 : "Informe o motivo. Ele será exibido ao organizador e registrado na auditoria."}
             </p>
             {/*
-              * Só o cancelamento tem backend. Suspender e excluir evento não
-              * existem como operação de domínio — ver ADR 0010 §1. Dizer isso na
-              * tela é melhor do que um botão que finge ter agido.
-              */}
+             * Só o cancelamento tem backend. Suspender e excluir evento não
+             * existem como operação de domínio — ver ADR 0010 §1. Dizer isso na
+             * tela é melhor do que um botão que finge ter agido.
+             */}
             {action.kind !== "Cancelar evento" ? (
               <p className="mt-2 text-sm text-muted-foreground">
                 Esta operação ainda não existe no backend. Para tirar o evento do ar agora, use
@@ -189,7 +232,11 @@ function AdminEvents() {
               </button>
               <button
                 type="button"
-                onClick={() => { setAction(null); setReason(""); cancel.reset(); }}
+                onClick={() => {
+                  setAction(null);
+                  setReason("");
+                  cancel.reset();
+                }}
                 className="border border-border px-4 py-2 font-display text-[11px] font-bold uppercase tracking-widest"
               >
                 Cancelar

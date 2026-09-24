@@ -431,19 +431,99 @@ export const pools: { name: string; standings: PoolStanding[] }[] = [
   {
     name: "Pool A",
     standings: [
-      { team: "Mendes / Alves", j: 3, v: 3, d: 0, setsWon: 6, setsLost: 1, pointsFor: 128, pointsAgainst: 94, classificationPoints: 9 },
-      { team: "Farias / Rocha", j: 3, v: 2, d: 1, setsWon: 4, setsLost: 3, pointsFor: 118, pointsAgainst: 110, classificationPoints: 6 },
-      { team: "Gomes / Assis", j: 3, v: 1, d: 2, setsWon: 3, setsLost: 4, pointsFor: 109, pointsAgainst: 117, classificationPoints: 3 },
-      { team: "Xavier / Pires", j: 3, v: 0, d: 3, setsWon: 1, setsLost: 6, pointsFor: 88, pointsAgainst: 122, classificationPoints: 0 },
+      {
+        team: "Mendes / Alves",
+        j: 3,
+        v: 3,
+        d: 0,
+        setsWon: 6,
+        setsLost: 1,
+        pointsFor: 128,
+        pointsAgainst: 94,
+        classificationPoints: 9,
+      },
+      {
+        team: "Farias / Rocha",
+        j: 3,
+        v: 2,
+        d: 1,
+        setsWon: 4,
+        setsLost: 3,
+        pointsFor: 118,
+        pointsAgainst: 110,
+        classificationPoints: 6,
+      },
+      {
+        team: "Gomes / Assis",
+        j: 3,
+        v: 1,
+        d: 2,
+        setsWon: 3,
+        setsLost: 4,
+        pointsFor: 109,
+        pointsAgainst: 117,
+        classificationPoints: 3,
+      },
+      {
+        team: "Xavier / Pires",
+        j: 3,
+        v: 0,
+        d: 3,
+        setsWon: 1,
+        setsLost: 6,
+        pointsFor: 88,
+        pointsAgainst: 122,
+        classificationPoints: 0,
+      },
     ],
   },
   {
     name: "Pool B",
     standings: [
-      { team: "Nunes / Lima", j: 3, v: 3, d: 0, setsWon: 6, setsLost: 2, pointsFor: 131, pointsAgainst: 101, classificationPoints: 9 },
-      { team: "Barreto / Cunha", j: 3, v: 2, d: 1, setsWon: 5, setsLost: 3, pointsFor: 124, pointsAgainst: 112, classificationPoints: 6 },
-      { team: "Prado / Vidal", j: 3, v: 1, d: 2, setsWon: 2, setsLost: 5, pointsFor: 101, pointsAgainst: 121, classificationPoints: 3 },
-      { team: "Moura / Teles", j: 3, v: 0, d: 3, setsWon: 1, setsLost: 6, pointsFor: 92, pointsAgainst: 126, classificationPoints: 0 },
+      {
+        team: "Nunes / Lima",
+        j: 3,
+        v: 3,
+        d: 0,
+        setsWon: 6,
+        setsLost: 2,
+        pointsFor: 131,
+        pointsAgainst: 101,
+        classificationPoints: 9,
+      },
+      {
+        team: "Barreto / Cunha",
+        j: 3,
+        v: 2,
+        d: 1,
+        setsWon: 5,
+        setsLost: 3,
+        pointsFor: 124,
+        pointsAgainst: 112,
+        classificationPoints: 6,
+      },
+      {
+        team: "Prado / Vidal",
+        j: 3,
+        v: 1,
+        d: 2,
+        setsWon: 2,
+        setsLost: 5,
+        pointsFor: 101,
+        pointsAgainst: 121,
+        classificationPoints: 3,
+      },
+      {
+        team: "Moura / Teles",
+        j: 3,
+        v: 0,
+        d: 3,
+        setsWon: 1,
+        setsLost: 6,
+        pointsFor: 92,
+        pointsAgainst: 126,
+        classificationPoints: 0,
+      },
     ],
   },
 ];
@@ -532,7 +612,13 @@ export const matches: Match[] = [
   },
 ];
 
-export type BracketMatch = { a: string; b: string; scoreA?: number; scoreB?: number; winner?: "a" | "b" };
+export type BracketMatch = {
+  a: string;
+  b: string;
+  scoreA?: number;
+  scoreB?: number;
+  winner?: "a" | "b";
+};
 
 export const goldBracket: { round: string; matches: BracketMatch[] }[] = [
   {
@@ -567,13 +653,62 @@ export type PointTransaction = {
 };
 
 export const pointTransactions: PointTransaction[] = [
-  { id: "p1", type: "MATCH_WIN", points: 2, description: "Vitória — Pool A", event: "Copa Areia Curitiba", date: "22 ago" },
-  { id: "p2", type: "MATCH_WIN", points: 2, description: "Vitória — Pool A", event: "Copa Areia Curitiba", date: "22 ago" },
-  { id: "p3", type: "MATCH_LOSS", points: -1, description: "Derrota — Pool A", event: "Copa Areia Curitiba", date: "22 ago" },
-  { id: "p4", type: "MATCH_WIN", points: 2, description: "Vitória — Quartas", event: "Copa Areia Curitiba", date: "22 ago" },
-  { id: "p5", type: "MATCH_WIN", points: 2, description: "Vitória — Semifinal", event: "Copa Areia Curitiba", date: "22 ago" },
-  { id: "p6", type: "FINAL_RUNNER_UP", points: 0, description: "Derrota na final — vice não sofre desconto", event: "Copa Areia Curitiba", date: "22 ago" },
-  { id: "p7", type: "OTHER", points: 1, description: "Bônus de colocação — Vice-campeã", event: "Copa Areia Curitiba", date: "22 ago" },
+  {
+    id: "p1",
+    type: "MATCH_WIN",
+    points: 2,
+    description: "Vitória — Pool A",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
+  {
+    id: "p2",
+    type: "MATCH_WIN",
+    points: 2,
+    description: "Vitória — Pool A",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
+  {
+    id: "p3",
+    type: "MATCH_LOSS",
+    points: -1,
+    description: "Derrota — Pool A",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
+  {
+    id: "p4",
+    type: "MATCH_WIN",
+    points: 2,
+    description: "Vitória — Quartas",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
+  {
+    id: "p5",
+    type: "MATCH_WIN",
+    points: 2,
+    description: "Vitória — Semifinal",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
+  {
+    id: "p6",
+    type: "FINAL_RUNNER_UP",
+    points: 0,
+    description: "Derrota na final — vice não sofre desconto",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
+  {
+    id: "p7",
+    type: "OTHER",
+    points: 1,
+    description: "Bônus de colocação — Vice-campeã",
+    event: "Copa Areia Curitiba",
+    date: "22 ago",
+  },
 ];
 
 export type HistoryRow = {
@@ -590,9 +725,42 @@ export type HistoryRow = {
 };
 
 export const performanceHistory: HistoryRow[] = [
-  { event: "Copa Areia Curitiba", slug: "copa-areia-curitiba", date: "22 ago 2026", partner: "Bruna Castro", format: "Pool + Gold/Silver", matches: 6, wins: 4, losses: 2, position: "🥈 Vice", points: 8 },
-  { event: "Circuito Litoral — Etapa 3", slug: "circuito-litoral-etapa-3", date: "18 jul 2026", partner: "Carla Souza", format: "Pool + Elim.", matches: 5, wins: 4, losses: 1, position: "🥇 Campeã", points: 11 },
-  { event: "Beach Open Floripa", slug: "beach-open-floripa", date: "14 jun 2026", partner: "Bruna Castro", format: "Single Elim.", matches: 3, wins: 2, losses: 1, position: "Semifinal", points: 3 },
+  {
+    event: "Copa Areia Curitiba",
+    slug: "copa-areia-curitiba",
+    date: "22 ago 2026",
+    partner: "Bruna Castro",
+    format: "Pool + Gold/Silver",
+    matches: 6,
+    wins: 4,
+    losses: 2,
+    position: "🥈 Vice",
+    points: 8,
+  },
+  {
+    event: "Circuito Litoral — Etapa 3",
+    slug: "circuito-litoral-etapa-3",
+    date: "18 jul 2026",
+    partner: "Carla Souza",
+    format: "Pool + Elim.",
+    matches: 5,
+    wins: 4,
+    losses: 1,
+    position: "🥇 Campeã",
+    points: 11,
+  },
+  {
+    event: "Beach Open Floripa",
+    slug: "beach-open-floripa",
+    date: "14 jun 2026",
+    partner: "Bruna Castro",
+    format: "Single Elim.",
+    matches: 3,
+    wins: 2,
+    losses: 1,
+    position: "Semifinal",
+    points: 3,
+  },
 ];
 
 export type Review = {
@@ -650,10 +818,42 @@ export type Venue = {
 };
 
 export const venues: Venue[] = [
-  { id: "v1", name: "Arena Norte Beach", city: "Curitiba", state: "PR", courts: 6, structure: ["Coberta", "Iluminação", "Vestiário", "Bar"], upcoming: 3 },
-  { id: "v2", name: "Praia Mole Sports", city: "Florianópolis", state: "SC", courts: 4, structure: ["Areia natural", "Chuveiro", "Estacionamento"], upcoming: 2 },
-  { id: "v3", name: "Duna Beach Arena", city: "Natal", state: "RN", courts: 3, structure: ["Iluminação", "Arquibancada", "Bar"], upcoming: 1 },
-  { id: "v4", name: "Arena Boa Viagem", city: "Recife", state: "PE", courts: 8, structure: ["Coberta", "Iluminação", "Fisioterapia"], upcoming: 4 },
+  {
+    id: "v1",
+    name: "Arena Norte Beach",
+    city: "Curitiba",
+    state: "PR",
+    courts: 6,
+    structure: ["Coberta", "Iluminação", "Vestiário", "Bar"],
+    upcoming: 3,
+  },
+  {
+    id: "v2",
+    name: "Praia Mole Sports",
+    city: "Florianópolis",
+    state: "SC",
+    courts: 4,
+    structure: ["Areia natural", "Chuveiro", "Estacionamento"],
+    upcoming: 2,
+  },
+  {
+    id: "v3",
+    name: "Duna Beach Arena",
+    city: "Natal",
+    state: "RN",
+    courts: 3,
+    structure: ["Iluminação", "Arquibancada", "Bar"],
+    upcoming: 1,
+  },
+  {
+    id: "v4",
+    name: "Arena Boa Viagem",
+    city: "Recife",
+    state: "PE",
+    courts: 8,
+    structure: ["Coberta", "Iluminação", "Fisioterapia"],
+    upcoming: 4,
+  },
 ];
 
 export type Notification = {
@@ -665,9 +865,27 @@ export type Notification = {
 };
 
 export const notifications: Notification[] = [
-  { id: "n1", type: "MATCH_STARTING", title: "Sua partida começa em 15 min", body: "Quadra 1 · Gold · Quartas · vs Prado / Vidal", time: "agora" },
-  { id: "n2", type: "BRACKET_PUBLISHED", title: "Chave publicada", body: "Copa Areia Curitiba — Gold e Silver disponíveis", time: "1 h" },
-  { id: "n3", type: "REVIEW_AVAILABLE", title: "Avaliações liberadas", body: "Circuito Litoral — Etapa 3 foi finalizado", time: "ontem" },
+  {
+    id: "n1",
+    type: "MATCH_STARTING",
+    title: "Sua partida começa em 15 min",
+    body: "Quadra 1 · Gold · Quartas · vs Prado / Vidal",
+    time: "agora",
+  },
+  {
+    id: "n2",
+    type: "BRACKET_PUBLISHED",
+    title: "Chave publicada",
+    body: "Copa Areia Curitiba — Gold e Silver disponíveis",
+    time: "1 h",
+  },
+  {
+    id: "n3",
+    type: "REVIEW_AVAILABLE",
+    title: "Avaliações liberadas",
+    body: "Circuito Litoral — Etapa 3 foi finalizado",
+    time: "ontem",
+  },
 ];
 
 export const formatRecommendations = [

@@ -84,7 +84,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "BeacHub — Plataforma de vôlei de areia" },
       {
         name: "description",
-        content: "Campeonatos, duplas, chaves, resultados, ranking e reputação do vôlei de areia brasileiro.",
+        content:
+          "Campeonatos, duplas, chaves, resultados, ranking e reputação do vôlei de areia brasileiro.",
       },
       { property: "og:title", content: "BeacHub — Plataforma de vôlei de areia" },
       { property: "og:description", content: "Aqui é onde o vôlei de areia acontece." },

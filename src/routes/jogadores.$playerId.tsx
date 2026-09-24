@@ -4,7 +4,13 @@ import { useState } from "react";
 
 import { AppShell } from "@/components/site/shell";
 import { PlayerAvatar, ReputationBadge, Stat } from "@/components/site/cards";
-import { getPlayer, performanceHistory, players, pointTransactions, reviews } from "@/lib/mock-data";
+import {
+  getPlayer,
+  performanceHistory,
+  players,
+  pointTransactions,
+  reviews,
+} from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/jogadores/$playerId")({
@@ -15,7 +21,12 @@ export const Route = createFileRoute("/jogadores/$playerId")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Jogador não encontrado · BeacHub" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Jogador não encontrado · BeacHub" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     const p = loaderData.player;
     const title = `${p.name} — ranking #${p.rankPosition} · BeacHub`;
@@ -42,7 +53,10 @@ export const Route = createFileRoute("/jogadores/$playerId")({
     <AppShell>
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="text-2xl">Jogador não encontrado</h1>
-        <Link to="/ranking" className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent">
+        <Link
+          to="/ranking"
+          className="mt-4 inline-flex font-display text-xs font-bold uppercase tracking-widest text-accent"
+        >
           Ver ranking
         </Link>
       </div>
@@ -110,7 +124,9 @@ function PlayerPage() {
               onClick={() => setTab(t)}
               className={cn(
                 "whitespace-nowrap border-b-2 px-3 py-3 font-display text-xs font-bold uppercase tracking-widest",
-                tab === t ? "border-accent text-foreground" : "border-transparent text-muted-foreground",
+                tab === t
+                  ? "border-accent text-foreground"
+                  : "border-transparent text-muted-foreground",
               )}
             >
               {t}
@@ -135,11 +151,16 @@ function HistoryTab() {
       <table className="w-full min-w-[720px] text-sm">
         <thead>
           <tr className="border-b border-border bg-sand text-left">
-            {["Evento", "Data", "Parceiro", "Formato", "J", "V", "D", "Colocação", "Pontos"].map((h) => (
-              <th key={h} className="px-3 py-2 font-display text-[10px] uppercase tracking-widest text-muted-foreground">
-                {h}
-              </th>
-            ))}
+            {["Evento", "Data", "Parceiro", "Formato", "J", "V", "D", "Colocação", "Pontos"].map(
+              (h) => (
+                <th
+                  key={h}
+                  className="px-3 py-2 font-display text-[10px] uppercase tracking-widest text-muted-foreground"
+                >
+                  {h}
+                </th>
+              ),
+            )}
           </tr>
         </thead>
         <tbody>
@@ -183,7 +204,11 @@ function LedgerTab() {
             <span
               className={cn(
                 "score-num w-10 text-lg",
-                t.points > 0 ? "text-success" : t.points < 0 ? "text-destructive" : "text-muted-foreground",
+                t.points > 0
+                  ? "text-success"
+                  : t.points < 0
+                    ? "text-destructive"
+                    : "text-muted-foreground",
               )}
             >
               {t.points > 0 ? `+${t.points}` : t.points}
@@ -218,7 +243,10 @@ function ReviewsTab() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={cn("h-3.5 w-3.5", i < r.rating ? "fill-warning text-warning" : "text-border")}
+                      className={cn(
+                        "h-3.5 w-3.5",
+                        i < r.rating ? "fill-warning text-warning" : "text-border",
+                      )}
                     />
                   ))}
                 </span>
@@ -238,7 +266,9 @@ function ReviewsTab() {
                   ["Comprometimento", r.criteria.commitment],
                 ].map(([label, v]) => (
                   <div key={label as string} className="border border-border px-2 py-1.5">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      {label}
+                    </p>
                     <p className="score-num">{v}</p>
                   </div>
                 ))}
@@ -248,8 +278,8 @@ function ReviewsTab() {
         </div>
       ))}
       <p className="text-xs text-muted-foreground">
-        Avaliações de jogadores com menos de 4 participações concluídas ficam registradas, mas não influenciam a nota
-        de reputação.
+        Avaliações de jogadores com menos de 4 participações concluídas ficam registradas, mas não
+        influenciam a nota de reputação.
       </p>
     </div>
   );
@@ -268,7 +298,9 @@ function PartnersTab() {
           <PlayerAvatar initials={p.initials} size="sm" />
           <div>
             <p className="font-display text-sm font-bold">{p.name}</p>
-            <p className="text-xs text-muted-foreground">Parceria em 2 eventos · último em ago 2026</p>
+            <p className="text-xs text-muted-foreground">
+              Parceria em 2 eventos · último em ago 2026
+            </p>
           </div>
         </Link>
       ))}

@@ -16,13 +16,24 @@ export const Route = createFileRoute("/parceiros")({
           "Encontre parceiros de vôlei de areia por cidade, nível, categoria e ranking. Envie o convite e inscreva a dupla.",
       },
       { property: "og:title", content: "Encontrar parceiro de dupla · BeacHub" },
-      { property: "og:description", content: "Filtre por cidade, nível e disponibilidade e convide seu parceiro." },
+      {
+        property: "og:description",
+        content: "Filtre por cidade, nível e disponibilidade e convide seu parceiro.",
+      },
     ],
   }),
   component: PartnersPage,
 });
 
-const cities = ["Todas", "Curitiba", "Florianópolis", "Santos", "Recife", "Natal", "Vitória"] as const;
+const cities = [
+  "Todas",
+  "Curitiba",
+  "Florianópolis",
+  "Santos",
+  "Recife",
+  "Natal",
+  "Vitória",
+] as const;
 const levels = ["Todos", "Iniciante", "Intermediário", "Avançado", "Open"] as const;
 
 function PartnersPage() {
@@ -70,7 +81,9 @@ function PartnersPage() {
                   onClick={() => setInvited((v) => [...new Set([...v, p.id])])}
                   className={cn(
                     "h-9 shrink-0 px-3 font-display text-[10px] font-bold uppercase tracking-widest",
-                    invited.includes(p.id) ? "bg-muted text-muted-foreground" : "bg-accent text-accent-foreground",
+                    invited.includes(p.id)
+                      ? "bg-muted text-muted-foreground"
+                      : "bg-accent text-accent-foreground",
                   )}
                 >
                   {invited.includes(p.id) ? "Convite enviado" : "Convidar"}
@@ -90,13 +103,23 @@ function PartnersPage() {
   );
 }
 
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       onClick={onClick}
       className={cn(
         "border px-3 py-1.5 font-display text-xs font-bold uppercase tracking-widest",
-        active ? "border-graphite bg-graphite text-background" : "border-border bg-card text-muted-foreground",
+        active
+          ? "border-graphite bg-graphite text-background"
+          : "border-border bg-card text-muted-foreground",
       )}
     >
       {children}

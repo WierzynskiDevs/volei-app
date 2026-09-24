@@ -21,7 +21,8 @@ export function OrganizerNav() {
     <div className="-mx-4 mb-6 overflow-x-auto border-b border-border px-4">
       <div className="flex min-w-max gap-1 pb-2">
         {organizerNav.map((item) => {
-          const active = item.to === "/organizador" ? pathname === "/organizador" : pathname.startsWith(item.to);
+          const active =
+            item.to === "/organizador" ? pathname === "/organizador" : pathname.startsWith(item.to);
           return (
             <Link
               key={item.to}

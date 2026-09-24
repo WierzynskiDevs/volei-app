@@ -3,7 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { AdminPageHeader, AdminShell } from "@/components/site/admin-shell";
 import { formatDateTime } from "@/components/site/admin-async";
-import { FinanceTimeline, GatewayBadge, MoneyRow, PaymentStatusPill, RefundStatusPill } from "@/components/site/finance";
+import {
+  FinanceTimeline,
+  GatewayBadge,
+  MoneyRow,
+  PaymentStatusPill,
+  RefundStatusPill,
+} from "@/components/site/finance";
 import { adminPaymentQuery, type AdminPayment } from "@/lib/api/admin";
 import { paymentPillStatus } from "@/lib/api/format";
 import { brl, pct, type LedgerEntry } from "@/lib/finance-data";
@@ -12,7 +18,11 @@ export const Route = createFileRoute("/admin/pagamentos/$id")({
   head: () => ({
     meta: [
       { title: "Pagamento · Super Admin BeacHub" },
-      { name: "description", content: "Ledger completo da cobrança: criação, confirmação, split, taxas, saldo do organizador e reembolso." },
+      {
+        name: "description",
+        content:
+          "Ledger completo da cobrança: criação, confirmação, split, taxas, saldo do organizador e reembolso.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Pagamento · Super Admin BeacHub" },
     ],
@@ -152,11 +162,11 @@ function AdminPaymentDetail() {
                 negative
               />
               {/*
-                * Taxa do gateway e líquido só existem depois que o Asaas
-                * responde. Enquanto não vierem, a linha diz "indisponível" —
-                * R$ 0,00 afirmaria que o organizador não paga taxa e recebe
-                * nada (ADR 0009 §5).
-                */}
+               * Taxa do gateway e líquido só existem depois que o Asaas
+               * responde. Enquanto não vierem, a linha diz "indisponível" —
+               * R$ 0,00 afirmaria que o organizador não paga taxa e recebe
+               * nada (ADR 0009 §5).
+               */}
               {payment.asaas_fee_cents === null ? (
                 <div className="flex flex-wrap items-baseline gap-2 px-4 py-3">
                   <span className="text-sm text-muted-foreground">Taxa Asaas</span>
@@ -227,8 +237,12 @@ function AdminPaymentDetail() {
           <section className="mt-6 border border-border bg-card">
             <div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
               <h2 className="text-lg">Reembolso</h2>
-              <RefundStatusPill status={payment.status === "REFUNDED" ? "REFUNDED" : "PROCESSING"} />
-              <span className="score-num ml-auto text-sm tabular-nums">{brl(payment.refunded_cents)}</span>
+              <RefundStatusPill
+                status={payment.status === "REFUNDED" ? "REFUNDED" : "PROCESSING"}
+              />
+              <span className="score-num ml-auto text-sm tabular-nums">
+                {brl(payment.refunded_cents)}
+              </span>
             </div>
             <div className="px-4 py-3">
               <p className="text-sm">

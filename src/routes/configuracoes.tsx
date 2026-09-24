@@ -8,7 +8,10 @@ export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
       { title: "Configurações da conta · BeacHub" },
-      { name: "description", content: "Gerencie seus dados, privacidade, notificações e sessão na plataforma BeacHub." },
+      {
+        name: "description",
+        content: "Gerencie seus dados, privacidade, notificações e sessão na plataforma BeacHub.",
+      },
       { property: "og:title", content: "Configurações da conta · BeacHub" },
       { property: "og:description", content: "Dados pessoais, privacidade e sessão." },
     ],
@@ -39,7 +42,11 @@ function SettingsPage() {
   return (
     <AppShell>
       <div className="mx-auto max-w-3xl px-4 py-8">
-        <PageHeader eyebrow="Conta" title="Configurações" description="Seus dados de contato nunca aparecem no perfil público." />
+        <PageHeader
+          eyebrow="Conta"
+          title="Configurações"
+          description="Seus dados de contato nunca aparecem no perfil público."
+        />
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Box title="Dados da conta">
@@ -64,9 +71,14 @@ function SettingsPage() {
             <Toggle label="Novidades e publicidade" />
           </Box>
           <Box title="Sessão">
-            <p className="text-sm text-muted-foreground">Encerrar a sessão limpa os dados exibidos na interface.</p>
+            <p className="text-sm text-muted-foreground">
+              Encerrar a sessão limpa os dados exibidos na interface.
+            </p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Link to="/meus-feedbacks" className="border border-border px-4 py-2 font-display text-[11px] font-bold uppercase tracking-widest">
+              <Link
+                to="/meus-feedbacks"
+                className="border border-border px-4 py-2 font-display text-[11px] font-bold uppercase tracking-widest"
+              >
                 Meus feedbacks
               </Link>
               <button

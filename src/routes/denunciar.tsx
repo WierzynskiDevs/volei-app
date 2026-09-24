@@ -8,9 +8,16 @@ export const Route = createFileRoute("/denunciar")({
   head: () => ({
     meta: [
       { title: "Denunciar · BeacHub" },
-      { name: "description", content: "Denuncie organizadores, participantes, arenas ou eventos que descumpram as regras da plataforma." },
+      {
+        name: "description",
+        content:
+          "Denuncie organizadores, participantes, arenas ou eventos que descumpram as regras da plataforma.",
+      },
       { property: "og:title", content: "Denunciar · BeacHub" },
-      { property: "og:description", content: "Canal de denúncias com análise pela equipe de governança." },
+      {
+        property: "og:description",
+        content: "Canal de denúncias com análise pela equipe de governança.",
+      },
     ],
   }),
   component: ReportPage,
@@ -120,7 +127,9 @@ function ReportPage() {
             <span>
               Anexar evidência <span className="text-muted-foreground">(opcional)</span>
             </span>
-            <span className="font-display text-[10px] font-bold uppercase tracking-widest text-accent">Selecionar</span>
+            <span className="font-display text-[10px] font-bold uppercase tracking-widest text-accent">
+              Selecionar
+            </span>
             <input type="file" className="hidden" />
           </label>
 

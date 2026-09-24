@@ -34,13 +34,7 @@ const registrationSchema = z.object({
   is_captain: z.boolean(),
   partner_mode: z.enum(["PARTNER", "SEEKING", "INDIVIDUAL"]),
 
-  status: z.enum([
-    "PENDING_ACCEPTANCE",
-    "PENDING_PAYMENT",
-    "CONFIRMED",
-    "CANCELLED",
-    "EXPIRED",
-  ]),
+  status: z.enum(["PENDING_ACCEPTANCE", "PENDING_PAYMENT", "CONFIRMED", "CANCELLED", "EXPIRED"]),
   status_label: z.string(),
 
   level_review: z.enum(["NOT_REQUIRED", "REQUIRED", "APPROVED", "REJECTED"]),
@@ -75,9 +69,7 @@ const registrationSchema = z.object({
     })
     .nullish(),
 
-  player: z
-    .object({ id: z.string(), name: z.string(), level: z.string().nullable() })
-    .nullish(),
+  player: z.object({ id: z.string(), name: z.string(), level: z.string().nullable() }).nullish(),
 
   group: z
     .object({
@@ -218,14 +210,11 @@ export async function createRegistration(
   return registrationSchema.parse(response.data);
 }
 
-export async function cancelRegistration(
-  id: string,
-  reason?: string,
-): Promise<ApiRegistration> {
-  const response = await apiRequest<Resource<unknown>>(
-    `/registrations/${encodeURIComponent(id)}`,
-    { method: "DELETE", ...(reason ? { body: { reason } } : {}) },
-  );
+export async function cancelRegistration(id: string, reason?: string): Promise<ApiRegistration> {
+  const response = await apiRequest<Resource<unknown>>(`/registrations/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    ...(reason ? { body: { reason } } : {}),
+  });
 
   return registrationSchema.parse(response.data);
 }

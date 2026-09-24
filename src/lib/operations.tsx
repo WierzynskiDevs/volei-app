@@ -5,13 +5,7 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 export type OpsStatus =
-  | "PENDENTE"
-  | "ATRIBUIDO"
-  | "PRONTO"
-  | "EM_ANDAMENTO"
-  | "FINALIZADO"
-  | "CANCELADO"
-  | "ADIADO";
+  "PENDENTE" | "ATRIBUIDO" | "PRONTO" | "EM_ANDAMENTO" | "FINALIZADO" | "CANCELADO" | "ADIADO";
 
 export const OPS_STATUS_LABEL: Record<OpsStatus, string> = {
   PENDENTE: "Pendente",
@@ -118,8 +112,22 @@ const seedConfig: EventOpsConfig = {
 };
 
 const seedReferees: Referee[] = [
-  { id: "r1", name: "Marcelo Faria", phone: "(41) 99811-2200", invite: "ACEITO", court: "Quadra 1", rating: 4.8 },
-  { id: "r2", name: "Patrícia Lemos", phone: "(41) 99744-1080", invite: "ACEITO", court: "Quadra 2", rating: 4.9 },
+  {
+    id: "r1",
+    name: "Marcelo Faria",
+    phone: "(41) 99811-2200",
+    invite: "ACEITO",
+    court: "Quadra 1",
+    rating: 4.8,
+  },
+  {
+    id: "r2",
+    name: "Patrícia Lemos",
+    phone: "(41) 99744-1080",
+    invite: "ACEITO",
+    court: "Quadra 2",
+    rating: 4.9,
+  },
   { id: "r3", name: "Ivo Camargo", phone: "(41) 99620-3311", invite: "ENVIADO", court: "Quadra 3" },
   { id: "r4", name: "Sandra Kühn", phone: "(41) 99500-7744", invite: "NAO_ENVIADO", court: null },
 ];
@@ -322,7 +330,8 @@ export function buildStandings(matches: OpsMatch[], scoring: ScoringRules): Stan
     }
   }
   return [...map.values()].sort(
-    (x, y) => y.points - x.points || y.wins - x.wins || y.setsWon - y.setsLost - (x.setsWon - x.setsLost),
+    (x, y) =>
+      y.points - x.points || y.wins - x.wins || y.setsWon - y.setsLost - (x.setsWon - x.setsLost),
   );
 }
 
@@ -410,7 +419,11 @@ export function OperationsProvider({ children }: { children: ReactNode }) {
                   : "PENDENTE",
         })),
       startMatch: (matchId) =>
-        patchMatch(matchId, (m) => ({ ...m, status: "EM_ANDAMENTO", startedAt: m.startedAt ?? nowClock() })),
+        patchMatch(matchId, (m) => ({
+          ...m,
+          status: "EM_ANDAMENTO",
+          startedAt: m.startedAt ?? nowClock(),
+        })),
       finishMatch: (matchId, sets) =>
         patchMatch(matchId, (m) => ({
           ...m,
@@ -423,7 +436,13 @@ export function OperationsProvider({ children }: { children: ReactNode }) {
       renameTeam: (matchId, side, name) =>
         patchMatch(matchId, (m) => (side === "A" ? { ...m, teamA: name } : { ...m, teamB: name })),
       addReferee: (name, phone) => {
-        const ref: Referee = { id: `r${Date.now()}`, name, phone, invite: "NAO_ENVIADO", court: null };
+        const ref: Referee = {
+          id: `r${Date.now()}`,
+          name,
+          phone,
+          invite: "NAO_ENVIADO",
+          court: null,
+        };
         setReferees((prev) => [...prev, ref]);
         return ref;
       },

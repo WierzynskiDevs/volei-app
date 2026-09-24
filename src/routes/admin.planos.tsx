@@ -1,16 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, AdminTable, StatusPill } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  AdminTable,
+  StatusPill,
+} from "@/components/site/admin-shell";
 import { MoneyCard } from "@/components/site/finance";
-import { brl, organizerFinances, pct, plans, paymentsByOrganizer, summarize } from "@/lib/finance-data";
+import {
+  brl,
+  organizerFinances,
+  pct,
+  plans,
+  paymentsByOrganizer,
+  summarize,
+} from "@/lib/finance-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/planos")({
   head: () => ({
     meta: [
       { title: "Planos e taxas · Super Admin BeacHub" },
-      { name: "description", content: "Configure planos, mensalidades, taxa da plataforma e limites, e veja quantos organizadores usam cada plano." },
+      {
+        name: "description",
+        content:
+          "Configure planos, mensalidades, taxa da plataforma e limites, e veja quantos organizadores usam cada plano.",
+      },
       { property: "og:title", content: "Planos e taxas · Super Admin BeacHub" },
       { property: "og:description", content: "Modelo de monetização da plataforma." },
     ],
@@ -39,13 +56,19 @@ function AdminPlans() {
           <MoneyCard label="MRR de assinaturas" cents={mrr} hint="mensalidades ativas" emphasis />
           <MoneyCard
             label="Receita de taxas"
-            cents={organizerFinances.reduce((s, o) => s + summarize(paymentsByOrganizer(o.id)).platformFee, 0)}
+            cents={organizerFinances.reduce(
+              (s, o) => s + summarize(paymentsByOrganizer(o.id)).platformFee,
+              0,
+            )}
             hint="comissão sobre inscrições"
             tone="ok"
           />
           <MoneyCard
             label="GMV dos organizadores"
-            cents={organizerFinances.reduce((s, o) => s + summarize(paymentsByOrganizer(o.id)).gross, 0)}
+            cents={organizerFinances.reduce(
+              (s, o) => s + summarize(paymentsByOrganizer(o.id)).gross,
+              0,
+            )}
             hint="base de cálculo da comissão"
           />
         </div>
@@ -59,10 +82,15 @@ function AdminPlans() {
                 key={p.id}
                 type="button"
                 onClick={() => setSelected(p.id)}
-                className={cn("border p-5 text-left", active ? "border-graphite bg-card" : "border-border bg-card/60")}
+                className={cn(
+                  "border p-5 text-left",
+                  active ? "border-graphite bg-card" : "border-border bg-card/60",
+                )}
               >
                 <div className="flex items-center justify-between">
-                  <p className="font-display text-lg font-bold uppercase tracking-widest">{p.name}</p>
+                  <p className="font-display text-lg font-bold uppercase tracking-widest">
+                    {p.name}
+                  </p>
                   <StatusPill tone={p.status === "ATIVO" ? "ok" : "neutral"}>{p.status}</StatusPill>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">{p.description}</p>
@@ -73,7 +101,8 @@ function AdminPlans() {
                   Taxa {pct(p.platformFeeRate)} por inscrição
                 </p>
                 <p className="mt-3 text-xs text-muted-foreground">
-                  {count} organizador(es) · {p.eventLimit ?? "∞"} eventos · {p.registrationLimit ?? "∞"} inscrições
+                  {count} organizador(es) · {p.eventLimit ?? "∞"} eventos ·{" "}
+                  {p.registrationLimit ?? "∞"} inscrições
                 </p>
               </button>
             );
@@ -90,11 +119,18 @@ function AdminPlans() {
               {[
                 { label: "Mensalidade (R$)", value: (plan.monthlyCents / 100).toFixed(2) },
                 { label: "Taxa da plataforma (%)", value: String(plan.platformFeeRate) },
-                { label: "Taxa fixa por transação (R$)", value: (plan.platformFeeFixedCents / 100).toFixed(2) },
-                { label: "Limite de eventos", value: plan.eventLimit === null ? "Ilimitado" : String(plan.eventLimit) },
+                {
+                  label: "Taxa fixa por transação (R$)",
+                  value: (plan.platformFeeFixedCents / 100).toFixed(2),
+                },
+                {
+                  label: "Limite de eventos",
+                  value: plan.eventLimit === null ? "Ilimitado" : String(plan.eventLimit),
+                },
                 {
                   label: "Limite de inscrições",
-                  value: plan.registrationLimit === null ? "Ilimitado" : String(plan.registrationLimit),
+                  value:
+                    plan.registrationLimit === null ? "Ilimitado" : String(plan.registrationLimit),
                 },
                 { label: "Status", value: plan.status },
               ].map((f) => (
@@ -128,16 +164,24 @@ function AdminPlans() {
                   const s = summarize(paymentsByOrganizer(o.id));
                   return (
                     <div key={o.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-                      <span className="min-w-[160px] flex-1 font-display text-sm font-bold">{o.name}</span>
+                      <span className="min-w-[160px] flex-1 font-display text-sm font-bold">
+                        {o.name}
+                      </span>
                       <span className="score-num text-sm tabular-nums">{brl(s.gross)}</span>
-                      <StatusPill tone={o.status === "REGULAR" ? "ok" : o.status === "ATENCAO" ? "warn" : "danger"}>
+                      <StatusPill
+                        tone={
+                          o.status === "REGULAR" ? "ok" : o.status === "ATENCAO" ? "warn" : "danger"
+                        }
+                      >
                         {o.status}
                       </StatusPill>
                     </div>
                   );
                 })
               ) : (
-                <p className="px-4 py-6 text-sm text-muted-foreground">Nenhum organizador neste plano.</p>
+                <p className="px-4 py-6 text-sm text-muted-foreground">
+                  Nenhum organizador neste plano.
+                </p>
               )}
             </div>
           </div>

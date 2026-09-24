@@ -9,7 +9,11 @@ export const Route = createFileRoute("/cadastro")({
   head: () => ({
     meta: [
       { title: "Criar conta · BeacHub" },
-      { name: "description", content: "Crie sua conta gratuita no BeacHub e comece a jogar campeonatos de vôlei de areia com ranking e reputação." },
+      {
+        name: "description",
+        content:
+          "Crie sua conta gratuita no BeacHub e comece a jogar campeonatos de vôlei de areia com ranking e reputação.",
+      },
       { property: "og:title", content: "Criar conta · BeacHub" },
       { property: "og:description", content: "Cadastro rápido: nome, e-mail, telefone e senha." },
     ],
@@ -90,7 +94,9 @@ function SignupPage() {
             </span>
             <span>
               <span className="block font-display text-sm font-bold">Avatar</span>
-              <span className="block text-xs text-muted-foreground">Opcional · JPG ou PNG até 2 MB</span>
+              <span className="block text-xs text-muted-foreground">
+                Opcional · JPG ou PNG até 2 MB
+              </span>
             </span>
             <input type="file" accept="image/*" className="hidden" />
           </label>
@@ -104,7 +110,9 @@ function SignupPage() {
               placeholder="Seu nome"
             />
           </L>
-          {fieldErrors['name'] ? <p className="text-sm text-destructive">{fieldErrors['name']}</p> : null}
+          {fieldErrors["name"] ? (
+            <p className="text-sm text-destructive">{fieldErrors["name"]}</p>
+          ) : null}
           <L label="E-mail">
             <input
               required
@@ -116,7 +124,9 @@ function SignupPage() {
               placeholder="voce@email.com"
             />
           </L>
-          {fieldErrors['email'] ? <p className="text-sm text-destructive">{fieldErrors['email']}</p> : null}
+          {fieldErrors["email"] ? (
+            <p className="text-sm text-destructive">{fieldErrors["email"]}</p>
+          ) : null}
           <L label="Telefone">
             <input
               required
@@ -127,7 +137,9 @@ function SignupPage() {
               placeholder="(00) 00000-0000"
             />
           </L>
-          {fieldErrors['phone'] ? <p className="text-sm text-destructive">{fieldErrors['phone']}</p> : null}
+          {fieldErrors["phone"] ? (
+            <p className="text-sm text-destructive">{fieldErrors["phone"]}</p>
+          ) : null}
           <div className="grid gap-4 sm:grid-cols-2">
             <L label="Senha">
               <input
@@ -152,7 +164,9 @@ function SignupPage() {
             </L>
           </div>
           {mismatch ? <p className="text-sm text-destructive">As senhas não conferem.</p> : null}
-          {fieldErrors['password'] ? <p className="text-sm text-destructive">{fieldErrors['password']}</p> : null}
+          {fieldErrors["password"] ? (
+            <p className="text-sm text-destructive">{fieldErrors["password"]}</p>
+          ) : null}
           {error ? (
             <p role="alert" className="text-sm text-destructive">
               {error}
@@ -161,11 +175,21 @@ function SignupPage() {
 
           <div className="space-y-2 border-t border-border pt-4 text-sm">
             <label className="flex items-start gap-2">
-              <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} className="mt-1" />
+              <input
+                type="checkbox"
+                checked={terms}
+                onChange={(e) => setTerms(e.target.checked)}
+                className="mt-1"
+              />
               <span>Aceito os Termos de Uso</span>
             </label>
             <label className="flex items-start gap-2">
-              <input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} className="mt-1" />
+              <input
+                type="checkbox"
+                checked={privacy}
+                onChange={(e) => setPrivacy(e.target.checked)}
+                className="mt-1"
+              />
               <span>Li e aceito a Política de Privacidade</span>
             </label>
           </div>
@@ -179,7 +203,10 @@ function SignupPage() {
           </button>
           <p className="text-center text-sm text-muted-foreground">
             Já tem conta?{" "}
-            <Link to="/login" className="font-semibold text-accent underline-offset-4 hover:underline">
+            <Link
+              to="/login"
+              className="font-semibold text-accent underline-offset-4 hover:underline"
+            >
               Entrar
             </Link>
           </p>

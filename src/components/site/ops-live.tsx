@@ -168,7 +168,8 @@ function ScoreDialog({
         <DialogHeader>
           <DialogTitle className="font-display text-xl">Registrar placar</DialogTitle>
           <DialogDescription>
-            {match.phase} · {match.court_label ?? "sem quadra"} · melhor de {bestOfSets} · sets até {pointsPerSet}
+            {match.phase} · {match.court_label ?? "sem quadra"} · melhor de {bestOfSets} · sets até{" "}
+            {pointsPerSet}
             {bestOfSets > 1 ? ` (decisivo ${tiebreakPoints})` : ""}.
           </DialogDescription>
         </DialogHeader>
@@ -186,7 +187,10 @@ function ScoreDialog({
 
         <div className="space-y-2">
           {sets.map((s, i) => (
-            <div key={s.index} className="flex items-center gap-3 border border-border bg-card px-3 py-2">
+            <div
+              key={s.index}
+              className="flex items-center gap-3 border border-border bg-card px-3 py-2"
+            >
               <span className="eyebrow w-12">Set {s.index}</span>
               <input
                 type="number"
@@ -212,7 +216,8 @@ function ScoreDialog({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Sets sem pontuação não são registrados. O resultado pode ser corrigido depois com registro de auditoria.
+          Sets sem pontuação não são registrados. O resultado pode ser corrigido depois com registro
+          de auditoria.
         </p>
 
         <DialogFooter>
@@ -342,7 +347,9 @@ function MatchOpsCard({
       )}
     >
       <div className="flex items-start gap-2">
-        {draggable ? <GripVertical className="mt-0.5 hidden h-4 w-4 shrink-0 text-muted-foreground md:block" /> : null}
+        {draggable ? (
+          <GripVertical className="mt-0.5 hidden h-4 w-4 shrink-0 text-muted-foreground md:block" />
+        ) : null}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <OpsStatusPill status={match.status} />
@@ -350,12 +357,16 @@ function MatchOpsCard({
           </div>
           <div className="mt-2 space-y-1">
             <div className="flex items-center justify-between gap-2">
-              <p className="truncate font-display text-sm font-bold">{match.team_a_name ?? "Dupla A"}</p>
+              <p className="truncate font-display text-sm font-bold">
+                {match.team_a_name ?? "Dupla A"}
+              </p>
               {match.sets.length ? <span className="score-num tabular-nums">{won.a}</span> : null}
             </div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">×</p>
             <div className="flex items-center justify-between gap-2">
-              <p className="truncate font-display text-sm font-bold">{match.team_b_name ?? "Dupla B"}</p>
+              <p className="truncate font-display text-sm font-bold">
+                {match.team_b_name ?? "Dupla B"}
+              </p>
               {match.sets.length ? <span className="score-num tabular-nums">{won.b}</span> : null}
             </div>
           </div>
@@ -423,7 +434,10 @@ function MatchOpsCard({
 
       <div className="mt-2 flex flex-wrap gap-1.5">
         {match.status === "FINALIZADA" ? (
-          <button onClick={() => setScoreOpen(true)} className={cn(actionClass, "border border-border")}>
+          <button
+            onClick={() => setScoreOpen(true)}
+            className={cn(actionClass, "border border-border")}
+          >
             <Repeat className="h-3.5 w-3.5" /> Corrigir placar
           </button>
         ) : match.status === "EM_ANDAMENTO" ? (
@@ -434,7 +448,10 @@ function MatchOpsCard({
             >
               <Square className="h-3.5 w-3.5" /> Finalizar jogo
             </button>
-            <button onClick={() => setScoreOpen(true)} className={cn(actionClass, "border border-border")}>
+            <button
+              onClick={() => setScoreOpen(true)}
+              className={cn(actionClass, "border border-border")}
+            >
               Registrar placar
             </button>
           </>
@@ -452,7 +469,10 @@ function MatchOpsCard({
             >
               <Play className="h-3.5 w-3.5" /> Iniciar jogo
             </button>
-            <button onClick={() => setScoreOpen(true)} className={cn(actionClass, "border border-border")}>
+            <button
+              onClick={() => setScoreOpen(true)}
+              className={cn(actionClass, "border border-border")}
+            >
               <UserCheck className="h-3.5 w-3.5" /> Registrar placar
             </button>
           </>
@@ -518,7 +538,12 @@ function Column({
         over && "border-accent",
       )}
     >
-      <div className={cn("border-b border-border px-3 py-2", tone === "pending" ? "bg-muted" : "bg-sand")}>
+      <div
+        className={cn(
+          "border-b border-border px-3 py-2",
+          tone === "pending" ? "bg-muted" : "bg-sand",
+        )}
+      >
         <p className="font-display text-xs font-bold uppercase tracking-widest">{title}</p>
         <p className="text-[11px] text-muted-foreground">
           {matches.length} partida{matches.length === 1 ? "" : "s"}
@@ -579,7 +604,11 @@ function NewMatchForm({ slug }: { slug: string }) {
     <div className="mb-4 flex flex-wrap items-end gap-2 border border-dashed border-border bg-card p-3">
       <label className="block">
         <span className="eyebrow">Dupla A</span>
-        <select value={teamA} onChange={(e) => setTeamA(e.target.value)} className={cn(selectClass, "mt-1 w-48")}>
+        <select
+          value={teamA}
+          onChange={(e) => setTeamA(e.target.value)}
+          className={cn(selectClass, "mt-1 w-48")}
+        >
           <option value="">Selecione</option>
           {teams.map((t) => (
             <option key={t.id} value={t.id}>
@@ -590,7 +619,11 @@ function NewMatchForm({ slug }: { slug: string }) {
       </label>
       <label className="block">
         <span className="eyebrow">Dupla B</span>
-        <select value={teamB} onChange={(e) => setTeamB(e.target.value)} className={cn(selectClass, "mt-1 w-48")}>
+        <select
+          value={teamB}
+          onChange={(e) => setTeamB(e.target.value)}
+          className={cn(selectClass, "mt-1 w-48")}
+        >
           <option value="">Selecione</option>
           {teams.map((t) => (
             <option key={t.id} value={t.id}>
@@ -665,10 +698,19 @@ export function OpsKanban({
   const mobileList = mobileCourt === "PENDENTES" ? pending : byCourt(mobileCourt);
 
   if (matchesQuery.isPending || courtsQ.isPending || refereesQ.isPending) {
-    return <div className="h-40 animate-pulse border border-border bg-background" aria-busy="true" />;
+    return (
+      <div className="h-40 animate-pulse border border-border bg-background" aria-busy="true" />
+    );
   }
 
-  const cardProps: ColumnCardProps = { slug, courts, referees, bestOfSets, pointsPerSet, tiebreakPoints };
+  const cardProps: ColumnCardProps = {
+    slug,
+    courts,
+    referees,
+    bestOfSets,
+    pointsPerSet,
+    tiebreakPoints,
+  };
 
   return (
     <div>
@@ -676,7 +718,8 @@ export function OpsKanban({
         <div>
           <h2 className="text-xl">Operacional</h2>
           <p className="text-sm text-muted-foreground">
-            Arraste as partidas pendentes para a quadra. O sistema não sorteia — quem decide é o organizador.
+            Arraste as partidas pendentes para a quadra. O sistema não sorteia — quem decide é o
+            organizador.
           </p>
         </div>
         <p className="eyebrow">
@@ -723,7 +766,9 @@ export function OpsKanban({
                 )}
               >
                 {c === "PENDENTES" ? "Pendentes" : courts.find((court) => court.id === c)?.label}
-                <span className="ml-1.5 opacity-70">{(c === "PENDENTES" ? pending : byCourt(c)).length}</span>
+                <span className="ml-1.5 opacity-70">
+                  {(c === "PENDENTES" ? pending : byCourt(c)).length}
+                </span>
               </button>
             ))}
           </div>

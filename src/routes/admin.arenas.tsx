@@ -2,14 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, StatusPill } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  StatusPill,
+} from "@/components/site/admin-shell";
 import { partnerVenues } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/arenas")({
   head: () => ({
     meta: [
       { title: "Arenas parceiras · Super Admin BeacHub" },
-      { name: "description", content: "Cadastre e administre as arenas parceiras oficiais da plataforma BeacHub: estrutura, contato e quadras." },
+      {
+        name: "description",
+        content:
+          "Cadastre e administre as arenas parceiras oficiais da plataforma BeacHub: estrutura, contato e quadras.",
+      },
       { property: "og:title", content: "Arenas parceiras · Super Admin BeacHub" },
       { property: "og:description", content: "Somente o Super Admin cadastra arenas parceiras." },
     ],
@@ -38,7 +47,10 @@ function AdminVenues() {
         />
 
         {creating ? (
-          <form className="mt-6 border border-border bg-card p-6" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="mt-6 border border-border bg-card p-6"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <h2 className="text-lg">Cadastrar arena parceira</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <F label="Nome" />
@@ -86,7 +98,10 @@ function AdminVenues() {
                 <p className="mt-3 text-sm">{v.description}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {v.structure.map((s) => (
-                    <span key={s} className="border border-border px-2 py-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+                    <span
+                      key={s}
+                      className="border border-border px-2 py-0.5 text-[11px] uppercase tracking-wide text-muted-foreground"
+                    >
                       {s}
                     </span>
                   ))}

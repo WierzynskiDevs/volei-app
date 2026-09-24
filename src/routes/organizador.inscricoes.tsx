@@ -14,9 +14,15 @@ export const Route = createFileRoute("/organizador/inscricoes")({
   head: () => ({
     meta: [
       { title: "Inscrições pagas · Organizador BeacHub" },
-      { name: "description", content: "Quem pagou, quem está pendente e quem pediu reembolso em cada campeonato." },
+      {
+        name: "description",
+        content: "Quem pagou, quem está pendente e quem pediu reembolso em cada campeonato.",
+      },
       { property: "og:title", content: "Inscrições pagas · Organizador BeacHub" },
-      { property: "og:description", content: "Controle de inscrições e cobranças por participante." },
+      {
+        property: "og:description",
+        content: "Controle de inscrições e cobranças por participante.",
+      },
     ],
   }),
   component: OrganizerRegistrations,
@@ -58,8 +64,8 @@ function OrganizerRegistrations() {
         <PageHeader eyebrow={account?.organizerName ?? "Organizador"} title="Inscrições" />
 
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          A inscrição só é considerada confirmada depois que o pagamento é confirmado pelo gateway. Iniciar o cadastro não
-          garante vaga.
+          A inscrição só é considerada confirmada depois que o pagamento é confirmado pelo gateway.
+          Iniciar o cadastro não garante vaga.
         </p>
 
         <div className="mt-6">
@@ -71,7 +77,10 @@ function OrganizerRegistrations() {
             <thead>
               <tr className="border-b border-border bg-sand-deep/40 text-left">
                 {["Jogador", "Dupla", "Evento", "Valor", "Método", "Status", "Ações"].map((h) => (
-                  <th key={h} className="px-4 py-3 font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  <th
+                    key={h}
+                    className="px-4 py-3 font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                  >
                     {h}
                   </th>
                 ))}
@@ -120,9 +129,13 @@ function OrganizerRegistrations() {
                         <p className="text-xs text-muted-foreground">{r.status_label}</p>
                       </td>
                       <td className="px-4 py-3">{teamLabel(r)}</td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">{r.event?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {r.event?.name ?? "—"}
+                      </td>
                       <td className="score-num px-4 py-3 tabular-nums">{brl(amountCents)}</td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">{payment?.method_label ?? "—"}</td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {payment?.method_label ?? "—"}
+                      </td>
                       <td className="px-4 py-3">
                         {payment ? (
                           <PaymentStatusPill status={paymentPillStatus(payment.status)} />
@@ -137,12 +150,12 @@ function OrganizerRegistrations() {
                       </td>
                       <td className="px-4 py-3">
                         {/*
-                          * Lembrete de cobrança depende de um módulo de
-                          * notificações que ainda não existe. Em vez de um botão
-                          * que finge enviar, a coluna mostra a referência da
-                          * cobrança — que é o que o organizador usa para achar a
-                          * transação no gateway.
-                          */}
+                         * Lembrete de cobrança depende de um módulo de
+                         * notificações que ainda não existe. Em vez de um botão
+                         * que finge enviar, a coluna mostra a referência da
+                         * cobrança — que é o que o organizador usa para achar a
+                         * transação no gateway.
+                         */}
                         <span className="text-xs text-muted-foreground">
                           {payment ? payment.id.slice(0, 8) : "—"}
                         </span>

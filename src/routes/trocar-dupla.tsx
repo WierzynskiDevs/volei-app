@@ -13,10 +13,14 @@ export const Route = createFileRoute("/trocar-dupla")({
       { title: "Trocar dupla · BeacHub" },
       {
         name: "description",
-        content: "Escolha um jogador já cadastrado ou convide um novo parceiro para regularizar sua inscrição.",
+        content:
+          "Escolha um jogador já cadastrado ou convide um novo parceiro para regularizar sua inscrição.",
       },
       { property: "og:title", content: "Trocar dupla · BeacHub" },
-      { property: "og:description", content: "Convide um parceiro compatível com a categoria do campeonato." },
+      {
+        property: "og:description",
+        content: "Convide um parceiro compatível com a categoria do campeonato.",
+      },
     ],
   }),
   component: SwapPartner,
@@ -63,7 +67,9 @@ function SwapPartner() {
               onClick={() => setMode(m)}
               className={cn(
                 "px-3 py-2 font-display text-[11px] font-bold uppercase tracking-widest",
-                mode === m ? "bg-graphite text-background" : "border border-border text-muted-foreground",
+                mode === m
+                  ? "bg-graphite text-background"
+                  : "border border-border text-muted-foreground",
               )}
             >
               {m === "existente" ? "Escolher dupla existente" : "Convidar novo jogador"}
@@ -103,7 +109,9 @@ function SwapPartner() {
                 </div>
               ))}
               {found.length === 0 ? (
-                <p className="px-4 py-8 text-center text-sm text-muted-foreground">Nenhum jogador encontrado.</p>
+                <p className="px-4 py-8 text-center text-sm text-muted-foreground">
+                  Nenhum jogador encontrado.
+                </p>
               ) : null}
             </div>
           </div>
@@ -136,7 +144,9 @@ function SwapPartner() {
                   toast.error("Informe o nome do jogador.");
                   return;
                 }
-                setLink(`https://beachub.com/convite/${name.trim().toLowerCase().replace(/\s+/g, "-")}`);
+                setLink(
+                  `https://beachub.com/convite/${name.trim().toLowerCase().replace(/\s+/g, "-")}`,
+                );
               }}
               className="inline-flex h-11 items-center gap-2 bg-accent px-5 font-display text-xs font-bold uppercase tracking-widest text-accent-foreground"
             >
@@ -156,8 +166,8 @@ function SwapPartner() {
                   <Copy className="h-3.5 w-3.5" /> Copiar link
                 </button>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Este jogador precisa criar uma conta para confirmar sua participação. Se ele não criar até o dia do
-                  evento, o organizador pode autorizá-lo como jogador convidado.
+                  Este jogador precisa criar uma conta para confirmar sua participação. Se ele não
+                  criar até o dia do evento, o organizador pode autorizá-lo como jogador convidado.
                 </p>
               </div>
             ) : null}

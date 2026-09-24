@@ -55,7 +55,9 @@ export function SetLine({ match }: { match: ScheduledMatch }) {
           )}
         </li>
       ))}
-      {match.sets.length === 0 ? <li className="text-sm text-muted-foreground">Nenhum set iniciado</li> : null}
+      {match.sets.length === 0 ? (
+        <li className="text-sm text-muted-foreground">Nenhum set iniciado</li>
+      ) : null}
     </ul>
   );
 }
@@ -81,11 +83,18 @@ export function LiveMatchCard({ match, dark = false }: { match: ScheduledMatch; 
       </div>
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-4">
-        <p className={cn("font-display font-bold", dark ? "text-2xl md:text-3xl" : "text-lg")}>{match.teamA}</p>
+        <p className={cn("font-display font-bold", dark ? "text-2xl md:text-3xl" : "text-lg")}>
+          {match.teamA}
+        </p>
         <p className="score-num text-center text-2xl md:text-3xl">
           ({w.a}) <span className="text-muted-foreground">×</span> ({w.b})
         </p>
-        <p className={cn("text-right font-display font-bold", dark ? "text-2xl md:text-3xl" : "text-lg")}>
+        <p
+          className={cn(
+            "text-right font-display font-bold",
+            dark ? "text-2xl md:text-3xl" : "text-lg",
+          )}
+        >
           {match.teamB}
         </p>
       </div>
@@ -96,7 +105,9 @@ export function LiveMatchCard({ match, dark = false }: { match: ScheduledMatch; 
           dark ? "border-background/20 text-background/70" : "border-border text-muted-foreground",
         )}
       >
-        <span className="font-display font-bold uppercase tracking-widest text-accent">{match.court}</span>
+        <span className="font-display font-bold uppercase tracking-widest text-accent">
+          {match.court}
+        </span>
         <span>Programado {match.scheduledStartAt}</span>
         {match.actualStartAt ? <span>Início real {match.actualStartAt}</span> : null}
         {delay > 0 ? <DelayPill minutes={delay} /> : null}
@@ -110,7 +121,13 @@ export function LiveMatchCard({ match, dark = false }: { match: ScheduledMatch; 
   );
 }
 
-export function UpcomingMatchCard({ match, dark = false }: { match: ScheduledMatch; dark?: boolean }) {
+export function UpcomingMatchCard({
+  match,
+  dark = false,
+}: {
+  match: ScheduledMatch;
+  dark?: boolean;
+}) {
   const est = estimateFor(match.id);
 
   return (
@@ -125,7 +142,9 @@ export function UpcomingMatchCard({ match, dark = false }: { match: ScheduledMat
         </div>
         <div className="mt-1 flex items-baseline justify-between">
           <span className="eyebrow text-accent">Estimado</span>
-          <span className="score-num text-lg text-accent">{est?.estimated ?? match.scheduledStartAt}</span>
+          <span className="score-num text-lg text-accent">
+            {est?.estimated ?? match.scheduledStartAt}
+          </span>
         </div>
         <p className="mt-2 font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">
           {match.court} · {match.phase}

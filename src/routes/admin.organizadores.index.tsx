@@ -2,7 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, AdminTable, StatusPill } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  AdminTable,
+  StatusPill,
+} from "@/components/site/admin-shell";
 import { AdminTableState, formatDate } from "@/components/site/admin-async";
 import {
   adminOrganizersQuery,
@@ -26,7 +32,11 @@ export const Route = createFileRoute("/admin/organizadores/")({
   head: () => ({
     meta: [
       { title: "Organizadores · Super Admin BeacHub" },
-      { name: "description", content: "Acompanhe organizadores de campeonatos, volume de eventos, denúncias associadas e status na plataforma." },
+      {
+        name: "description",
+        content:
+          "Acompanhe organizadores de campeonatos, volume de eventos, denúncias associadas e status na plataforma.",
+      },
       { property: "og:title", content: "Organizadores · Super Admin BeacHub" },
       { property: "og:description", content: "Governança de quem opera campeonatos." },
     ],
@@ -41,7 +51,10 @@ function toneOf(status: OrganizerStatus) {
 }
 
 function AdminOrganizers() {
-  const [decision, setDecision] = useState<{ organizer: AdminOrganizer; status: OrganizerStatus } | null>(null);
+  const [decision, setDecision] = useState<{
+    organizer: AdminOrganizer;
+    status: OrganizerStatus;
+  } | null>(null);
   const [reason, setReason] = useState("");
 
   const queryClient = useQueryClient();
@@ -67,7 +80,9 @@ function AdminOrganizers() {
           description="Organizador cria e opera campeonatos. Não confundir com Super Admin, que controla a plataforma inteira."
         />
 
-        <AdminTable head={["Organizador", "Cidade", "Eventos", "Denúncias", "Status", "Desde", "Ações"]}>
+        <AdminTable
+          head={["Organizador", "Cidade", "Eventos", "Denúncias", "Status", "Desde", "Ações"]}
+        >
           <AdminTableState
             columns={7}
             isPending={isPending}
@@ -81,7 +96,9 @@ function AdminOrganizers() {
               <tr key={o.id}>
                 <td className="px-4 py-3">
                   <p className="font-display text-sm font-bold">{o.name}</p>
-                  <p className="text-xs text-muted-foreground">{o.contact_email ?? o.owner?.email ?? "—"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {o.contact_email ?? o.owner?.email ?? "—"}
+                  </p>
                 </td>
                 <td className="px-4 py-3 text-sm">
                   {o.city && o.state ? `${o.city}/${o.state}` : "—"}
@@ -89,17 +106,19 @@ function AdminOrganizers() {
                 {/* Contagem vinda do módulo Events, composta pelo backend. */}
                 <td className="score-num px-4 py-3">{o.events_count ?? "—"}</td>
                 {/*
-                  * Denúncias são Fase 2: não existe tabela nem endpoint. O
-                  * protótipo contava por correspondência de nome — inventar de
-                  * novo seria pior do que a coluna vazia.
-                  */}
+                 * Denúncias são Fase 2: não existe tabela nem endpoint. O
+                 * protótipo contava por correspondência de nome — inventar de
+                 * novo seria pior do que a coluna vazia.
+                 */}
                 <td className="px-4 py-3">
                   <StatusPill>—</StatusPill>
                 </td>
                 <td className="px-4 py-3">
                   <StatusPill tone={toneOf(o.status)}>{o.status_label}</StatusPill>
                 </td>
-                <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(o.created_at)}</td>
+                <td className="px-4 py-3 text-xs text-muted-foreground">
+                  {formatDate(o.created_at)}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1.5">
                     <Link
@@ -121,7 +140,10 @@ function AdminOrganizers() {
                       tone="danger"
                       onClick={() => {
                         // Bloqueado volta para regular; os demais vão para bloqueado.
-                        setDecision({ organizer: o, status: o.status === "BLOCKED" ? "REGULAR" : "BLOCKED" });
+                        setDecision({
+                          organizer: o,
+                          status: o.status === "BLOCKED" ? "REGULAR" : "BLOCKED",
+                        });
                         setReason("");
                       }}
                     >
@@ -160,8 +182,8 @@ function AdminOrganizers() {
                 ? "Ele deixa de criar eventos e de receber pagamentos enquanto estiver suspenso."
                 : decision?.status === "ATTENTION"
                   ? "A conta continua operando; a advertência fica registrada para acompanhamento."
-                  : "Ele volta a operar normalmente."}
-              {" "}A decisão vai para a trilha de auditoria com o motivo informado.
+                  : "Ele volta a operar normalmente."}{" "}
+              A decisão vai para a trilha de auditoria com o motivo informado.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <label className="block">

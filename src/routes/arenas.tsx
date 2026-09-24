@@ -10,7 +10,8 @@ export const Route = createFileRoute("/arenas")({
       { title: "Arenas e quadras de vôlei de areia · BeacHub" },
       {
         name: "description",
-        content: "Descubra arenas de vôlei de areia no Brasil: quadras, estrutura, iluminação e próximos campeonatos.",
+        content:
+          "Descubra arenas de vôlei de areia no Brasil: quadras, estrutura, iluminação e próximos campeonatos.",
       },
       { property: "og:title", content: "Arenas e quadras de vôlei de areia · BeacHub" },
       { property: "og:description", content: "Arenas, quadras e eventos próximos em todo o país." },

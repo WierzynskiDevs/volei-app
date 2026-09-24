@@ -1,7 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { AdminAction, AdminPageHeader, AdminShell, AdminTable, StatusPill } from "@/components/site/admin-shell";
+import {
+  AdminAction,
+  AdminPageHeader,
+  AdminShell,
+  AdminTable,
+  StatusPill,
+} from "@/components/site/admin-shell";
 import { Stat } from "@/components/site/cards";
 import { AD_POSITIONS, adCampaigns, ctr, type AdStatus } from "@/lib/admin-data";
 
@@ -9,9 +15,16 @@ export const Route = createFileRoute("/admin/publicidade")({
   head: () => ({
     meta: [
       { title: "Publicidade · Super Admin BeacHub" },
-      { name: "description", content: "Gerencie anunciantes, banners por posição, período de veiculação e estatísticas de impressões e cliques." },
+      {
+        name: "description",
+        content:
+          "Gerencie anunciantes, banners por posição, período de veiculação e estatísticas de impressões e cliques.",
+      },
       { property: "og:title", content: "Publicidade · Super Admin BeacHub" },
-      { property: "og:description", content: "Monetização com banners premium, sem poluir a experiência." },
+      {
+        property: "og:description",
+        content: "Monetização com banners premium, sem poluir a experiência.",
+      },
     ],
   }),
   component: AdminAds,
@@ -48,14 +61,21 @@ function AdminAds() {
         />
 
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Stat label="Campanhas" value={adCampaigns.length} hint={`${adCampaigns.filter((c) => c.status === "ATIVA").length} ativas`} />
+          <Stat
+            label="Campanhas"
+            value={adCampaigns.length}
+            hint={`${adCampaigns.filter((c) => c.status === "ATIVA").length} ativas`}
+          />
           <Stat label="Impressões" value={impressions.toLocaleString("pt-BR")} />
           <Stat label="Cliques" value={clicks.toLocaleString("pt-BR")} />
           <Stat label="CTR médio" value={`${((clicks / impressions) * 100).toFixed(2)}%`} />
         </div>
 
         {creating ? (
-          <form className="mt-6 border border-border bg-card p-6" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="mt-6 border border-border bg-card p-6"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <h2 className="text-lg">Nova campanha</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <label className="block">
@@ -98,7 +118,18 @@ function AdminAds() {
           </form>
         ) : null}
 
-        <AdminTable head={["Campanha", "Posições", "Período", "Impressões", "Cliques", "CTR", "Status", "Ações"]}>
+        <AdminTable
+          head={[
+            "Campanha",
+            "Posições",
+            "Período",
+            "Impressões",
+            "Cliques",
+            "CTR",
+            "Status",
+            "Ações",
+          ]}
+        >
           {adCampaigns.map((c) => (
             <tr key={c.id}>
               <td className="px-4 py-3">

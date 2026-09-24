@@ -20,7 +20,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "BeacHub — A plataforma do vôlei de areia brasileiro" },
       {
         property: "og:description",
-        content: "Campeonatos, duplas, chaves, resultados e ranking. Aqui é onde o vôlei de areia acontece.",
+        content:
+          "Campeonatos, duplas, chaves, resultados e ranking. Aqui é onde o vôlei de areia acontece.",
       },
     ],
   }),
@@ -51,7 +52,8 @@ function Home() {
               <span className="text-accent">acontece.</span>
             </h1>
             <p className="mt-5 max-w-md text-lg text-muted-foreground">
-              Campeonatos, duplas, chaves, resultados e ranking em um só lugar — para quem joga e para quem organiza.
+              Campeonatos, duplas, chaves, resultados e ranking em um só lugar — para quem joga e
+              para quem organiza.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
@@ -101,8 +103,13 @@ function Home() {
                     { s: "Set 2", r: "22 × 24" },
                     { s: "Set 3", r: "Em andamento" },
                   ].map((row) => (
-                    <div key={row.s} className="flex justify-between border-b border-background/15 pb-1">
-                      <span className="font-display text-xs uppercase tracking-widest text-background/60">{row.s}</span>
+                    <div
+                      key={row.s}
+                      className="flex justify-between border-b border-background/15 pb-1"
+                    >
+                      <span className="font-display text-xs uppercase tracking-widest text-background/60">
+                        {row.s}
+                      </span>
                       <span className="score-num">{row.r}</span>
                     </div>
                   ))}
@@ -114,7 +121,6 @@ function Home() {
                 >
                   Ver painel de partidas →
                 </Link>
-
               </div>
             </div>
           </div>
@@ -128,7 +134,10 @@ function Home() {
               <p className="eyebrow">Inscrições abertas</p>
               <h2 className="mt-1 text-2xl">Próximos campeonatos</h2>
             </div>
-            <Link to="/eventos" className="font-display text-xs font-bold uppercase tracking-widest text-accent">
+            <Link
+              to="/eventos"
+              className="font-display text-xs font-bold uppercase tracking-widest text-accent"
+            >
               Ver todos
             </Link>
           </div>
@@ -149,7 +158,8 @@ function Home() {
             <Search className="h-6 w-6 text-accent" />
             <h2 className="mt-3 text-2xl">Encontre um parceiro</h2>
             <p className="mt-2 text-muted-foreground">
-              Filtre por cidade, nível, categoria e ranking. Convide, combine e inscreva a dupla em minutos.
+              Filtre por cidade, nível, categoria e ranking. Convide, combine e inscreva a dupla em
+              minutos.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               <Tag>Curitiba</Tag>
@@ -171,14 +181,19 @@ function Home() {
                 <Trophy className="h-6 w-6 text-accent" />
                 <h2 className="text-2xl">Ranking geral</h2>
               </div>
-              <Link to="/ranking" className="font-display text-xs font-bold uppercase tracking-widest text-accent">
+              <Link
+                to="/ranking"
+                className="font-display text-xs font-bold uppercase tracking-widest text-accent"
+              >
                 Ver ranking
               </Link>
             </div>
             <ul className="mt-4 divide-y divide-border">
               {top.map((p) => (
                 <li key={p.id} className="flex items-center gap-3 py-3">
-                  <span className="score-num w-7 text-lg text-muted-foreground">{p.rankPosition}</span>
+                  <span className="score-num w-7 text-lg text-muted-foreground">
+                    {p.rankPosition}
+                  </span>
                   <PlayerAvatar initials={p.initials} size="sm" />
                   <Link
                     to="/jogadores/$playerId"

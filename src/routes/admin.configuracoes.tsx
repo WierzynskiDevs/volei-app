@@ -6,10 +6,17 @@ export const Route = createFileRoute("/admin/configuracoes")({
   head: () => ({
     meta: [
       { title: "Configurações da plataforma · Super Admin BeacHub" },
-      { name: "description", content: "Parâmetros globais da plataforma BeacHub: regras de ranking, reputação, moderação e políticas públicas." },
+      {
+        name: "description",
+        content:
+          "Parâmetros globais da plataforma BeacHub: regras de ranking, reputação, moderação e políticas públicas.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Configurações da plataforma · Super Admin BeacHub" },
-      { property: "og:description", content: "Parâmetros globais de ranking, reputação e governança." },
+      {
+        property: "og:description",
+        content: "Parâmetros globais de ranking, reputação e governança.",
+      },
     ],
   }),
   component: AdminSettings,
@@ -45,7 +52,8 @@ function AdminSettings() {
             <Num label="Limite de avaliações por dupla" value="1" />
           </div>
           <p className="mt-3 text-sm text-muted-foreground">
-            Reputação nunca influencia o ranking de performance — os dois eixos permanecem separados.
+            Reputação nunca influencia o ranking de performance — os dois eixos permanecem
+            separados.
           </p>
         </section>
 
@@ -58,7 +66,10 @@ function AdminSettings() {
               "Bloquear inscrição de contas suspensas",
               "Exibir selo de Arena Parceira apenas para arenas verificadas",
             ].map((s) => (
-              <label key={s} className="flex items-center justify-between border-b border-border pb-2">
+              <label
+                key={s}
+                className="flex items-center justify-between border-b border-border pb-2"
+              >
                 <span>{s}</span>
                 <input type="checkbox" defaultChecked />
               </label>
