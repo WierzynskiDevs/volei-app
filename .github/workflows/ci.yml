@@ -39,9 +39,11 @@ jobs:
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
 
-      # gerado pelo build (nitro preset cloudflare-module, deployConfig: true)
-      - run: npx wrangler deploy
-        working-directory: .output/server
+      # nitro deploy (não wrangler deploy direto): o preset cloudflare-module
+      # gera dois configs (.output/server/wrangler.json e
+      # .wrangler/deploy/config.json via deployConfig: true) que conflitam
+      # se invocados via wrangler puro — nitro sabe reconciliar os dois.
+      - run: npx nitro deploy --prebuilt
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
