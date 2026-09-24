@@ -61,3 +61,31 @@ export const organizerPlanQuery = () =>
       return organizerPlanSchema.parse(body.data);
     },
   });
+
+/**
+ * Vinculação da conta de recebimento (ADR 0018).
+ *
+ * Só os campos que o Asaas exige para abrir a subconta — nada de status ou
+ * identificador de gateway sai do backend, então nada disso é lido aqui.
+ */
+export type PaymentAccountPayload = {
+  mobile_phone: string;
+  income_cents: number;
+  address: string;
+  address_number: string;
+  province: string;
+  postal_code: string;
+};
+
+const paymentAccountResultSchema = z.object({
+  payment_account_status: z.enum(["LINKED", "PENDING", "NOT_LINKED"]),
+  payment_account_status_label: z.string(),
+});
+
+export async function requestPaymentAccountOnboarding(payload: PaymentAccountPayload) {
+  const body = await apiRequest<Resource<unknown>>("/organizer/payment-account", {
+    method: "POST",
+    body: payload,
+  });
+  return paymentAccountResultSchema.parse(body.data);
+}

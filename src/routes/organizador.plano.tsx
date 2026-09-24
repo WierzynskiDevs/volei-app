@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { AppShell, PageHeader } from "@/components/site/shell";
 import { Stat } from "@/components/site/cards";
 import { OrganizerNav } from "@/components/site/organizer-nav";
 import { FinancePill, GatewayBadge } from "@/components/site/finance";
 import { formatDate } from "@/components/site/admin-async";
+import { ApiError } from "@/lib/api/client";
 import { organizerFinanceQuery } from "@/lib/api/finance";
-import { organizerPlanQuery } from "@/lib/api/plan";
+import { organizerPlanQuery, requestPaymentAccountOnboarding } from "@/lib/api/plan";
 import { brl, pct } from "@/lib/finance-data";
 import { cn } from "@/lib/utils";
 
@@ -101,6 +104,8 @@ function OrganizerPlan() {
               <p className="mt-1">Inscrições caem no seu saldo já com as taxas descontadas.</p>
             </div>
           </div>
+
+          {data?.organizer.payment_account_status === "NOT_LINKED" ? <PaymentAccountForm /> : null}
         </section>
 
         <section className="mt-8">
@@ -163,5 +168,122 @@ function OrganizerPlan() {
         </section>
       </div>
     </AppShell>
+  );
+}
+
+/**
+ * Formulário de vinculação da subconta Asaas (ADR 0018) — só aparece quando
+ * `payment_account_status === "NOT_LINKED"`. Pede exatamente o que o Asaas
+ * exige para abrir a conta (endereço, CEP, renda mensal declarada) e nada
+ * além disso; esses dados nunca existiram no cadastro do organizador porque
+ * a ADR 0014 manteve o cadastro inicial mínimo de propósito.
+ */
+function PaymentAccountForm() {
+  const queryClient = useQueryClient();
+  const [mobilePhone, setMobilePhone] = useState("");
+  const [incomeReais, setIncomeReais] = useState("");
+  const [address, setAddress] = useState("");
+  const [addressNumber, setAddressNumber] = useState("");
+  const [province, setProvince] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+
+  const request = useMutation({
+    mutationFn: () =>
+      requestPaymentAccountOnboarding({
+        mobile_phone: mobilePhone.replace(/\D/g, ""),
+        income_cents: Math.round(Number(incomeReais.replace(",", ".")) * 100),
+        address,
+        address_number: addressNumber,
+        province,
+        postal_code: postalCode.replace(/\D/g, ""),
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["organizer", "plan"] });
+      toast.success("Vinculação solicitada", {
+        description: "Assim que o Asaas aprovar a conta, você pode publicar eventos pagos.",
+      });
+    },
+    onError: (e: unknown) => {
+      toast.error(e instanceof ApiError ? e.message : "Não foi possível solicitar a vinculação.");
+    },
+  });
+
+  return (
+    <div className="mt-4 border border-dashed border-border bg-card p-4">
+      <p className="eyebrow">Vincular conta de recebimento</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        O Asaas exige estes dados para abrir a conta que recebe o dinheiro das suas inscrições.
+      </p>
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        <label className="block">
+          <span className="eyebrow">Celular (com DDD)</span>
+          <input
+            value={mobilePhone}
+            onChange={(e) => setMobilePhone(e.target.value)}
+            placeholder="(41) 99999-0000"
+            className="mt-1 h-11 w-full border border-border bg-background px-3 outline-none"
+          />
+        </label>
+        <label className="block">
+          <span className="eyebrow">Renda mensal declarada</span>
+          <input
+            value={incomeReais}
+            onChange={(e) => setIncomeReais(e.target.value)}
+            placeholder="5000,00"
+            inputMode="decimal"
+            className="mt-1 h-11 w-full border border-border bg-background px-3 outline-none"
+          />
+        </label>
+        <label className="block sm:col-span-2">
+          <span className="eyebrow">Endereço</span>
+          <input
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Rua das Palmeiras"
+            className="mt-1 h-11 w-full border border-border bg-background px-3 outline-none"
+          />
+        </label>
+        <label className="block">
+          <span className="eyebrow">Número</span>
+          <input
+            value={addressNumber}
+            onChange={(e) => setAddressNumber(e.target.value)}
+            placeholder="123"
+            className="mt-1 h-11 w-full border border-border bg-background px-3 outline-none"
+          />
+        </label>
+        <label className="block">
+          <span className="eyebrow">Bairro</span>
+          <input
+            value={province}
+            onChange={(e) => setProvince(e.target.value)}
+            placeholder="Centro"
+            className="mt-1 h-11 w-full border border-border bg-background px-3 outline-none"
+          />
+        </label>
+        <label className="block sm:col-span-2">
+          <span className="eyebrow">CEP</span>
+          <input
+            value={postalCode}
+            onChange={(e) => setPostalCode(e.target.value)}
+            placeholder="80000-000"
+            className="mt-1 h-11 w-full border border-border bg-background px-3 outline-none"
+          />
+        </label>
+      </div>
+      <button
+        onClick={() => {
+          if (!mobilePhone || !incomeReais || !address || !addressNumber || !province || !postalCode) {
+            toast.error("Preencha todos os campos.");
+            return;
+          }
+          request.mutate();
+        }}
+        disabled={request.isPending}
+        className="mt-4 inline-flex h-11 items-center bg-accent px-5 font-display text-xs font-bold uppercase tracking-widest text-accent-foreground disabled:opacity-60"
+      >
+        {request.isPending ? "Enviando…" : "Vincular conta"}
+      </button>
+    </div>
   );
 }
