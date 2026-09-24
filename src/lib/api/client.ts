@@ -15,6 +15,9 @@
  *    **decodificado** — o Laravel grava o cookie URL-encoded.
  */
 
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequestHeader, getRequestUrl } from "@tanstack/react-start/server";
+
 /** Base da API. Sobrescrevível por ambiente sem tocar em código. */
 export const API_BASE_URL = (import.meta.env["VITE_API_URL"] ?? "http://localhost:8000").replace(
   /\/$/,
@@ -76,6 +79,44 @@ function readCookie(name: string): string | null {
   const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
   return match ? decodeURIComponent(match[1]!) : null;
 }
+
+/**
+ * Repassa o cookie de sessão do navegador na chamada servidor→API durante SSR
+ * (ADR 0012, pendência registrada: "os loaders SSR... precisam encaminhar o
+ * cookie de sessão recebido do navegador").
+ *
+ * No navegador, `credentials: "include"` já basta — o próprio browser anexa o
+ * cookie. No Worker (SSR), o `fetch()` daqui é uma chamada servidor→servidor:
+ * não existe cookie de navegador para incluir a menos que a gente leia o
+ * `Cookie` da requisição recebida e repasse explicitamente. Sem isto, a
+ * primeira renderização aparece anônima mesmo com o usuário logado.
+ *
+ * `createIsomorphicFn` (não `import()` dinâmico) de propósito: o compilador
+ * do TanStack Start reescreve esta chamada antes do bundle do navegador
+ * existir, trocando o branch `.server()` — e o import server-only dentro
+ * dele — por um no-op. Um `import()` dinâmico comum é bloqueado pelo plugin
+ * de proteção de import ("server-only import reachable from client code").
+ *
+ * Também repassa a origem (`Origin`): o cookie sozinho não basta. O Sanctum
+ * só trata a requisição como "do frontend" (`EnsureFrontendRequestsAreStateful
+ * ::fromFrontend()`) quando `Referer`/`Origin` bate com `SANCTUM_STATEFUL_DOMAINS`
+ * — sem isso ele ignora o cookie e cai no caminho de token, que não existe
+ * aqui, e devolve 401 mesmo com a sessão válida.
+ */
+const getForwardedRequestContext = createIsomorphicFn()
+  .server((): { cookie: string | null; origin: string | null } => {
+    try {
+      return {
+        cookie: getRequestHeader("cookie") ?? null,
+        origin: getRequestUrl().origin,
+      };
+    } catch {
+      // Fora de um request handler válido (ex.: script de build) — nada
+      // para repassar, não é erro.
+      return { cookie: null, origin: null };
+    }
+  })
+  .client((): { cookie: null; origin: null } => ({ cookie: null, origin: null }));
 
 /**
  * Garante o cookie de CSRF antes de uma escrita.
@@ -181,6 +222,10 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 
     const xsrf = readCookie("XSRF-TOKEN");
     if (isWrite && xsrf) headers["X-XSRF-TOKEN"] = xsrf;
+
+    const forwarded = getForwardedRequestContext();
+    if (forwarded.cookie !== null) headers["Cookie"] = forwarded.cookie;
+    if (forwarded.origin !== null) headers["Origin"] = forwarded.origin;
 
     /*
      * `init` é montado por partes: com `exactOptionalPropertyTypes`, passar
