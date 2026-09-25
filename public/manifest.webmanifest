@@ -1,0 +1,14 @@
+{
+  "name": "BeacHub — Vôlei de Areia",
+  "short_name": "BeacHub",
+  "description": "Campeonatos, duplas, chaves, resultados, ranking e reputação do vôlei de areia brasileiro.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F2EC",
+  "theme_color": "#0D1B2A",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
