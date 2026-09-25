@@ -138,7 +138,7 @@ export const publicMatchesQuery = (slug: string) =>
  * `null`), diferente de `GET .../matches` (index/detalhe), que sempre
  * carrega tudo. Por isso `.optional()` aqui, e não só `.nullable()`.
  */
-const organizerMatchSchema = z.object({
+export const organizerMatchSchema = z.object({
   id: z.string(),
   event_id: z.string(),
   phase: z.string().nullable(),

@@ -104,6 +104,18 @@ export const queryKeys = {
     byEvent: (slug: string) => [...queryKeys.organizerMatches.all, "event", slug] as const,
   },
 
+  /**
+   * "Minhas partidas" do juiz — sessão por token, nunca cookie (ADR 0013
+   * §5/§7). A chave inclui o próprio token porque não há usuário autenticado
+   * para escopar por sessão de cookie — trocar de sessão de juiz não pode
+   * reaproveitar cache da anterior.
+   */
+  refereeMatches: {
+    all: ["refereeMatches"] as const,
+    mine: (sessionToken: string) =>
+      [...queryKeys.refereeMatches.all, "mine", sessionToken] as const,
+  },
+
   /*
    * Painel administrativo (ADR 0010). Fica sob uma raiz própria para que
    * `["admin"]` invalide o painel inteiro — que é o que uma suspensão de conta
