@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 import { AppShell } from "@/components/site/shell";
@@ -27,6 +28,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -88,16 +90,27 @@ function LoginPage() {
               />
             </Field>
             <Field label="Senha">
-              <input
-                type="password"
-                required
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="input-base"
-                aria-invalid={error !== null}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="input-base pr-10"
+                  aria-invalid={error !== null}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  aria-pressed={showPassword}
+                  className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </Field>
             {error ? (
               <p role="alert" className="text-sm text-destructive">
